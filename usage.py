@@ -1,22 +1,48 @@
-from google.appengine.ext import webapp
+from google.appengine.ext import webapp, db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
 
 import os
 
+class Reading(db.Model):
+    user = db.UserProperty()
+    postcode = db.StringProperty(multiline=True)
+    electric = db.StringProperty()
+    gas = db.StringProperty()
+    date = db.DateTimeProperty(auto_now_add=True)
+
 class IndexPage(webapp.RequestHandler):
     """Deals with /"""
 
     def get(self):
-        """Handles default request."""
+        """Handles default request. Display a select sample."""
         template_values = {}
         path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
         self.response.out.write(template.render(path, template_values))
 
     def post(self):
         """Log their postcode and cost"""
-        pass
+
+        user = users.get_current_user()
+
+        if user:
+            postcode = self.request.get('postcode')
+            electric = self.request.get('electric')
+            gas = self.request.get('gas')
+            reading = Reading()
+            reading.user = user
+            reading.postcode = postcode
+            reading.gas = gas
+            reading.electric = electric
+            reading.put()
+            template_values = {}
+            path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
+            self.response.out.write(template.render(path, template_values))
+
+        else:
+            path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
+            self.response.out.write(template.render(path, template_values))
 
 class Login(webapp.RequestHandler):
     """Deal with logins and stuff"""
