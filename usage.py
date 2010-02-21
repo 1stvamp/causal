@@ -17,7 +17,16 @@ class IndexPage(webapp.RequestHandler):
 
     def get(self):
         """Handles default request. Display a select sample."""
-        template_values = {}
+        user = users.get_current_user()
+
+        # get a select of people to display
+        # soon this will be ppl nearby
+        readings = Reading.gql("ORDER BY date DESC LIMIT 10")
+
+        if readings.count() == 0:
+            readings = None
+        template_values = {'user' : user,
+                           'readings' : readings}
         path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
         self.response.out.write(template.render(path, template_values))
 
