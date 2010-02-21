@@ -14,6 +14,10 @@ class IndexPage(webapp.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
         self.response.out.write(template.render(path, template_values))
 
+    def post(self):
+        """Log their postcode and cost"""
+        pass
+
 class Login(webapp.RequestHandler):
     """Deal with logins and stuff"""
 
@@ -29,6 +33,7 @@ class Logout (webapp.RequestHandler):
     """Logout the user"""
 
     def get(self):
+        """Log them out and back to the front page."""
         self.redirect(users.create_logout_url('/'))
 
 application = webapp.WSGIApplication(
