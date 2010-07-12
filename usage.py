@@ -9,7 +9,7 @@ class IndexPage(webapp.RequestHandler):
         pass
 
 import sys
-
+import logging
 from datetime import datetime, timedelta
 from hashlib import sha1
 from hmac import new as hmac
@@ -142,6 +142,7 @@ class OAuthClient(object):
 
         if self.token is None:
             self.token = OAuthAccessToken.get_by_key_name(self.get_cookie())
+            logging.debug(self.get_cookie())
 
         fetch = urlfetch(self.get_signed_url(
             api_method, self.token, http_method, **extra_params
@@ -152,8 +153,8 @@ class OAuthClient(object):
                 "Error calling... Got return status: %i [%r]" %
                 (fetch.status_code, fetch.content)
                 )
-
-        return simplejson.dump(fetch.content)
+        #logging.debug(simplejson.loads(fetch.content))
+        return simplejson.loads(fetch.content)
 
     def post(self, api_method, http_method='POST', expected_status=(200,), **extra_params):
 
@@ -246,7 +247,7 @@ class OAuthClient(object):
             db.delete(old)
 
         self.token.put()
-        self.set_cookie(key_name)
+        self.set_cookie(key_name) # write it to db
         self.handler.redirect(return_to)
 
     def cleanup(self):
@@ -395,6 +396,7 @@ application = webapp.WSGIApplication(
                                      debug=True)
 
 def main():
+    logging.getLogger().setLevel(logging.DEBUG)
     run_wsgi_app(application)
 
 if __name__ == "__main__":
