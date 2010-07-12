@@ -142,8 +142,7 @@ class OAuthClient(object):
 
         if self.token is None:
             self.token = OAuthAccessToken.get_by_key_name(self.get_cookie())
-            logging.debug(self.get_cookie())
-
+        logging.debug(self.get_signed_url(api_method, self.token, http_method, **extra_params))
         fetch = urlfetch(self.get_signed_url(
             api_method, self.token, http_method, **extra_params
             ))
@@ -361,6 +360,11 @@ class MainHandler(RequestHandler):
 
     def get(self):
 
+        user = users.get_current_user()
+
+        if not user:
+            self.redirect(users.create_login_url(self.request.uri))
+        
         client = OAuthClient('twitter', self)
         gdata = OAuthClient('google', self, scope='http://www.google.com/calendar/feeds')
 
@@ -379,8 +383,12 @@ class MainHandler(RequestHandler):
         write("<strong>Location:</strong> %s<br />" % info['location'])
 
         rate_info = client.get('/account/rate_limit_status')
+        
 
         write("<strong>API Rate Limit Status:</strong> %r" % rate_info)
+        
+        tweets = client.get('/statuses/user_timeline')
+        write("<strong>Tweets:</strong> %r" % tweets)
 
         write(FOOTER)
 
