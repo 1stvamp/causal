@@ -142,7 +142,7 @@ class OAuthClient(object):
 
         if self.token is None:
             self.token = OAuthAccessToken.get_by_key_name(self.get_cookie())
-        logging.debug(self.get_signed_url(api_method, self.token, http_method, **extra_params))
+        
         fetch = urlfetch(self.get_signed_url(
             api_method, self.token, http_method, **extra_params
             ))
@@ -152,7 +152,6 @@ class OAuthClient(object):
                 "Error calling... Got return status: %i [%r]" %
                 (fetch.status_code, fetch.content)
                 )
-        #logging.debug(simplejson.loads(fetch.content))
         return simplejson.loads(fetch.content)
 
     def post(self, api_method, http_method='POST', expected_status=(200,), **extra_params):
@@ -265,6 +264,7 @@ class OAuthClient(object):
             )).content
 
     def get_signed_url(self, __url, __token=None, __meth='GET',**extra_params):
+        
         return '%s?%s'%(__url, self.get_signed_body(__url, __token, __meth, **extra_params))
 
     def get_signed_body(self, __url, __token=None, __meth='GET',**extra_params):
@@ -278,8 +278,9 @@ class OAuthClient(object):
             'oauth_timestamp': int(time()),
             'oauth_nonce': getrandbits(64),
             }
-
+        
         kwargs.update(extra_params)
+        logging.debug(kwargs)
 
         if self.service_key is None:
             self.service_key = get_service_key(self.service)
@@ -380,9 +381,13 @@ class MainHandler(RequestHandler):
         template_values = {}
         
         template_values['screen_name'] = info['screen_name']
-        template_values['location'] = info['location']
-        template_values['tweets'] = client.get('/statuses/user_timeline')
+        template_values['location'] = info['location']	
         
+        template_values['tweets'] = []
+        
+        for i in range(0,2):
+            template_values['tweets'] = template_values['tweets'] + client.get('/statuses/user_timeline', count='200', page=str(i))
+            
         path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
         self.response.out.write(template.render(path, template_values))
 
