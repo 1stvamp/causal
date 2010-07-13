@@ -108,6 +108,7 @@ class OAuthAccessToken(db.Model):
     """OAuth Access Token."""
 
     service = db.StringProperty()
+    google_username = db.StringProperty()
     specifier = db.StringProperty()
     oauth_token = db.StringProperty()
     oauth_token_secret = db.StringProperty()
@@ -139,9 +140,10 @@ class OAuthClient(object):
                 self.service_info['default_api_prefix'], api_method,
                 self.service_info['default_api_suffix']
                 )
-
+        
         if self.token is None:
-            self.token = OAuthAccessToken.get_by_key_name(self.get_cookie())
+            user = users.get_current_user()
+            self.token = OAuthAccessToken.get_by_key_name(user.nickname())
         
         fetch = urlfetch(self.get_signed_url(
             api_method, self.token, http_method, **extra_params
@@ -163,7 +165,8 @@ class OAuthClient(object):
                 )
 
         if self.token is None:
-            self.token = OAuthAccessToken.get_by_key_name(self.get_cookie())
+            user = users.get_current_user()
+            self.token = OAuthAccessToken.get_by_key_name(user.nickname())
 
         fetch = urlfetch(url=api_method, payload=self.get_signed_body(
             api_method, self.token, http_method, **extra_params
@@ -230,8 +233,10 @@ class OAuthClient(object):
             self.service_info['access_token_url'], oauth_token
             )
 
-        key_name = create_uuid()
-
+        user = users.get_current_user()
+        
+        key_name = user.nickname()
+        #FIXME
         self.token = OAuthAccessToken(
             key_name=key_name, service=self.service,
             **dict(token.split('=') for token in token_info.split('&'))
