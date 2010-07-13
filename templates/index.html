@@ -13,7 +13,7 @@
       <ul>
       {% for tweet in tweets %}
         <li>
-        {{tweet}}
+        {{tweet.created_at}} : {{tweet.text}} 
 	</li>
       {% endfor %}
 	</ul>
