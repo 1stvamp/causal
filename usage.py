@@ -8,7 +8,7 @@ class IndexPage(webapp.RequestHandler):
     def get(self):
         pass
 
-import sys
+import sys, os
 import logging
 from datetime import datetime, timedelta
 from hashlib import sha1
@@ -375,22 +375,16 @@ class MainHandler(RequestHandler):
             write(FOOTER)
             return
 
-        write('<a href="/oauth/twitter/logout">Logout from Twitter</a><br /><br />')
-
         info = client.get('/account/verify_credentials')
 
-        write("<strong>Screen Name:</strong> %s<br />" % info['screen_name'])
-        write("<strong>Location:</strong> %s<br />" % info['location'])
-
-        rate_info = client.get('/account/rate_limit_status')
+        template_values = {}
         
-
-        write("<strong>API Rate Limit Status:</strong> %r" % rate_info)
+        template_values['screen_name'] = info['screen_name']
+        template_values['location'] = info['location']
+        template_values['tweets'] = client.get('/statuses/user_timeline')
         
-        tweets = client.get('/statuses/user_timeline')
-        write("<strong>Tweets:</strong> %r" % tweets)
-
-        write(FOOTER)
+        path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
+        self.response.out.write(template.render(path, template_values))
 
 # ------------------------------------------------------------------------------
 # self runner -- gae cached main() function
