@@ -185,8 +185,9 @@ class OAuthClient(object):
         proxy_id = self.get_cookie()
 
         if proxy_id:
-            return "FOO%rFF" % proxy_id
             self.expire_cookie()
+            return "FOO%rFF" % proxy_id
+            
 
         return self.get_request_token()
 
@@ -239,6 +240,7 @@ class OAuthClient(object):
         #FIXME
         self.token = OAuthAccessToken(
             key_name=key_name, service=self.service,
+            google_username=key_name, 
             **dict(token.split('=') for token in token_info.split('&'))
             )
 
@@ -380,9 +382,13 @@ class MainHandler(RequestHandler):
             write('<a href="/oauth/twitter/login">Login via Twitter</a>')
             write(FOOTER)
             return
-
-        info = client.get('/account/verify_credentials')
-
+        try:
+            info = client.get('/account/verify_credentials')
+        except:
+            write('<a href="/oauth/twitter/login">Login via Twitter</a>')
+            write(FOOTER)
+            return
+        
         template_values = {}
         
         template_values['screen_name'] = info['screen_name']
