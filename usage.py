@@ -2,12 +2,6 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
-
-class IndexPage(webapp.RequestHandler):
-    
-    def get(self):
-        pass
-
 import sys, os
 import logging
 from datetime import datetime, timedelta
@@ -59,6 +53,19 @@ OAUTH_APP_SETTINGS = {
 
         },
 
+    'foursquare': {
+
+        'consumer_key': 'WZG3BFLERY1FOCNVA2D5NNZZ3IG0MR4DOYHA4BQAQT40PWX5',
+        'consumer_secret': 'DI1SYWTW4VK53UEJGNCJ2VGTWGMCVPV5NGMYZ20YXMJD5YQ3',
+
+        'request_token_url': 'http://foursquare.com/oauth/request_token',
+        'access_token_url': 'https://foursquare.com/oauth/access_token',
+        'user_auth_url': 'http://foursquare.com/oauth/authorize',
+
+        'default_api_prefix': 'http://foursquare.com',
+        'default_api_suffix': '.json',
+
+        },
     }
 
 CLEANUP_BATCH_SIZE = 100
@@ -287,7 +294,6 @@ class OAuthClient(object):
             }
         
         kwargs.update(extra_params)
-        logging.debug(kwargs)
 
         if self.service_key is None:
             self.service_key = get_service_key(self.service)
@@ -355,50 +361,49 @@ class OAuthHandler(RequestHandler):
 # modify this demo MainHandler to suit your needs
 # ------------------------------------------------------------------------------
 
-HEADER = """
-  <html><head><title>Twitter OAuth Demo</title>
-  </head><body>
-  <h1>Twitter OAuth Demo App</h1>
-  """
-
-FOOTER = "</body></html>"
-
 class MainHandler(RequestHandler):
     """Demo Twitter App."""
 
     def get(self):
-
-        user = users.get_current_user()
-
-        if not user:
-            self.redirect(users.create_login_url(self.request.uri))
-        
-        client = OAuthClient('twitter', self)
-        gdata = OAuthClient('google', self, scope='http://www.google.com/calendar/feeds')
-
-        write = self.response.out.write; write(HEADER)
-
-        if not client.get_cookie():
-            write('<a href="/oauth/twitter/login">Login via Twitter</a>')
-            write(FOOTER)
-            return
-        try:
-            info = client.get('/account/verify_credentials')
-        except:
-            write('<a href="/oauth/twitter/login">Login via Twitter</a>')
-            write(FOOTER)
-            return
-        
+        # return values
         template_values = {}
         
-        template_values['screen_name'] = info['screen_name']
-        template_values['location'] = info['location']	
+        user = users.get_current_user()
         
-        template_values['tweets'] = []
+        # log user into google
+        if not user:
+            return self.redirect(users.create_login_url(self.request.uri))
         
-        for i in range(0,2):
-            template_values['tweets'] = template_values['tweets'] + client.get('/statuses/user_timeline', count='200', page=str(i))
+        # fetch the users details
+        tokens = OAuthAccessToken.all()
+        tokens.filter("google_username =", user.nickname())
+        
+        # try to get the twitter token
+        tokens.filter("service =", "twitter")
+        
+        twitter_client = OAuthClient('twitter', self)
+        twitter_token = tokens.fetch(1)
+        
+        # we have a twitter token for the user
+        if twitter_token:
+            twitter_client.token = twitter_token[0]
+        
+            try:
+                info = twitter_client.get('/account/verify_credentials')
+            except:
+                logging.debug('Failed to get twitter users info')
+                return
             
+            template_values['screen_name'] = info['screen_name']
+            template_values['location'] = info['location']	
+            
+            template_values['tweets'] = []
+            
+            for i in range(0,1):
+                template_values['tweets'] = template_values['tweets'] + twitter_client.get('/statuses/user_timeline', count='200', page=str(i))
+            
+        #foursquare_client = OAuthClient('foursquare', self)
+        
         path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
         self.response.out.write(template.render(path, template_values))
 
