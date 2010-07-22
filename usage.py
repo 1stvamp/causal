@@ -36,7 +36,7 @@ OAUTH_APP_SETTINGS = {
         'consumer_secret': 'DI1SYWTW4VK53UEJGNCJ2VGTWGMCVPV5NGMYZ20YXMJD5YQ3',
 
         'request_token_url': 'http://foursquare.com/oauth/request_token',
-        'access_token_url': 'https://foursquare.com/oauth/access_token',
+        'access_token_url': 'http://foursquare.com/oauth/access_token',
         'user_auth_url': 'http://foursquare.com/oauth/authorize',
 
         'default_api_prefix': 'http://foursquare.com',
@@ -165,8 +165,6 @@ class FoursquareOAuthReply(RequestHandler):
         
         token = oauth.Token(access_token['oauth_token'] , access_token['oauth_token_secret'])
         client = oauth.Client(consumer, token)
-        url = 'http://twitter.com/account/verify_credentials.xml'
-        resp, content = client.request(url, "GET")
         
         token_save = OAuthAccessToken(service=service,
                                   key_name=user.nickname(),
