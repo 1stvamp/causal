@@ -44,59 +44,104 @@ OAUTH_APP_SETTINGS = {
 
         },
     }
-
-class OAuthHandler(RequestHandler):
+class FoursquareOAuthHandler(RequestHandler):
     
     def get(self):
         user = users.get_current_user()
         # log user into google
         if not user:
             return self.redirect(users.create_login_url(self.request.uri))
-        if 'twitter' in self.get_url():
-            # go off to twitter
-            self.do_oauth_request('twitter', user)
-        
-        if 'foursquare' in self.get_url():
-            # go off to foursquare
-            pass
 
-    def do_oauth_request(self, service, user):
+        self.redirect(do_oauth_request('foursquare', user))
+
+
+class TwitterOAuthHandler(RequestHandler):
+    
+    def get(self):
+        user = users.get_current_user()
+        # log user into google
+        if not user:
+            return self.redirect(users.create_login_url(self.request.uri))
+
+        self.redirect(do_oauth_request('twitter', user))
+
+def do_oauth_request(service, user):
+    
+    oauth_details = OAUTH_APP_SETTINGS[service]
+    consumer = oauth.Consumer(oauth_details['consumer_key'], 
+                              oauth_details['consumer_secret'])
+    
+    client = oauth.Client(consumer)
+    resp, content = client.request(oauth_details['request_token_url'], "GET")
+    
+    if resp['status'] != '200':
+        print "fail"
+    
+    request_token_params = dict((token.split('=') for token in content.split('&')))
+    
+    token = OAuthRequestToken(service=service,
+                              key_name=user.nickname(),
+                              user=user.nickname(), 
+                              **request_token_params)
+    token.save()
+    return ("%s?oauth_token=%s" % (oauth_details['user_auth_url'], 
+                                         request_token_params['oauth_token']))
         
+class TwitterOAuthReply(RequestHandler):
+    
+    def get(self):
+        user = users.get_current_user()
+        # log user into google
+        if not user:
+            return self.redirect(users.create_login_url(self.request.uri))
+        
+        
+        # go off to twitter
+        service = 'twitter'
+
         oauth_details = OAUTH_APP_SETTINGS[service]
+        
+        # fetch token details
+        request_token = self.request.get('oauth_token')
+        tokens = OAuthRequestToken.all()
+        tokens.filter("oauth_token = ", request_token)
+        request_token = tokens.fetch(1)[0]
+        
+        # creat consumer
         consumer = oauth.Consumer(oauth_details['consumer_key'], 
                                   oauth_details['consumer_secret'])
         
-        client = oauth.Client(consumer)
-        resp, content = client.request(oauth_details['request_token_url'], "GET")
         
-        if resp['status'] != '200':
-            print "fail"
+        token = oauth.Token(request_token.oauth_token, request_token.oauth_token_secret)
         
-        request_token_params = dict((token.split('=') for token in content.split('&')))
+        client = oauth.Client(consumer, token)
+        resp, content = client.request(oauth_details['access_token_url'], "POST")
         
-        token = OAuthRequestToken(service=service,
+        access_token = dict((token.split('=') for token in content.split('&')))
+        
+        token = oauth.Token(access_token['oauth_token'] , access_token['oauth_token_secret'])
+        client = oauth.Client(consumer, token)
+        
+        token_save = OAuthAccessToken(service=service,
                                   key_name=user.nickname(),
-                                  user=user.nickname(), 
-                                  **request_token_params)
-        token.save()
-        self.redirect("%s?oauth_token=%s" % (oauth_details['user_auth_url'], 
-                                             request_token_params['oauth_token']))
+                                  google_username=user.nickname(), 
+                                  **access_token)
+        token_save.save()
         
-class OAuthReply(RequestHandler):
+        url = oauth_details['default_api_prefix'] + '/statuses/user_timeline' + oauth_details['default_api_suffix']
+        resp, content = client.request(url, "GET")
+        
+
+class FoursquareOAuthReply(RequestHandler):
     
     def get(self):
         user = users.get_current_user()
         # log user into google
         if not user:
             return self.redirect(users.create_login_url(self.request.uri))
-        
-        if 'twitter' in self.get_url():
-            # go off to twitter
-            service = 'twitter'
-        
-        if 'foursquare' in self.get_url():
-            # go off to foursquare
-            service = 'foursquare'
+    
+        # go off to foursquare
+        service = 'foursquare'
 
         oauth_details = OAUTH_APP_SETTINGS[service]
         
@@ -123,16 +168,14 @@ class OAuthReply(RequestHandler):
         url = 'http://twitter.com/account/verify_credentials.xml'
         resp, content = client.request(url, "GET")
         
-        print content
-        
         token_save = OAuthAccessToken(service=service,
                                   key_name=user.nickname(),
-                                  user=user.nickname(), 
+                                  google_username=user.nickname(), 
                                   **access_token)
         
-        #instance.trusted_request_token = access_token['oauth_token']
-        #instance.trusted_request_token_secret = access_token['oauth_token_secret']
+        token_save.save()
 
+        
 class MainHandler(RequestHandler):
     
     def get(self):
@@ -140,18 +183,45 @@ class MainHandler(RequestHandler):
         # log user into google
         if not user:
             return self.redirect(users.create_login_url(self.request.uri))
-        
+        twitter_details = OAUTH_APP_SETTINGS['twitter']
         template_values = {}
+        consumer = oauth.Consumer(twitter_details['consumer_key'], 
+                                  twitter_details['consumer_secret'])
+        # fetch tokens from database
+        tokens = OAuthRequestToken.all()
+        tokens.filter("user = ", user.nickname())
+        request_token = tokens.fetch(2)
+        
+        # get 200 tweets
+        #oauth_details = OAUTH_APP_SETTINGS[service]
+        #for i in range(0,2):
+        #    url = default_api_prefix
+        #    template_values['tweets'] = template_values['tweets'] + client.get('/statuses/user_timeline', count='200', page=str(i))
+ 	
+        request_token = self.request.get('oauth_token')
+        tokens = OAuthAccessToken.all()
+        tokens.filter("google_username = ", user.nickname())
+        tokens.filter("service = ", 'twitter')
+        
+        if tokens.fetch(1):
+            access_token = tokens.fetch(1)[0]
+            
+            token = oauth.Token(access_token.oauth_token , access_token.oauth_token_secret)
+            client = oauth.Client(consumer, token)
+            
+            url = twitter_details['default_api_prefix'] + '/statuses/user_timeline' + twitter_details['default_api_suffix']
+            resp, content = client.request(url, "GET")
+            template_values['tweets'] = simplejson.loads(content)
         
         path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
         self.response.out.write(template.render(path, template_values))
     
 application = webapp.WSGIApplication(
                                      [('/', MainHandler),
-                                      ('/oauth/twitter/login', OAuthHandler),
-                                      ('/oauth/twitter/callback', OAuthReply),
-                                      ('/oauth/foursquare/login', OAuthHandler),
-                                      ('/oauth/foursquare/callback', OAuthReply),
+                                      ('/oauth/foursquare/login', FoursquareOAuthHandler),
+                                      ('/oauth/foursquare/callback', FoursquareOAuthReply),
+                                      ('/oauth/twitter/login', TwitterOAuthHandler),
+                                      ('/oauth/twitter/callback', TwitterOAuthReply),
                                       ],
                                      debug=True)
 
