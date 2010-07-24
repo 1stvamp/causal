@@ -16,13 +16,15 @@ import httplib2
 def index(request):
     
     template_values = {}
+    
     if request.method == 'GET':
         params = {
-        'user' : request.user,
-        'service' : 'twitter',
+            'user' : request.user,
+            'service' : 'twitter',
         }
     
         access_token_list = OAuthAccessToken.objects.filter(**params)
+        
         if access_token_list:
             access_token = access_token_list[0]
             
@@ -68,7 +70,17 @@ def index(request):
                      'date' : track['date']['#text']}
                 tracks.append(a)
             template_values['tracks'] = tracks
+
+        results = []
+        for tweet in template_values['tweets']:
+            results.append(tweet)
+            
+        for track in template_values['tracks']:
+            results.append(track)
         
+        for checkin in template_values['checkins']['checkins']:
+            results.append(checkin)
+            
     return render_to_response('index.html',template_values, 
         context_instance=RequestContext(request))
 
