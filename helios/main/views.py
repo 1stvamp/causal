@@ -10,6 +10,7 @@ from forms import RegistrationForm
 import oauth2 as oauth
 from settings import OAUTH_APP_SETTINGS
 from django.utils import simplejson
+import httplib2
 
 @login_required(redirect_field_name='redirect_to')
 def index(request):
@@ -49,17 +50,29 @@ def index(request):
             token = oauth.Token(access_token.oauth_token , access_token.oauth_token_secret)
             
             client = oauth.Client(consumer, token)
-            url = OAUTH_APP_SETTINGS['foursquare']['default_api_prefix'] + '/v1/checkins'+ OAUTH_APP_SETTINGS['foursquare']['default_api_suffix']
+            url = OAUTH_APP_SETTINGS['foursquare']['default_api_prefix'] + '/v1/history'+ OAUTH_APP_SETTINGS['foursquare']['default_api_suffix']
             resp, content = client.request(url, "GET")
             
             template_values['checkins'] = simplejson.loads(content)
             
-        
+            url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=bassdread&api_key=09f1c061fc65a7bc08fb3ad95222d16e&format=json'
+            resp, content = client.request(url, "GET")
+            
+            tracks_listing = simplejson.loads(content)
+            
+            tracks = []
+            
+            for track in tracks_listing['recenttracks']['track']:
+                a = {'name' : track['name'],
+                     'artist' : track['artist']['#text'],
+                     'date' : track['date']['#text']}
+                tracks.append(a)
+            template_values['tracks'] = tracks
         
     return render_to_response('index.html',template_values, 
         context_instance=RequestContext(request))
 
-#@login_required(redirect_field_name='redirect_to')
+@login_required(redirect_field_name='redirect_to')
 def oauth_login(request, service=None):
     
     if request.method == 'GET':

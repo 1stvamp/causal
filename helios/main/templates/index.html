@@ -24,7 +24,15 @@
   <ul>
     {% for checkin in checkins.checkins %}
     <li>
-      {{checkin.created }} : {{checkin.user.firstname }} : {{checkin.venue.name }} 
+      {{checkin.created }} : {{checkin.venue.name }} 
+    </li>
+    {% endfor %}
+  </ul>
+  
+    <ul>
+    {% for track in tracks %}
+    <li>
+      {{ track.date }} : {{track.artist}} : {{ track.name }}
     </li>
     {% endfor %}
   </ul>
