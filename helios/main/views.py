@@ -10,6 +10,7 @@ from forms import RegistrationForm
 import oauth2 as oauth
 from settings import OAUTH_APP_SETTINGS
 from django.utils import simplejson
+
 @login_required(redirect_field_name='redirect_to')
 def index(request):
     
@@ -33,6 +34,25 @@ def index(request):
             resp, content = client.request(url, "GET")
             
             template_values['tweets'] = simplejson.loads(content)
+            
+        params = {
+        'user' : request.user,
+        'service' : 'foursquare',
+        }
+    
+        access_token_list = OAuthAccessToken.objects.filter(**params)
+        if access_token_list:
+            access_token = access_token_list[0]
+            
+            consumer = oauth.Consumer(OAUTH_APP_SETTINGS['foursquare']['consumer_key'], 
+                                      OAUTH_APP_SETTINGS['foursquare']['consumer_secret'])
+            token = oauth.Token(access_token.oauth_token , access_token.oauth_token_secret)
+            
+            client = oauth.Client(consumer, token)
+            url = OAUTH_APP_SETTINGS['foursquare']['default_api_prefix'] + '/v1/checkins'+ OAUTH_APP_SETTINGS['foursquare']['default_api_suffix']
+            resp, content = client.request(url, "GET")
+            
+            template_values['checkins'] = simplejson.loads(content)
             
         
         

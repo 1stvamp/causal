@@ -19,4 +19,13 @@
     </li>
     {% endfor %}
   </ul>
+  
+    
+  <ul>
+    {% for checkin in checkins.checkins %}
+    <li>
+      {{checkin.created }} : {{checkin.user.firstname }} : {{checkin.venue.name }} 
+    </li>
+    {% endfor %}
+  </ul>
 {% endblock %}

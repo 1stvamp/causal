@@ -28,11 +28,11 @@ DATABASES = {
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Europe/London'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-gb'
 
 SITE_ID = 1
 
@@ -122,7 +122,7 @@ OAUTH_APP_SETTINGS = {
         'access_token_url': 'http://foursquare.com/oauth/access_token',
         'user_auth_url': 'http://foursquare.com/oauth/authorize',
 
-        'default_api_prefix': 'http://foursquare.com',
+        'default_api_prefix': 'http://api.foursquare.com',
         'default_api_suffix': '.json',
 
         },
