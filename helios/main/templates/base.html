@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+	<title>Application Form</title>
+	<link rel="stylesheet" type="text/css" media="screen" href="/static/css/layout.css" />
+    </head>
+    
+<body>
+
+    <div id="wrapper" class="clearfix">
+
+        <div id="content">
+    	    <div id="primary" class="clearfix">
+	    {% if request.user.is_authenticated %}<a href="/logout/">Logout</a>{% endif %}
+	        {% block content %}
+	        {% endblock content %}
+	    </div>
+	    <div id="secondary">
+	    </div>
+	    
+	</div>
+
+	<div id="footer">
+	</div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+Welcome.
+<div class="form-data">
+    <form action="." method="POST" >{% csrf_token %}
+{{ form }}
+
+ <span class="help">'Have you <a href="/password_reset/">forgotten your password</a>?' </span>
+
+<input type="submit" value="go" class="button-submit" />
+    </form>    
+</div>
+{% endblock %}

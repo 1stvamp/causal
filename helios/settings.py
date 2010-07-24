@@ -96,3 +96,34 @@ INSTALLED_APPS = (
     'south',
     'main',
 )
+
+OAUTH_APP_SETTINGS = {
+
+    'twitter': {
+
+        'consumer_key': 'hX6Da559MW6IIo0yVAcRrQ',
+        'consumer_secret': 'AHEh5NwOfIWL1K32xmqHQdTrztJnvayxzzy81BPTdbY',
+
+        'request_token_url': 'https://twitter.com/oauth/request_token',
+        'access_token_url': 'https://twitter.com/oauth/access_token',
+        'user_auth_url': 'http://twitter.com/oauth/authorize',
+
+        'default_api_prefix': 'http://twitter.com',
+        'default_api_suffix': '.json',
+
+        },
+
+    'foursquare': {
+
+        'consumer_key': 'WZG3BFLERY1FOCNVA2D5NNZZ3IG0MR4DOYHA4BQAQT40PWX5',
+        'consumer_secret': 'DI1SYWTW4VK53UEJGNCJ2VGTWGMCVPV5NGMYZ20YXMJD5YQ3',
+
+        'request_token_url': 'http://foursquare.com/oauth/request_token',
+        'access_token_url': 'http://foursquare.com/oauth/access_token',
+        'user_auth_url': 'http://foursquare.com/oauth/authorize',
+
+        'default_api_prefix': 'http://foursquare.com',
+        'default_api_suffix': '.json',
+
+        },
+    }
