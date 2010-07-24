@@ -15,7 +15,6 @@ class OAuthAccessToken(models.Model):
 
     user = models.ForeignKey(User)
     service = models.CharField(max_length=50)
-    specifier = models.CharField(max_length=50)
     oauth_token = models.CharField(max_length=50)
     oauth_token_secret = models.CharField(max_length=50)
     created = models.DateTimeField()
