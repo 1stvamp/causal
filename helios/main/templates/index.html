@@ -13,18 +13,26 @@
   <strong>Location:</strong>{{location}}<br />
   
   <ul>
+  {% for res in results %}
+  <li>
+      {{res.date}} : {{res.info}}
+    </li>
+    {% endfor %}
+  </ul>
+  
+  <ul>
     {% for tweet in tweets %}
     <li>
-      {{tweet.created_at}} : {{tweet.text}} 
+      {{tweet.date}} : {{tweet.text}} 
     </li>
     {% endfor %}
   </ul>
   
     
   <ul>
-    {% for checkin in checkins.checkins %}
+    {% for checkin in checkins %}
     <li>
-      {{checkin.created }} : {{checkin.venue.name }} 
+      {{checkin.date }} : {{checkin.venue.name }} 
     </li>
     {% endfor %}
   </ul>

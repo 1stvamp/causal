@@ -65,23 +65,29 @@ def index(request):
             tracks = []
             
             for track in tracks_listing['recenttracks']['track']:
-                a = {'name' : track['name'],
-                     'artist' : track['artist']['#text'],
-                     'date' : track['date']['#text']}
+                a = {'info' : track['artist']['#text'] + ' ' + track['name'],
+                     'date' : datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M')}
                 tracks.append(a)
             template_values['tracks'] = tracks
 
         results = []
         for tweet in template_values['tweets']:
             tweet['created_at'] = tweet['created_at'].replace(' +0000','')
-            datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y')
+            tweet['date'] = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y')
+            tweet['info'] = tweet['text']
             results.append(tweet)
             
         for track in template_values['tracks']:
             results.append(track)
         
         for checkin in template_values['checkins']['checkins']:
+            checkin['created'] = checkin['created'].replace(' +0000', '')
+            checkin['date'] = datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')
+            checkin['info'] = checkin['venue']['name'] 
             results.append(checkin)
+            
+        results.sort(key=lambda item:item['date'], reverse=True)
+        template_values['results'] = results
             
     return render_to_response('index.html',template_values, 
         context_instance=RequestContext(request))
