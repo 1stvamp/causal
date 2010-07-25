@@ -13,7 +13,7 @@ from django.utils import simplejson
 import httplib2
 
 @login_required(redirect_field_name='redirect_to')
-def index(request):
+def history(request):
     
     template_values = {}
     
@@ -171,7 +171,7 @@ def register(request):
                                 password=form.cleaned_data['password1'])
             login(request, user)
         
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/history/')
     
     return render_to_response('accounts/register.html',{
         'form' : form,
