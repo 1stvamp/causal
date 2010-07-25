@@ -18,13 +18,22 @@ def index(request):
     template_values = {}
     
     if request.method == 'GET':
+
+        # final averaged list
+        results = []
+        
         params = {
             'user' : request.user,
             'service' : 'twitter',
         }
     
         access_token_list = OAuthAccessToken.objects.filter(**params)
-        
+
+        ############################################################
+        #
+        #Fetch tweets if we have a token
+        #
+        ############################################################
         if access_token_list:
             access_token = access_token_list[0]
             
@@ -37,6 +46,12 @@ def index(request):
             resp, content = client.request(url, "GET")
             
             template_values['tweets'] = simplejson.loads(content)
+            for tweet in template_values['tweets']:
+                tweet['created_at'] = tweet['created_at'].replace(' +0000','')
+                tweet['date'] = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y')
+                tweet['info'] = tweet['text']
+                results.append(tweet)
+
             
         params = {
         'user' : request.user,
@@ -44,6 +59,11 @@ def index(request):
         }
     
         access_token_list = OAuthAccessToken.objects.filter(**params)
+        ###############################################################
+        #
+        # fetch checkins from foursquare if token
+        #
+        ###############################################################
         if access_token_list:
             access_token = access_token_list[0]
             
@@ -62,25 +82,20 @@ def index(request):
             
             tracks_listing = simplejson.loads(content)
             
-            results = []
-            
-            for track in tracks_listing['recenttracks']['track']:
-                a = {'info' : track['artist']['#text'] + ' ' + track['name'],
-                     'date' : datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M')}
-                results.append(a)
-
-            for tweet in template_values['tweets']:
-                tweet['created_at'] = tweet['created_at'].replace(' +0000','')
-                tweet['date'] = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y')
-                tweet['info'] = tweet['text']
-                results.append(tweet)
-            
             for checkin in template_values['checkins']['checkins']:
                 checkin['created'] = checkin['created'].replace(' +0000', '')
                 checkin['date'] = datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')
                 checkin['info'] = checkin['venue']['name'] 
-                results.append(checkin)
-                
+                results.append(checkin)            
+                       
+        for track in tracks_listing['recenttracks']['track']:
+            a = {'info' : track['artist']['#text'] + ' ' + track['name'],
+                 'date' : datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M')}
+            results.append(a)
+
+                        
+            
+        if results:    
             results.sort(key=lambda item:item['date'], reverse=True)
             template_values['results'] = results
             
