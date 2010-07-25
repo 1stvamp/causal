@@ -14,34 +14,10 @@
   
   <ul>
   {% for res in results %}
-  <li>
+    <li>
       {{res.date}} : {{res.info}}
     </li>
-    {% endfor %}
+  {% endfor %}
   </ul>
   
-  <ul>
-    {% for tweet in tweets %}
-    <li>
-      {{tweet.date}} : {{tweet.text}} 
-    </li>
-    {% endfor %}
-  </ul>
-  
-    
-  <ul>
-    {% for checkin in checkins %}
-    <li>
-      {{checkin.date }} : {{checkin.venue.name }} 
-    </li>
-    {% endfor %}
-  </ul>
-  
-    <ul>
-    {% for track in tracks %}
-    <li>
-      {{ track.date }} : {{track.artist}} : {{ track.name }}
-    </li>
-    {% endfor %}
-  </ul>
 {% endblock %}
