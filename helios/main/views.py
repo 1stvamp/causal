@@ -73,6 +73,8 @@ def index(request):
 
         results = []
         for tweet in template_values['tweets']:
+            tweet['created_at'] = tweet['created_at'].replace(' +0000','')
+            datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y')
             results.append(tweet)
             
         for track in template_values['tracks']:
