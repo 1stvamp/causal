@@ -17,13 +17,10 @@ class RegistrationForm(forms.Form):
     ``RegistrationProfile.objects.create_inactive_user()``.
     
     """
-    username = forms.RegexField(regex=r'^\w+$',
-                                max_length=30,
-                                widget=forms.TextInput(attrs=attrs_dict),
-                                label=u'username')
-    email = forms.EmailField(widget=forms.TextInput(attrs=dict(attrs_dict,
-                                                               maxlength=75)),
-                             label=u'email address')
+    email = forms.EmailField(widget=forms.TextInput(
+        attrs=dict(attrs_dict,maxlength=75)),
+        label=u'email address')
+    
     password1 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict, render_value=False),
                                 label=u'password')
     password2 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict, render_value=False),
@@ -41,18 +38,6 @@ class RegistrationForm(forms.Form):
             return self.cleaned_data['username']
         raise forms.ValidationError(u'That username is already taken. Please choose another.')
     
-    def clean_email(self):
-        """
-        Validate that the username is alphanumeric and is not already
-        in use.
-        
-        """
-        try:
-            user = User.objects.get(email__iexact=self.cleaned_data['email'])
-        except User.DoesNotExist:
-            return self.cleaned_data['email']
-        raise forms.ValidationError(u'That email address is already taken. Please choose another.')
-
     def clean(self):
         """
         Verifiy that the values entered into the two password fields

@@ -97,6 +97,10 @@ INSTALLED_APPS = (
     'main',
 )
 
+AUTHENTICATION_BACKENDS = (
+    'main.email-auth.EmailBackend',
+ )
+
 OAUTH_APP_SETTINGS = {
 
     'twitter': {

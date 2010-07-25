@@ -76,18 +76,18 @@ def history(request):
             resp, content = client.request(url, "GET")
             
             template_values['checkins'] = simplejson.loads(content)
-            
-            url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=bassdread&api_key=09f1c061fc65a7bc08fb3ad95222d16e&format=json'
-            resp, content = client.request(url, "GET")
-            
-            tracks_listing = simplejson.loads(content)
-            
+        
             for checkin in template_values['checkins']['checkins']:
                 checkin['created'] = checkin['created'].replace(' +0000', '')
                 checkin['date'] = datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')
                 checkin['info'] = checkin['venue']['name'] 
                 results.append(checkin)            
-                       
+        
+        url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=bassdread&api_key=09f1c061fc65a7bc08fb3ad95222d16e&format=json'
+        h = httplib2.Http()
+        resp, content = h.request(url, "GET")
+        tracks_listing = simplejson.loads(content)
+        
         for track in tracks_listing['recenttracks']['track']:
             a = {'info' : track['artist']['#text'] + ' ' + track['name'],
                  'date' : datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M')}
@@ -164,10 +164,11 @@ def register(request):
             
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            User.objects.create_user(form.cleaned_data['username'], 
-                                        form.cleaned_data['email'],
-                                        form.cleaned_data['password1'])
-            user = authenticate(username=form.cleaned_data['username'], 
+            User.objects.create_user(form.cleaned_data['email'],
+                form.cleaned_data['email'], 
+                form.cleaned_data['password1'])
+            
+            user = authenticate(username=form.cleaned_data['email'], 
                                 password=form.cleaned_data['password1'])
             login(request, user)
         
