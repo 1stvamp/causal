@@ -21,6 +21,7 @@ def history(request):
 
         # final averaged list
         results = []
+        geo_locations = []
         
         params = {
             'user' : request.user,
@@ -50,6 +51,9 @@ def history(request):
                 tweet['created_at'] = tweet['created_at'].replace(' +0000','')
                 tweet['date'] = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y')
                 tweet['info'] = tweet['text']
+                if tweet['coordinates']:
+                    tweet['coordinates'] = {'lat' : tweet['geo']['coordinates'][0], 'long' : tweet['geo']['coordinates'][1]}
+                tweet['class'] = 'twitter'
                 results.append(tweet)
 
             
@@ -81,17 +85,22 @@ def history(request):
                 checkin['created'] = checkin['created'].replace(' +0000', '')
                 checkin['date'] = datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')
                 checkin['info'] = checkin['venue']['name'] 
+                checkin['class'] = 'foursquare'
                 results.append(checkin)            
         
-        url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=bassdread&api_key=09f1c061fc65a7bc08fb3ad95222d16e&format=json'
-        h = httplib2.Http()
-        resp, content = h.request(url, "GET")
-        tracks_listing = simplejson.loads(content)
-        
-        for track in tracks_listing['recenttracks']['track']:
-            a = {'info' : track['artist']['#text'] + ' ' + track['name'],
-                 'date' : datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M')}
-            results.append(a)
+        fm = request.user.lastfmsettings_set.get()
+        if fm:
+            url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=09f1c061fc65a7bc08fb3ad95222d16e&format=json' % fm.username
+            h = httplib2.Http()
+            resp, content = h.request(url, "GET")
+            tracks_listing = simplejson.loads(content)
+            
+            for track in tracks_listing['recenttracks']['track']:
+                if track.has_key('date'):
+                    a = {'info' : track['artist']['#text'] + ' ' + track['name'],
+                         'date' : datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M'),
+                         'class': 'lastfm'}
+                    results.append(a)
 
         if results:    
             results.sort(key=lambda item:item['date'], reverse=True)
@@ -158,6 +167,9 @@ def oauth_callback(request, service=None):
 def register(request):
     form = RegistrationForm()
     
+    if request.user:
+        return HttpResponseRedirect('/history/')
+    
     if request.method == 'POST':
             
         form = RegistrationForm(request.POST)
@@ -192,4 +204,3 @@ def profile(request):
         'form' : form,
         }, 
         context_instance=RequestContext(request))
- 

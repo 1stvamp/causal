@@ -14,7 +14,7 @@
   
   <ul>
   {% for res in results %}
-    <li>
+    <li class="{{res.class}}">
       {{res.date}} : {{res.info}}
     </li>
   {% endfor %}

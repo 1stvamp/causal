@@ -1,8 +1,9 @@
-import os
+import os,settings
 # Django settings for helios project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+SERVE_STATIC = True
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -43,10 +44,10 @@ USE_I18N = True
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale
 USE_L10N = True
-
+PATH_SITE_ROOT = os.path.normpath(os.path.dirname(__file__))
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = os.path.join(PATH_SITE_ROOT, 'static')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).

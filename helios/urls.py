@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-
+import settings
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -29,3 +29,9 @@ urlpatterns = patterns('',
     url(r'^$', 'main.views.register', name='register'),
     url(r'^history/$', 'main.views.history', name='history'),
 )
+
+if settings.SERVE_STATIC:
+	urlpatterns += patterns('',
+	    (r'^static/(?P<path>.*)$', 'django.views.static.serve', {
+	    	'document_root': settings.MEDIA_ROOT }),
+	)
