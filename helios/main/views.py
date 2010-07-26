@@ -88,19 +88,20 @@ def history(request):
                 checkin['class'] = 'foursquare'
                 results.append(checkin)            
         
-        fm = request.user.lastfmsettings_set.get()
-        if fm:
-            url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=09f1c061fc65a7bc08fb3ad95222d16e&format=json' % fm.username
-            h = httplib2.Http()
-            resp, content = h.request(url, "GET")
-            tracks_listing = simplejson.loads(content)
-            
-            for track in tracks_listing['recenttracks']['track']:
-                if track.has_key('date'):
-                    a = {'info' : track['artist']['#text'] + ' ' + track['name'],
-                         'date' : datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M'),
-                         'class': 'lastfm'}
-                    results.append(a)
+        if request.user.lastfmsettings_set.count() > 0:
+            fm = request.user.lastfmsettings_set.get()
+            if fm:
+                url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=09f1c061fc65a7bc08fb3ad95222d16e&format=json' % fm.username
+                h = httplib2.Http()
+                resp, content = h.request(url, "GET")
+                tracks_listing = simplejson.loads(content)
+                
+                for track in tracks_listing['recenttracks']['track']:
+                    if track.has_key('date'):
+                        a = {'info' : track['artist']['#text'] + ' ' + track['name'],
+                             'date' : datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M'),
+                             'class': 'lastfm'}
+                        results.append(a)
 
         if results:    
             results.sort(key=lambda item:item['date'], reverse=True)
@@ -192,6 +193,10 @@ def register(request):
 @login_required(redirect_field_name='redirect_to')
 def profile(request):
     form = LastFMSettingsForm()
+    twitter = None
+    foursquare = None
+    lastfm = None
+    
     if request.POST:
         form = LastFMSettingsForm(request.POST)
         if form.is_valid():
@@ -200,7 +205,17 @@ def profile(request):
             last.username = form.cleaned_data['username']
             last.save()
             
+    else:
+        tokens = request.user.oauthaccesstoken_set.all()
+        for token in tokens:
+            if token.service == 'twitter':
+                twitter = True
+            if token.service == 'foursquare':
+                foursquare = True
+        
     return render_to_response('accounts/profile.html',{
         'form' : form,
+        'twitter' : twitter,
+        'foursquare' : foursquare,
         }, 
         context_instance=RequestContext(request))

@@ -6,5 +6,11 @@
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="save" class="button-submit" />
+    
+    <ul>
+        <li>Four Square Status: {{ foursquare }} </li>
+        <li>Twitter Status: {{ twitter }} </li>
+    </ul>
+    
 </div>
 {% endblock %}
