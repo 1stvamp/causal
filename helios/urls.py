@@ -18,11 +18,12 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
     (r'^admin/', include(admin.site.urls)),
     url(r'^oauth/(?P<service>\w+)/login/$', 'main.views.oauth_login', name='oauth_login'),
-    url(r'^oauth/(?P<service>\w+)/$', 'main.views.oauth_callback', name='oauth_callback'),
+    url(r'^oauth/(?P<service>\w+)/callback$', 'main.views.oauth_callback', name='oauth_callback'),
     
     #users
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'accounts/login.html'}, name='login'),
     url(r'^accounts/register/$', 'main.views.register', name='register'),
+    url(r'^accounts/profile/$', 'main.views.profile', name='register'),
     (r'^password_reset/$',     'django.contrib.auth.views.password_reset'),
     (r'^password_reset/done/$','django.contrib.auth.views.password_reset_done'),
     url(r'^$', 'main.views.register', name='register'),

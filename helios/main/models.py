@@ -18,3 +18,9 @@ class OAuthAccessToken(models.Model):
     oauth_token = models.CharField(max_length=50)
     oauth_token_secret = models.CharField(max_length=50)
     created = models.DateTimeField()
+    
+class LastFMSettings(models.Model):
+    """Settings for last.fm."""
+
+    user = models.ForeignKey(User)
+    username = models.CharField(max_length=50)

@@ -5,8 +5,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 from datetime import datetime
-from models import OAuthAccessToken, OAuthRequestToken
-from forms import RegistrationForm
+from models import OAuthAccessToken, OAuthRequestToken, LastFMSettings
+from forms import RegistrationForm, LastFMSettingsForm
 import oauth2 as oauth
 from settings import OAUTH_APP_SETTINGS
 from django.utils import simplejson
@@ -93,8 +93,6 @@ def history(request):
                  'date' : datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M')}
             results.append(a)
 
-                        
-            
         if results:    
             results.sort(key=lambda item:item['date'], reverse=True)
             template_values['results'] = results
@@ -155,7 +153,7 @@ def oauth_callback(request, service=None):
                                                     
     token_save.save()
     
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/history/')
     
 def register(request):
     form = RegistrationForm()
@@ -178,5 +176,20 @@ def register(request):
         'form' : form,
         }, 
         context_instance=RequestContext(request))
+
+@login_required(redirect_field_name='redirect_to')
+def profile(request):
+    form = LastFMSettingsForm()
+    if request.POST:
+        form = LastFMSettingsForm(request.POST)
+        if form.is_valid():
+            last = LastFMSettings()
+            last.user = request.user
+            last.username = form.cleaned_data['username']
+            last.save()
+            
+    return render_to_response('accounts/profile.html',{
+        'form' : form,
+        }, 
+        context_instance=RequestContext(request))
  
-    
