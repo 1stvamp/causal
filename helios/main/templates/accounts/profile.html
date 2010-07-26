@@ -8,8 +8,20 @@
     <input type="submit" value="save" class="button-submit" />
     
     <ul>
-        <li>Four Square Status: {{ foursquare }} </li>
-        <li>Twitter Status: {{ twitter }} </li>
+        <li>Four Square Status: 
+        {% if foursquare %}
+        Sorted!
+        {% else %}
+        <a href="/oauth/foursquare/login">Login to Four Square</a>
+        {% endif %}
+        </li>
+        <li>Twitter Status: 
+        {% if twitter %}
+        Sorted!
+        {% else %}
+        <a href="/oauth/twitter/login">Login to Twitter</a>
+        {% endif %}
+        </li>
     </ul>
     
 </div>

@@ -205,13 +205,12 @@ def profile(request):
             last.username = form.cleaned_data['username']
             last.save()
             
-    else:
-        tokens = request.user.oauthaccesstoken_set.all()
-        for token in tokens:
-            if token.service == 'twitter':
-                twitter = True
-            if token.service == 'foursquare':
-                foursquare = True
+    tokens = request.user.oauthaccesstoken_set.all()
+    for token in tokens:
+        if token.service == 'twitter':
+            twitter = True
+        if token.service == 'foursquare':
+            foursquare = True
         
     return render_to_response('accounts/profile.html',{
         'form' : form,
