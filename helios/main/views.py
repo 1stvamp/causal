@@ -128,10 +128,10 @@ def history(request):
             results.sort(key=lambda item:item['date'], reverse=True)
             template_values['results'] = results
             
-#        if days:
-#            for day in days:
-#                results.sort(key=lambda item:item['date'], reverse=True)
-#                template_values['results'] = results
+        if days:
+            for day in days:
+                day[day.keys()[0]].sort(key=lambda item:item['date'], reverse=True)
+            template_values['days'] = days
             
         # datetime
 
