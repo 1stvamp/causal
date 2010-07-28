@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
-from datetime import datetime
+from datetime import datetime, timedelta
 from models import OAuthAccessToken, OAuthRequestToken, LastFMSettings
 from forms import RegistrationForm, LastFMSettingsForm
 import oauth2 as oauth
@@ -19,6 +19,14 @@ def history(request):
     
     if request.method == 'GET':
 
+
+        days = []
+        for i in range(0,7):
+            dt = datetime.now()
+            d = timedelta(days=i)
+            a = dt-d
+            days.append({a.strftime('%A') : []})
+        
         # final averaged list
         results = []
         geo_locations = []
@@ -54,6 +62,11 @@ def history(request):
                 if tweet['coordinates']:
                     tweet['coordinates'] = {'lat' : tweet['geo']['coordinates'][0], 'long' : tweet['geo']['coordinates'][1]}
                 tweet['class'] = 'twitter'
+                
+                for day in days:
+                    datet =  datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y')
+                    if day.keys()[0] == datet.strftime('%A'):
+                        day[day.keys()[0]].append(tweet)
                 results.append(tweet)
 
             
@@ -86,6 +99,10 @@ def history(request):
                 checkin['date'] = datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')
                 checkin['info'] = checkin['venue']['name'] 
                 checkin['class'] = 'foursquare'
+                for day in days:
+                    datet =  datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')
+                    if day.keys()[0] == datet.strftime('%A'):
+                        day[day.keys()[0]].append(checkin)
                 results.append(checkin)            
         
         if request.user.lastfmsettings_set.count() > 0:
@@ -101,11 +118,26 @@ def history(request):
                         a = {'info' : track['artist']['#text'] + ' ' + track['name'],
                              'date' : datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M'),
                              'class': 'lastfm'}
+                        for day in days:
+                            datet =  datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M')
+                            if day.keys()[0] == datet.strftime('%A'):
+                                day[day.keys()[0]].append(a)
                         results.append(a)
 
         if results:    
             results.sort(key=lambda item:item['date'], reverse=True)
             template_values['results'] = results
+            
+#        if days:
+#            for day in days:
+#                results.sort(key=lambda item:item['date'], reverse=True)
+#                template_values['results'] = results
+            
+        # datetime
+
+       
+        template_values['days'] = days
+        
             
     return render_to_response('index.html',template_values, 
         context_instance=RequestContext(request))

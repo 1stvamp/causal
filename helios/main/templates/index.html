@@ -1,7 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-  
+
+{% for day in days %}
+{% for key,value in day.items %}
+<h1>{{ key }}</h1>
+<ul>
+{% for i in value %}
+<li class="{{i.class}}">{{i.info}}</li>
+{% endfor %}
+</ul>
+{% endfor %}
+
+{% endfor %}
+
   <ul>
   {% for res in results %}
     <li class="{{res.class}}">
@@ -9,5 +21,4 @@
     </li>
   {% endfor %}
   </ul>
-  
 {% endblock %}
