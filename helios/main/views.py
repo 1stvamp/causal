@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from models import OAuthAccessToken, OAuthRequestToken, LastFMSettings
 from forms import RegistrationForm, LastFMSettingsForm
 import oauth2 as oauth
@@ -21,8 +21,10 @@ def history(request):
 
 
         days = []
+        day_one = date.today() - timedelta(days=7)
+        
         for i in range(0,7):
-            dt = datetime.now()
+            dt = date.today()
             d = timedelta(days=i)
             lasttime = dt-d
             days.append({lasttime.strftime('%A') : []})
@@ -51,7 +53,7 @@ def history(request):
             token = oauth.Token(access_token.oauth_token , access_token.oauth_token_secret)
             
             client = oauth.Client(consumer, token)
-            url = OAUTH_APP_SETTINGS['twitter']['default_api_prefix'] + '/statuses/user_timeline' + OAUTH_APP_SETTINGS['twitter']['default_api_suffix']
+            url = OAUTH_APP_SETTINGS['twitter']['default_api_prefix'] + '/statuses/user_timeline' + OAUTH_APP_SETTINGS['twitter']['default_api_suffix'] + '?count=70'
             resp, content = client.request(url, "GET")
             
             tweets = simplejson.loads(content)
@@ -67,7 +69,7 @@ def history(request):
                 for day in days:
                     datet =  datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y')
                     if day.keys()[0] == datet.strftime('%A')\
-                       and datet > lasttime:
+                       and datet.date() > day_one:
                         day[day.keys()[0]].append(tweet)
                 results.append(tweet)
 
@@ -103,7 +105,7 @@ def history(request):
                 for day in days:
                     datet =  datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')
                     if day.keys()[0] == datet.strftime('%A')\
-                       and datet > lasttime:
+                       and datet.date() > day_one:
                         day[day.keys()[0]].append(checkin)
                 results.append(checkin)            
         
@@ -123,7 +125,7 @@ def history(request):
                         for day in days:
                             datet =  datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M')
                             if day.keys()[0] == datet.strftime('%A')\
-                               and datet > lasttime:
+                               and datet.date() > day_one:
                                 day[day.keys()[0]].append(a)
                         results.append(a)
 
