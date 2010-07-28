@@ -54,10 +54,11 @@ def history(request):
             url = OAUTH_APP_SETTINGS['twitter']['default_api_prefix'] + '/statuses/user_timeline' + OAUTH_APP_SETTINGS['twitter']['default_api_suffix']
             resp, content = client.request(url, "GET")
             
-            template_values['tweets'] = simplejson.loads(content)
-            for tweet in template_values['tweets']:
+            tweets = simplejson.loads(content)
+            for tweet in tweets:
+                hour = timedelta(hours=1)
                 tweet['created_at'] = tweet['created_at'].replace(' +0000','')
-                tweet['date'] = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y')
+                tweet['date'] = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y') + hour
                 tweet['info'] = tweet['text']
                 if tweet['coordinates']:
                     tweet['coordinates'] = {'lat' : tweet['geo']['coordinates'][0], 'long' : tweet['geo']['coordinates'][1]}
@@ -92,12 +93,11 @@ def history(request):
             client = oauth.Client(consumer, token)
             url = OAUTH_APP_SETTINGS['foursquare']['default_api_prefix'] + '/v1/history'+ OAUTH_APP_SETTINGS['foursquare']['default_api_suffix']
             resp, content = client.request(url, "GET")
-            
-            template_values['checkins'] = simplejson.loads(content)
-        
-            for checkin in template_values['checkins']['checkins']:
+            checkins = simplejson.loads(content)
+            for checkin in checkins['checkins']:
+                hour = timedelta(hours=1)
                 checkin['created'] = checkin['created'].replace(' +0000', '')
-                checkin['date'] = datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')
+                checkin['date'] = datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')+ hour
                 checkin['info'] = checkin['venue']['name'] 
                 checkin['class'] = 'foursquare'
                 for day in days:
@@ -114,15 +114,16 @@ def history(request):
                 h = httplib2.Http()
                 resp, content = h.request(url, "GET")
                 tracks_listing = simplejson.loads(content)
-                
+                hour = timedelta(hours=1)
                 for track in tracks_listing['recenttracks']['track']:
                     if track.has_key('date'):
                         a = {'info' : track['artist']['#text'] + ' ' + track['name'],
-                             'date' : datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M'),
+                             'date' : datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M') + hour,
                              'class': 'lastfm'}
                         for day in days:
                             datet =  datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M')
-                            if day.keys()[0] == datet.strftime('%A'):
+                            if day.keys()[0] == datet.strftime('%A')\
+                               and datet > lasttime:
                                 day[day.keys()[0]].append(a)
                         results.append(a)
 

@@ -7,18 +7,12 @@
 <h1>{{ key }}</h1>
 <ul>
 {% for i in value %}
-<li class="{{i.class}}">{{i.date}}:{{i.info}}</li>
+<li class="{{i.class}}"><img src="/static/images/{{i.class}}.jpg"/>{{i.date}}:{{i.info}}</li>
 {% endfor %}
 </ul>
 {% endfor %}
 
 {% endfor %}
 
-  <ul>
-  {% for res in results %}
-    <li class="{{res.class}}">
-      {{res.date}} : {{res.info}}
-    </li>
-  {% endfor %}
-  </ul>
+
 {% endblock %}
