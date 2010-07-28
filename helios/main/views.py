@@ -24,8 +24,8 @@ def history(request):
         for i in range(0,7):
             dt = datetime.now()
             d = timedelta(days=i)
-            a = dt-d
-            days.append({a.strftime('%A') : []})
+            lasttime = dt-d
+            days.append({lasttime.strftime('%A') : []})
         
         # final averaged list
         results = []
@@ -65,7 +65,8 @@ def history(request):
                 
                 for day in days:
                     datet =  datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y')
-                    if day.keys()[0] == datet.strftime('%A'):
+                    if day.keys()[0] == datet.strftime('%A')\
+                       and datet > lasttime:
                         day[day.keys()[0]].append(tweet)
                 results.append(tweet)
 
@@ -101,7 +102,8 @@ def history(request):
                 checkin['class'] = 'foursquare'
                 for day in days:
                     datet =  datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')
-                    if day.keys()[0] == datet.strftime('%A'):
+                    if day.keys()[0] == datet.strftime('%A')\
+                       and datet > lasttime:
                         day[day.keys()[0]].append(checkin)
                 results.append(checkin)            
         
