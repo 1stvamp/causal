@@ -1,4 +1,4 @@
-from main.models import OAuthAccessToken, OAuthRequestToken, LastFMSettings, GitHubSettings
+from main.models import OAuthAccessToken, OAuthRequestToken, LastFMSettings
 from django.contrib import admin
 
 class OAuthAccessTokenAdmin(admin.ModelAdmin):
