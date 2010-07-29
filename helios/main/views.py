@@ -12,6 +12,23 @@ from settings import OAUTH_APP_SETTINGS
 from django.utils import simplejson
 import httplib2
 
+def get_access_token(service):
+    """Get token if it exists for the service specified."""
+     
+    access_token = None
+     
+    params = {
+            'user' : request.user,
+            'service' : service,
+       }
+     
+    access_token_list = OAuthAccessToken.objects.filter(**params)
+     
+    if access_token_list:
+        access_token = access_token_list[0]
+     
+    return access_token
+
 @login_required(redirect_field_name='redirect_to')
 def history(request):
 
@@ -30,23 +47,11 @@ def history(request):
             days.append({lasttime.strftime('%A') : []})
 
         # final averaged list
-        results = []
         geo_locations = []
 
-        params = {
-            'user' : request.user,
-            'service' : 'twitter',
-        }
-
-        access_token_list = OAuthAccessToken.objects.filter(**params)
-
-        ############################################################
-        #
-        #Fetch tweets if we have a token
-        #
-        ############################################################
-        if access_token_list:
-            access_token = access_token_list[0]
+        access_token = get_access_token('twitter')
+        
+        if access_token:
 
             consumer = oauth.Consumer(OAUTH_APP_SETTINGS['twitter']['consumer_key'],
                                       OAUTH_APP_SETTINGS['twitter']['consumer_secret'])
@@ -71,23 +76,10 @@ def history(request):
                     if day.keys()[0] == datet.strftime('%A')\
                        and datet.date() > day_one:
                         day[day.keys()[0]].append(tweet)
-                results.append(tweet)
 
-
-        params = {
-        'user' : request.user,
-        'service' : 'foursquare',
-        }
-
-        access_token_list = OAuthAccessToken.objects.filter(**params)
-        ###############################################################
-        #
-        # fetch checkins from foursquare if token
-        #
-        ###############################################################
-        if access_token_list:
-            access_token = access_token_list[0]
-
+        access_token = get_access_token('twitter')
+        
+        if access_token:
             consumer = oauth.Consumer(OAUTH_APP_SETTINGS['foursquare']['consumer_key'],
                                       OAUTH_APP_SETTINGS['foursquare']['consumer_secret'])
             token = oauth.Token(access_token.oauth_token , access_token.oauth_token_secret)
