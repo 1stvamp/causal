@@ -1,151 +1,55 @@
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render_to_response
-from django.template import RequestContext
-from django.http import HttpResponse, HttpResponseRedirect
 from datetime import datetime, timedelta, date
-from models import OAuthAccessToken, OAuthRequestToken, LastFMSettings
-from forms import RegistrationForm, LastFMSettingsForm
-import oauth2 as oauth
-from settings import OAUTH_APP_SETTINGS
-from django.utils import simplejson
-import httplib2
+
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render_to_response
+from django.contrib.auth.models import User
+from django.template import RequestContext
+
+from helios.main.forms import RegistrationForm
+from helios.main.models import *
 
 @login_required(redirect_field_name='redirect_to')
 def history(request):
-
     template_values = {}
 
     if request.method == 'GET':
-
+        services = Service.objects.filter(user=request.user)
+        template_values['services'] = services
 
         days = []
+        day_names = {}
+        days_to_i = {}
         day_one = date.today() - timedelta(days=7)
 
         for i in range(0,7):
-            dt = date.today()
-            d = timedelta(days=i)
-            lasttime = dt-d
-            days.append({lasttime.strftime('%A') : []})
+            today = date.today()
+            last = today - timedelta(days=i)
+            days.append([])
+            day_names[i] = last.strftime('%A')
+            days_to_i[day_names[i]] = i
 
-        # final averaged list
-        results = []
-        geo_locations = []
-
-        params = {
-            'user' : request.user,
-            'service' : 'twitter',
-        }
-
-        access_token_list = OAuthAccessToken.objects.filter(**params)
-
-        ############################################################
-        #
-        #Fetch tweets if we have a token
-        #
-        ############################################################
-        if access_token_list:
-            access_token = access_token_list[0]
-
-            consumer = oauth.Consumer(OAUTH_APP_SETTINGS['twitter']['consumer_key'],
-                                      OAUTH_APP_SETTINGS['twitter']['consumer_secret'])
-            token = oauth.Token(access_token.oauth_token , access_token.oauth_token_secret)
-
-            client = oauth.Client(consumer, token)
-            url = OAUTH_APP_SETTINGS['twitter']['default_api_prefix'] + '/statuses/user_timeline' + OAUTH_APP_SETTINGS['twitter']['default_api_suffix'] + '?count=70'
-            resp, content = client.request(url, "GET")
-
-            tweets = simplejson.loads(content)
-            for tweet in tweets:
-                hour = timedelta(hours=1)
-                tweet['created_at'] = tweet['created_at'].replace(' +0000','')
-                tweet['date'] = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y') + hour
-                tweet['info'] = tweet['text']
-                if tweet['coordinates']:
-                    tweet['coordinates'] = {'lat' : tweet['geo']['coordinates'][0], 'long' : tweet['geo']['coordinates'][1]}
-                tweet['class'] = 'twitter'
-
-                for day in days:
-                    datet =  datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y')
-                    if day.keys()[0] == datet.strftime('%A')\
-                       and datet.date() > day_one:
-                        day[day.keys()[0]].append(tweet)
-                results.append(tweet)
-
-
-        params = {
-        'user' : request.user,
-        'service' : 'foursquare',
-        }
-
-        access_token_list = OAuthAccessToken.objects.filter(**params)
-        ###############################################################
-        #
-        # fetch checkins from foursquare if token
-        #
-        ###############################################################
-        if access_token_list:
-            access_token = access_token_list[0]
-
-            consumer = oauth.Consumer(OAUTH_APP_SETTINGS['foursquare']['consumer_key'],
-                                      OAUTH_APP_SETTINGS['foursquare']['consumer_secret'])
-            token = oauth.Token(access_token.oauth_token , access_token.oauth_token_secret)
-
-            client = oauth.Client(consumer, token)
-            url = OAUTH_APP_SETTINGS['foursquare']['default_api_prefix'] + '/v1/history'+ OAUTH_APP_SETTINGS['foursquare']['default_api_suffix']
-            resp, content = client.request(url, "GET")
-            checkins = simplejson.loads(content)
-            for checkin in checkins['checkins']:
-                hour = timedelta(hours=1)
-                checkin['created'] = checkin['created'].replace(' +0000', '')
-                checkin['date'] = datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')+ hour
-                checkin['info'] = checkin['venue']['name']
-                checkin['class'] = 'foursquare'
-                for day in days:
-                    datet =  datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')
-                    if day.keys()[0] == datet.strftime('%A')\
-                       and datet.date() > day_one:
-                        day[day.keys()[0]].append(checkin)
-                results.append(checkin)
-
-        if request.user.lastfmsettings_set.count() > 0:
-            fm = request.user.lastfmsettings_set.get()
-            if fm:
-                url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=09f1c061fc65a7bc08fb3ad95222d16e&format=json' % fm.username
-                h = httplib2.Http()
-                resp, content = h.request(url, "GET")
-                tracks_listing = simplejson.loads(content)
-                hour = timedelta(hours=1)
-                for track in tracks_listing['recenttracks']['track']:
-                    if track.has_key('date'):
-                        a = {'info' : track['artist']['#text'] + ' ' + track['name'],
-                             'date' : datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M') + hour,
-                             'class': 'lastfm'}
-                        for day in days:
-                            datet =  datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M')
-                            if day.keys()[0] == datet.strftime('%A')\
-                               and datet.date() > day_one:
-                                day[day.keys()[0]].append(a)
-                        results.append(a)
-
-        if results:
-            results.sort(key=lambda item:item['date'], reverse=True)
-            template_values['results'] = results
+        for service in services:
+            app = service.app
+            items = app.utils.get_items(user=request.user)
+            for item in items:
+                if item.created.date > day_one:
+                    days[days_to_i[item.created.strftime('%A')]].append(item)
 
         if days:
             for day in days:
-                day[day.keys()[0]].sort(key=lambda item:item['date'], reverse=True)
+                day.sort(key=lambda item:item.created.date, reverse=True)
             template_values['days'] = days
 
-        # datetime
-
-
         template_values['days'] = days
+        template_values['day_names'] = day_names
 
-
-    return render_to_response('index.html',template_values,
-        context_instance=RequestContext(request))
+    return render_to_response(
+        'index.html',
+        template_values,
+        context_instance=RequestContext(request)
+    )
 
 @login_required(redirect_field_name='redirect_to')
 def oauth_login(request, service=None):
