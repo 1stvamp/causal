@@ -4,6 +4,12 @@ import settings
 from django.contrib import admin
 admin.autodiscover()
 
+if settings.DEBUG:
+    try:
+        import helios.wingdbstub
+    except ImportError:
+        pass
+
 urlpatterns = patterns('',
     # Example:
     # (r'^helios/', include('helios.foo.urls')),
