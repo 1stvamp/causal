@@ -2,14 +2,14 @@
 {% load extras %}
 
 {% block content %}
-    {% for day in days %}
-        {% for key, value in day %}
-            <h1>{{ day_names|get:key }}</h1>
+    {% for items in days %}
+        <h1>{{ day_names|get:forloop.counter0 }}</h1>
+        {% if day %}
             <ul>
-            {% for item in value %}
-                <li class="{{ item.class_name }}"><img src="/static/images/{{ item.class_name }}.jpg"/>{{ item.created.date }}:{{ item.body }}</li>
-            {% endfor %}
+                {% for item in items %}
+                    <li class="{{ item.class_name }}"><img src="/static/images/{{ item.class_name }}.jpg"/>{{ item.created.date }}:{{ item.body }}</li>
+                {% endfor %}
             </ul>
-        {% endfor %}
+        {% endif %}
     {% endfor %}
 {% endblock %}
