@@ -205,7 +205,7 @@ def oauth_callback(request, service=None):
 def register(request):
     form = RegistrationForm()
 
-    if request.user:
+    if request.user.is_authenticated():
         return HttpResponseRedirect('/history/')
 
     if request.method == 'POST':
