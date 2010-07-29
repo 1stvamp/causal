@@ -12,13 +12,13 @@ from settings import OAUTH_APP_SETTINGS
 from django.utils import simplejson
 import httplib2
 
-def get_access_token(service):
+def get_access_token(service, user):
     """Get token if it exists for the service specified."""
      
     access_token = None
      
     params = {
-            'user' : request.user,
+            'user' : user,
             'service' : service,
        }
      
@@ -49,7 +49,7 @@ def history(request):
         # final averaged list
         geo_locations = []
 
-        access_token = get_access_token('twitter')
+        access_token = get_access_token('twitter', request.user)
         
         if access_token:
 
@@ -77,7 +77,7 @@ def history(request):
                        and datet.date() > day_one:
                         day[day.keys()[0]].append(tweet)
 
-        access_token = get_access_token('twitter')
+        access_token = get_access_token('foursquare', request.user)
         
         if access_token:
             consumer = oauth.Consumer(OAUTH_APP_SETTINGS['foursquare']['consumer_key'],
@@ -99,7 +99,6 @@ def history(request):
                     if day.keys()[0] == datet.strftime('%A')\
                        and datet.date() > day_one:
                         day[day.keys()[0]].append(checkin)
-                results.append(checkin)
 
         if request.user.lastfmsettings_set.count() > 0:
             fm = request.user.lastfmsettings_set.get()
@@ -119,22 +118,10 @@ def history(request):
                             if day.keys()[0] == datet.strftime('%A')\
                                and datet.date() > day_one:
                                 day[day.keys()[0]].append(a)
-                        results.append(a)
-
-        if results:
-            results.sort(key=lambda item:item['date'], reverse=True)
-            template_values['results'] = results
-
         if days:
             for day in days:
                 day[day.keys()[0]].sort(key=lambda item:item['date'], reverse=True)
             template_values['days'] = days
-
-        # datetime
-
-
-        template_values['days'] = days
-
 
     return render_to_response('index.html',template_values,
         context_instance=RequestContext(request))
