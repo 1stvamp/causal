@@ -3,7 +3,7 @@
 {% block content %}
 
 {% for day in days %}
-{% for key,value in day.items %}
+{% for key,value in day.iteritems %}
 <h1>{{ key }}</h1>
 <ul>
 {% for i in value %}
