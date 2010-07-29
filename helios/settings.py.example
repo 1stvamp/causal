@@ -93,9 +93,18 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     # Uncomment the next line to enable the admin:
-    'django.contrib.admin',
+    #'django.contrib.admin',
     'south',
-    'main',
+    'helios.main',
+
+    # Service apps, uncomment if you want 'em
+    #'helios.twitter',
+    #'helios.foursquare',
+    #'helios.flickr',
+    #'helios.feed',
+    #'helios.facebook',
+    #'helios.github',
+    #'helios.lastfm',
 )
 
 AUTHENTICATION_BACKENDS = (
