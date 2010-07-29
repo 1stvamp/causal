@@ -14,30 +14,30 @@ import httplib2
 
 @login_required(redirect_field_name='redirect_to')
 def history(request):
-    
+
     template_values = {}
-    
+
     if request.method == 'GET':
 
 
         days = []
         day_one = date.today() - timedelta(days=7)
-        
+
         for i in range(0,7):
             dt = date.today()
             d = timedelta(days=i)
             lasttime = dt-d
             days.append({lasttime.strftime('%A') : []})
-        
+
         # final averaged list
         results = []
         geo_locations = []
-        
+
         params = {
             'user' : request.user,
             'service' : 'twitter',
         }
-    
+
         access_token_list = OAuthAccessToken.objects.filter(**params)
 
         ############################################################
@@ -47,15 +47,15 @@ def history(request):
         ############################################################
         if access_token_list:
             access_token = access_token_list[0]
-            
-            consumer = oauth.Consumer(OAUTH_APP_SETTINGS['twitter']['consumer_key'], 
+
+            consumer = oauth.Consumer(OAUTH_APP_SETTINGS['twitter']['consumer_key'],
                                       OAUTH_APP_SETTINGS['twitter']['consumer_secret'])
             token = oauth.Token(access_token.oauth_token , access_token.oauth_token_secret)
-            
+
             client = oauth.Client(consumer, token)
             url = OAUTH_APP_SETTINGS['twitter']['default_api_prefix'] + '/statuses/user_timeline' + OAUTH_APP_SETTINGS['twitter']['default_api_suffix'] + '?count=70'
             resp, content = client.request(url, "GET")
-            
+
             tweets = simplejson.loads(content)
             for tweet in tweets:
                 hour = timedelta(hours=1)
@@ -65,7 +65,7 @@ def history(request):
                 if tweet['coordinates']:
                     tweet['coordinates'] = {'lat' : tweet['geo']['coordinates'][0], 'long' : tweet['geo']['coordinates'][1]}
                 tweet['class'] = 'twitter'
-                
+
                 for day in days:
                     datet =  datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y')
                     if day.keys()[0] == datet.strftime('%A')\
@@ -73,12 +73,12 @@ def history(request):
                         day[day.keys()[0]].append(tweet)
                 results.append(tweet)
 
-            
+
         params = {
         'user' : request.user,
         'service' : 'foursquare',
         }
-    
+
         access_token_list = OAuthAccessToken.objects.filter(**params)
         ###############################################################
         #
@@ -87,11 +87,11 @@ def history(request):
         ###############################################################
         if access_token_list:
             access_token = access_token_list[0]
-            
-            consumer = oauth.Consumer(OAUTH_APP_SETTINGS['foursquare']['consumer_key'], 
+
+            consumer = oauth.Consumer(OAUTH_APP_SETTINGS['foursquare']['consumer_key'],
                                       OAUTH_APP_SETTINGS['foursquare']['consumer_secret'])
             token = oauth.Token(access_token.oauth_token , access_token.oauth_token_secret)
-            
+
             client = oauth.Client(consumer, token)
             url = OAUTH_APP_SETTINGS['foursquare']['default_api_prefix'] + '/v1/history'+ OAUTH_APP_SETTINGS['foursquare']['default_api_suffix']
             resp, content = client.request(url, "GET")
@@ -100,15 +100,15 @@ def history(request):
                 hour = timedelta(hours=1)
                 checkin['created'] = checkin['created'].replace(' +0000', '')
                 checkin['date'] = datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')+ hour
-                checkin['info'] = checkin['venue']['name'] 
+                checkin['info'] = checkin['venue']['name']
                 checkin['class'] = 'foursquare'
                 for day in days:
                     datet =  datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')
                     if day.keys()[0] == datet.strftime('%A')\
                        and datet.date() > day_one:
                         day[day.keys()[0]].append(checkin)
-                results.append(checkin)            
-        
+                results.append(checkin)
+
         if request.user.lastfmsettings_set.count() > 0:
             fm = request.user.lastfmsettings_set.get()
             if fm:
@@ -129,40 +129,40 @@ def history(request):
                                 day[day.keys()[0]].append(a)
                         results.append(a)
 
-        if results:    
+        if results:
             results.sort(key=lambda item:item['date'], reverse=True)
             template_values['results'] = results
-            
+
         if days:
             for day in days:
                 day[day.keys()[0]].sort(key=lambda item:item['date'], reverse=True)
             template_values['days'] = days
-            
+
         # datetime
 
-       
+
         template_values['days'] = days
-        
-            
-    return render_to_response('index.html',template_values, 
+
+
+    return render_to_response('index.html',template_values,
         context_instance=RequestContext(request))
 
 @login_required(redirect_field_name='redirect_to')
 def oauth_login(request, service=None):
-    
+
     if request.method == 'GET':
         oauth_details = OAUTH_APP_SETTINGS[service]
-        consumer = oauth.Consumer(OAUTH_APP_SETTINGS[service]['consumer_key'], 
+        consumer = oauth.Consumer(OAUTH_APP_SETTINGS[service]['consumer_key'],
                                   OAUTH_APP_SETTINGS[service]['consumer_secret'])
-        
+
         client = oauth.Client(consumer)
         resp, content = client.request(oauth_details['request_token_url'], "GET")
-        
+
         if resp['status'] != '200':
             print "fail"
-            
+
         request_token_params = dict((token.split('=') for token in content.split('&')))
-        
+
         token = OAuthRequestToken()
         token.service=service
         token.user = request.user
@@ -170,61 +170,61 @@ def oauth_login(request, service=None):
         token.oauth_token_secret = request_token_params['oauth_token_secret']
         token.created = datetime.now()
         token.save()
-        
-    return HttpResponseRedirect("%s?oauth_token=%s" % (oauth_details['user_auth_url'], 
+
+    return HttpResponseRedirect("%s?oauth_token=%s" % (oauth_details['user_auth_url'],
                                          request_token_params['oauth_token']))
 
 def oauth_callback(request, service=None):
-    consumer = oauth.Consumer(OAUTH_APP_SETTINGS[service]['consumer_key'], 
+    consumer = oauth.Consumer(OAUTH_APP_SETTINGS[service]['consumer_key'],
                                   OAUTH_APP_SETTINGS[service]['consumer_secret'])
-    
+
     params = {
         'oauth_token' : request.GET['oauth_token'],
         'service' : service,
         }
-    
+
     request_token = OAuthRequestToken.objects.filter(**params)[0]
-    
+
     token = oauth.Token(request_token.oauth_token, request_token.oauth_token_secret)
     client = oauth.Client(consumer, token)
     resp, content = client.request(OAUTH_APP_SETTINGS[service]['access_token_url'], "POST")
 
     access_token = dict((token.split('=') for token in content.split('&')))
-    
+
     token_save = OAuthAccessToken()
     token_save.service=service
     token_save.user=request.user
     token_save.create=datetime.now()
     token_save.oauth_token=access_token['oauth_token']
     token_save.oauth_token_secret=access_token['oauth_token_secret']
-                                                    
+
     token_save.save()
-    
+
     return HttpResponseRedirect('/history/')
-    
+
 def register(request):
     form = RegistrationForm()
-    
+
     if request.user:
         return HttpResponseRedirect('/history/')
-    
+
     if request.method == 'POST':
-            
+
         form = RegistrationForm(request.POST)
         if form.is_valid():
             User.objects.create_user(form.cleaned_data['email'],
-                form.cleaned_data['email'], 
+                form.cleaned_data['email'],
                 form.cleaned_data['password1'])
-            
-            user = authenticate(username=form.cleaned_data['email'], 
+
+            user = authenticate(username=form.cleaned_data['email'],
                                 password=form.cleaned_data['password1'])
             login(request, user)
-        
+
             return HttpResponseRedirect('/history/')
-    
+
     return render_to_response('accounts/register.html',{
         'form' : form,
-        }, 
+        },
         context_instance=RequestContext(request))
 
 @login_required(redirect_field_name='redirect_to')
@@ -233,7 +233,7 @@ def profile(request):
     twitter = None
     foursquare = None
     lastfm = None
-    
+
     if request.POST:
         form = LastFMSettingsForm(request.POST)
         if form.is_valid():
@@ -241,17 +241,17 @@ def profile(request):
             last.user = request.user
             last.username = form.cleaned_data['username']
             last.save()
-            
+
     tokens = request.user.oauthaccesstoken_set.all()
     for token in tokens:
         if token.service == 'twitter':
             twitter = True
         if token.service == 'foursquare':
             foursquare = True
-        
+
     return render_to_response('accounts/profile.html',{
         'form' : form,
         'twitter' : twitter,
         'foursquare' : foursquare,
-        }, 
+        },
         context_instance=RequestContext(request))
