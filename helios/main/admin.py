@@ -1,13 +1,13 @@
 from main.models import *
 from django.contrib import admin
 
-class OAuthAccessTokenAdmin(admin.ModelAdmin):
+class AccessTokenAdmin(admin.ModelAdmin):
     pass
-admin.site.register(OAuthAccessToken, OAuthAccessTokenAdmin)
+admin.site.register(AccessToken, AccessTokenAdmin)
 
-class OAuthRequestTokenAdmin(admin.ModelAdmin):
+class RequestTokenAdmin(admin.ModelAdmin):
     pass
-admin.site.register(OAuthRequestToken, OAuthRequestTokenAdmin)
+admin.site.register(RequestToken, RequestTokenAdmin)
 
 class ServiceAdmin(admin.ModelAdmin):
     pass
