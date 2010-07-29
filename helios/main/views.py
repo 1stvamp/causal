@@ -118,14 +118,38 @@ def history(request):
                             if day.keys()[0] == datet.strftime('%A')\
                                and datet.date() > day_one:
                                 day[day.keys()[0]].append(a)
-        if days:
+
+
+        # http://github.com/api/v2/json/repos/show/bassdread
+        url = 'http://github.com/api/v2/json/repos/show/bassdread'
+        h = httplib2.Http()
+        resp, content = h.request(url, "GET")
+        
+        git_hub = simplejson.loads(content)
+        
+        for repo in git_hub['repositories']:
+            pushed = repo['pushed_at']
+            utc_offset = pushed.split(' ')[2]
+	    utc_offset = utc_offset[:3]
+	    if utc_offset.startswith('-'):
+		utc_offset = utc_offset.replace('-', '')
+	    utc_offset_delta = timedelta(hours=int(utc_offset))
+	    pushed = datetime.strptime(pushed.rsplit(' ', 1)[0], '%Y/%m/%d %H:%M:%S')
+	    pushed = pushed + utc_offset_delta
+	    record = { 'info' : repo['name'],
+	        'date' : pushed,
+	        'class' : 'github'
+	        }
+	    for day in days:
+		if day.keys()[0] == record['date'].strftime('%A')\
+	           and record['date'].date() > day_one:
+		    day[day.keys()[0]].append(record)
+
+	    
+	if days:
             for day in days:
                 day[day.keys()[0]].sort(key=lambda item:item['date'], reverse=True)
             template_values['days'] = days
-
-        # http://github.com/api/v2/json/repos/show/bassdread
-        
-        
             
     return render_to_response('index.html',template_values,
         context_instance=RequestContext(request))
