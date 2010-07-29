@@ -19,8 +19,3 @@ class LastFMSettingsAdmin(admin.ModelAdmin):
     list_display = ('username',)
     
 admin.site.register(LastFMSettings, LastFMSettingsAdmin)
-
-class GitHubSettingsAdmin(admin.ModelAdmin):
-    list_display = ('username',)
-    
-admin.site.register(GitHubSettings, GitHubSettingsAdmin)  

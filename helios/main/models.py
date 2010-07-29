@@ -24,9 +24,3 @@ class LastFMSettings(models.Model):
 
     user = models.ForeignKey(User)
     username = models.CharField(max_length=50)
-    
-class GitHubSettings(models.Model):
-    """Settings for github."""
-
-    user = models.ForeignKey(User)
-    username = models.CharField(max_length=50)
