@@ -120,31 +120,42 @@ def history(request):
                                 day[day.keys()[0]].append(a)
 
 
+        # get repo list http://github.com/api/v2/json/repos/show/bassdread
+	# get commits for repo thus http://github.com/api/v2/json/commits/list/bassdread/helios/master
+	# sort by date
+				
         # http://github.com/api/v2/json/repos/show/bassdread
         url = 'http://github.com/api/v2/json/repos/show/bassdread'
         h = httplib2.Http()
         resp, content = h.request(url, "GET")
         
         git_hub = simplejson.loads(content)
-        
+        repos = []
         for repo in git_hub['repositories']:
-            pushed = repo['pushed_at']
-            utc_offset = pushed.split(' ')[2]
-	    utc_offset = utc_offset[:3]
-	    if utc_offset.startswith('-'):
-		utc_offset = utc_offset.replace('-', '')
-	    utc_offset_delta = timedelta(hours=int(utc_offset))
-	    pushed = datetime.strptime(pushed.rsplit(' ', 1)[0], '%Y/%m/%d %H:%M:%S')
-	    pushed = pushed + utc_offset_delta
-	    record = { 'info' : repo['name'],
-	        'date' : pushed,
-	        'class' : 'github'
-	        }
-	    for day in days:
-		if day.keys()[0] == record['date'].strftime('%A')\
-	           and record['date'].date() > day_one:
-		    day[day.keys()[0]].append(record)
-
+	    
+	                 
+	    url = 'http://github.com/api/v2/json/commits/list/bassdread/%s/master' % repo['name']
+	    resp, content = h.request(url, "GET")
+	    commits = simplejson.loads(content)
+	    
+	    for commit in commits['commits']:
+		commited_datetime = commit['committed_date']
+		utc_offset = commited_datetime.rsplit('-', 1)[1]
+		utc_offset = utc_offset[:2]
+		utc_offset_delta = timedelta(hours=int(utc_offset))
+		
+		commited_datetime = datetime.strptime(commited_datetime.rsplit('-', 1)[0], '%Y-%m-%dT%H:%M:%S')
+		commited_datetime = commited_datetime + utc_offset_delta
+		record = { 
+		    'info' : 'Project: ' + repo['name'],
+		    'date' : commited_datetime,
+		    'class' : 'github'
+		}
+		
+		for day in days:
+		    if day.keys()[0] == record['date'].strftime('%A')\
+		       and record['date'].date() > day_one:
+			day[day.keys()[0]].append(record)
 	    
 	if days:
             for day in days:
