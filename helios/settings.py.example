@@ -96,8 +96,8 @@ INSTALLED_APPS = (
     #'django.contrib.admin',
     'south',
     'helios.main',
-
-    # Service apps, uncomment if you want 'em
+)
+INSTALLED_SERVICES = (
     #'helios.twitter',
     #'helios.foursquare',
     #'helios.flickr',
@@ -106,6 +106,7 @@ INSTALLED_APPS = (
     #'helios.github',
     #'helios.lastfm',
 )
+INSTALLED_APPS += INSTALLED_SERVICES
 
 AUTHENTICATION_BACKENDS = (
     'main.email-auth.EmailBackend',
