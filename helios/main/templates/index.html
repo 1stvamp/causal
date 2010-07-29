@@ -7,7 +7,7 @@
 <h1>{{ key }}</h1>
 <ul>
 {% for i in value %}
-<li class="{{i.class}}"><img src="/static/images/{{i.class}}.jpg"/>{{i.date}}:{{i.info}}</li>
+<li class="{{i.class}}"><img src="/static/images/{{i.class}}.jpg"/>{{i.date}} : {{i.info}} : Commit message: {{i.message}}</li>
 {% endfor %}
 </ul>
 {% endfor %}

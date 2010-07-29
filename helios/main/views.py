@@ -149,7 +149,8 @@ def history(request):
 		record = { 
 		    'info' : 'Project: ' + repo['name'],
 		    'date' : commited_datetime,
-		    'class' : 'github'
+		    'class' : 'github',
+		    'message' : commit['message'],
 		}
 		
 		for day in days:
