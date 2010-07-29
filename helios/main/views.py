@@ -123,6 +123,10 @@ def history(request):
                 day[day.keys()[0]].sort(key=lambda item:item['date'], reverse=True)
             template_values['days'] = days
 
+        # http://github.com/api/v2/json/repos/show/bassdread
+        
+        
+            
     return render_to_response('index.html',template_values,
         context_instance=RequestContext(request))
 

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from models import LastFMSettings
+from models import LastFMSettings, GitHubSettings
 
 attrs_dict = { 'class': 'required' }
 
@@ -10,7 +10,12 @@ class LastFMSettingsForm(forms.ModelForm):
         model = LastFMSettings
         exclude =('user')
 
-
+class GitHubSettingsForm(forms.ModelForm):
+     
+    class Meta:
+        model = GitHubSettings
+        exclude =('user')
+        
 attrs_dict = { 'class': 'required' }
 
 class RegistrationForm(forms.Form):

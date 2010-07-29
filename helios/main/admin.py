@@ -1,4 +1,4 @@
-from main.models import OAuthAccessToken, OAuthRequestToken, LastFMSettings
+from main.models import OAuthAccessToken, OAuthRequestToken, LastFMSettings, GitHubSettings
 from django.contrib import admin
 
 class OAuthAccessTokenAdmin(admin.ModelAdmin):
@@ -18,4 +18,9 @@ admin.site.register(OAuthRequestToken, OAuthRequestTokenAdmin)
 class LastFMSettingsAdmin(admin.ModelAdmin):
     list_display = ('username',)
     
-admin.site.register(LastFMSettings, LastFMSettingsAdmin)  
+admin.site.register(LastFMSettings, LastFMSettingsAdmin)
+
+class GitHubSettingsAdmin(admin.ModelAdmin):
+    list_display = ('username',)
+    
+admin.site.register(GitHubSettings, GitHubSettingsAdmin)  
