@@ -31,11 +31,11 @@ def history(request):
             days_to_i[day_names[i]] = i
 
         for service in services:
-            app = service.app
-            items = app.service.get_items(request.user, day_one, service)
-            for item in items:
-                if item.created.date > day_one:
-                    days[days_to_i[item.created.strftime('%A')]].append(item)
+            items = service.service_module.get_items(request.user, day_one, service)
+            if items:
+                for item in items:
+                    if item.created.date > day_one:
+                        days[days_to_i[item.created.strftime('%A')]].append(item)
 
         if days:
             for day in days:

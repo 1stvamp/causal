@@ -12,11 +12,7 @@ def get_items(user, since, model_instance=None):
 
     api = get_api(serv)
     if not api:
-        r = user_login(serv)
-        if r:
-            return r
-        else:
-            return items
+        return False
 
     timeline = api.search(
         "from:%s" % (api.me.screen_name),

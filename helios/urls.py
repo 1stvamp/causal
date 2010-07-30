@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import *
-import settings
+from django.conf import settings
+from django.utils.importlib import import_module
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -21,8 +22,6 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls), name='admin'),
     url(r'^oauth/', include(admin.site.urls), name='oath'),
-    url(r'^oauth/(?P<service>\w+)/login/$', 'main.views.oauth_login', name='oauth_login'),
-    url(r'^oauth/(?P<service>\w+)/callback$', 'main.views.oauth_callback', name='oauth_callback'),
 
     #users
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'accounts/login.html'}, name='login'),
@@ -33,6 +32,13 @@ urlpatterns = patterns('',
     url(r'^$', 'main.views.register', name='register'),
     url(r'^history/$', 'main.views.history', name='history'),
 )
+
+for service_name in settings.INSTALLED_SERVICES:
+    service_urls = import_module("%s.urls" % (service_name,))
+    if service_urls:
+	urlpatterns += patterns('',
+	    url(service_urls.base_path, include(service_urls), name=service_urls.shortcut),
+	)
 
 if settings.SERVE_STATIC:
 	urlpatterns += patterns('',

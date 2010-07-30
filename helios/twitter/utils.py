@@ -1,12 +1,13 @@
 import tweepy
 from datetime import datetime
 from django.shortcuts import redirect
+from django.core.urlresolvers import reverse
 
 from helios.main.models import RequestToken, AccessToken
 
 def _auth(oauth, cust_callback_url=None):
-    callback = cust_callback_url or oauth.default_api_suffix
-    callback = "%s%s" % (oauth.default_api_prefix, callback,)
+    callback = cust_callback_url or reverse('helios-twitter-callback')
+    callback = "%s%s" % (oauth.callback_url_base, callback,)
     return tweepy.OAuthHandler(oauth.consumer_key, oauth.consumer_secret, callback)
 
 def user_login(service, cust_callback_url=None):
@@ -30,23 +31,21 @@ def user_login(service, cust_callback_url=None):
 
 
 def get_api(service):
-    auth = _auth(service)
-
+    auth = _auth(service.oauth)
 
     # Get access token
-    access_token = AccessToken.objects.get(service=service)
-
-    if not access_token:
-        request_token = RequestToken.objects.get(service=service)
-        verify_token = request.session['helios_twitter_oauth_verify_token']
-
-        if not verify_token or not request_token:
+    try:
+        access_token = AccessToken.objects.get(service=service)
+    except AccessToken.DoesNotExist:
+        try:
+            request_token = RequestToken.objects.get(service=service)
+        except RequestToken.DoesNotExist:
             return False
 
         auth.set_request_token(request_token.oauth_token, request_token.oauth_token_secret)
 
         try:
-            auth.get_access_token(verify_token)
+            auth.get_access_token(request_token.oauth_verify)
         except tweepy.TweepError:
             return False
 
