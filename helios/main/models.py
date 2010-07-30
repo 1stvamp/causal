@@ -15,24 +15,27 @@ class OAuthSetting(models.Model):
     created = models.DateTimeField()
     callback_url_base = models.CharField(max_length=255)
 
-class Service(models.Model):
+class ServiceApp(models.Model):
+    module_name = models.CharField(max_length=255)
+    oauth = models.ForeignKey(OAuthSetting)
+    _module = None
+
+    @property
+    def module(self):
+        if not self._module:
+            self._module = import_module("%s.service" % (self.module_name,))
+        return self._module
+
+class UserService(models.Model):
     """User service handler. e.g. twitter, flickr etc."""
 
     user = models.ForeignKey(User)
-    oauth = models.ForeignKey(OAuthSetting)
-    app_name = models.CharField(max_length=255)
-    _service_module = None
-
-    @property
-    def service_module(self):
-        if not self._service_module:
-            self._service_module = import_module("%s.service" % (self.app_name,))
-        return self._service_module
+    app = models.ForeignKey(ServiceApp)
 
 class RequestToken(models.Model):
     """OAuth Request Token."""
 
-    service = models.ForeignKey(Service, null=True, blank=True)
+    service = models.ForeignKey(UserService, null=True, blank=True)
     oauth_token = models.CharField(max_length=255)
     oauth_token_secret = models.CharField(max_length=255)
     created = models.DateTimeField()

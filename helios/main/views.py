@@ -15,7 +15,7 @@ def history(request):
     template_values = {}
 
     if request.method == 'GET':
-        services = Service.objects.filter(user=request.user)
+        services = UserService.objects.filter(user=request.user)
         template_values['services'] = services
 
         days = []
@@ -31,7 +31,7 @@ def history(request):
             days_to_i[day_names[i]] = i
 
         for service in services:
-            items = service.service_module.get_items(request.user, day_one, service)
+            items = service.app.module.get_items(request.user, day_one, service)
             if items:
                 for item in items:
                     if item.created.date > day_one:

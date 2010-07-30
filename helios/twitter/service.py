@@ -1,8 +1,8 @@
 __version__ = '0.1.1'
 
 from django.shortcuts import render_to_response, redirect
-from helios.main.models import Service, ServiceItem
-from helios.twitter.utils import get_api, user_login
+from helios.main.models import UserService, ServiceItem
+from helios.twitter.utils import get_api, user_login, get_model_instance
 
 display_name = 'Twitter'
 
@@ -28,5 +28,3 @@ def get_items(user, since, model_instance=None):
             item.location['long'] = status.geo[1]
         item.service = serv
 
-def get_model_instance(user):
-    return Service.objects.get(user=user, app_name=__package__)

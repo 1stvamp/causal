@@ -9,9 +9,13 @@ class RequestTokenAdmin(admin.ModelAdmin):
     pass
 admin.site.register(RequestToken, RequestTokenAdmin)
 
-class ServiceAdmin(admin.ModelAdmin):
+class UserServiceAdmin(admin.ModelAdmin):
     pass
-admin.site.register(Service, ServiceAdmin)
+admin.site.register(UserService, UserServiceAdmin)
+
+class ServiceAppAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(ServiceApp, ServiceAppAdmin)
 
 class OAuthSettingAdmin(admin.ModelAdmin):
     pass

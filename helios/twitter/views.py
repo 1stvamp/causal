@@ -1,8 +1,9 @@
 from django.shortcuts import redirect
-from helios.main.models import Service, RequestToken
+from helios.main.models import UserService, RequestToken
+from helios.twitter.utils import get_model_instance
 
 def verify_auth(request):
-    service = Service.objects.get(user=request.user, app_name=__package__)
+    service = get_model_instance(request.user)
     request_token = RequestToken.object.get(user=request.user, service=service)
     request_token.oauth_verify = request.GET.get('oauth_verifier')
     request_token.save()

@@ -11,7 +11,7 @@ def _auth(oauth, cust_callback_url=None):
     return tweepy.OAuthHandler(oauth.consumer_key, oauth.consumer_secret, callback)
 
 def user_login(service, cust_callback_url=None):
-    oauth = service.oauth
+    oauth = service.app.oauth
     try:
         auth = _auth(oauth, cust_callback_url)
 
@@ -31,7 +31,7 @@ def user_login(service, cust_callback_url=None):
 
 
 def get_api(service):
-    auth = _auth(service.oauth)
+    auth = _auth(service.app.oauth)
 
     # Get access token
     try:
@@ -60,3 +60,6 @@ def get_api(service):
 
     # API instance
     return tweepy.API(auth)
+
+def get_model_instance(user):
+    return UserService.objects.get(user=user, app__module_name=__package__)
