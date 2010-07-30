@@ -11,6 +11,7 @@ import oauth2 as oauth
 from settings import OAUTH_APP_SETTINGS
 from django.utils import simplejson
 import httplib2
+import flickrapi
 
 def get_access_token(service, user):
     """Get token if it exists for the service specified."""
@@ -65,17 +66,15 @@ def history(request):
             for tweet in tweets:
                 hour = timedelta(hours=1)
                 tweet['created_at'] = tweet['created_at'].replace(' +0000','')
-                tweet['date'] = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y') + hour
-                tweet['info'] = tweet['text']
+                record = {
+                    'date' : datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y') + hour,
+                    'info' : tweet['text'],
+                    'class' : 'twitter'
+                }
                 if tweet['geo']:
-                    tweet['coordinates'] = {'lat' : tweet['geo']['coordinates'][0], 'long' : tweet['geo']['coordinates'][1]}
-                tweet['class'] = 'twitter'
-
-                for day in days:
-                    datet =  datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y')
-                    if day.keys()[0] == datet.strftime('%A')\
-                       and datet.date() > day_one:
-                        day[day.keys()[0]].append(tweet)
+                    record['coordinates'] = {'lat' : tweet['geo']['coordinates'][0], 'long' : tweet['geo']['coordinates'][1]}
+                    
+                days = in_date_range(days, record, day_one)
 
         access_token = get_access_token('foursquare', request.user)
 
@@ -91,15 +90,13 @@ def history(request):
             for checkin in checkins['checkins']:
                 hour = timedelta(hours=1)
                 checkin['created'] = checkin['created'].replace(' +0000', '')
-                checkin['date'] = datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')+ hour
-                checkin['info'] = checkin['venue']['name']
-                checkin['class'] = 'foursquare'
-                for day in days:
-                    datet =  datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')
-                    if day.keys()[0] == datet.strftime('%A')\
-                       and datet.date() > day_one:
-                        day[day.keys()[0]].append(checkin)
-
+                record = {
+                    'date' : datetime.strptime(checkin['created'], '%a, %d %b %y %H:%M:%S')+ hour,
+                    'info' : checkin['venue']['name'],
+                    'class' : 'foursquare',
+                }
+                days = in_date_range(days, record, day_one)
+                
         if request.user.lastfmsettings_set.count() > 0:
             fm = request.user.lastfmsettings_set.get()
             if fm:
@@ -110,27 +107,18 @@ def history(request):
                 hour = timedelta(hours=1)
                 for track in tracks_listing['recenttracks']['track']:
                     if track.has_key('date'):
-                        a = {'info' : track['artist']['#text'] + ' ' + track['name'],
+                        record = {'info' : track['artist']['#text'] + ' ' + track['name'],
                              'date' : datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M') + hour,
                              'class': 'lastfm'}
-                        for day in days:
-                            datet =  datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M')
-                            if day.keys()[0] == datet.strftime('%A')\
-                               and datet.date() > day_one:
-                                day[day.keys()[0]].append(a)
+                        days = in_date_range(days, record, day_one)
 
-
-        # get repo list http://github.com/api/v2/json/repos/show/bassdread
-        # get commits for repo thus http://github.com/api/v2/json/commits/list/bassdread/helios/master
-        # sort by date
-
-        # http://github.com/api/v2/json/repos/show/bassdread
         url = 'http://github.com/api/v2/json/repos/show/bassdread'
         h = httplib2.Http()
         resp, content = h.request(url, "GET")
 
         git_hub = simplejson.loads(content)
         repos = []
+        
         for repo in git_hub['repositories']:
 
 
@@ -142,7 +130,7 @@ def history(request):
                 commited_datetime = commit['committed_date']
                 utc_offset = commited_datetime.rsplit('-', 1)[1]
                 utc_offset = utc_offset[:2]
-                utc_offset_delta = timedelta(hours=int(utc_offset))
+                utc_offset_delta = timedelta(hours=int(utc_offset) + 1)
 
                 commited_datetime = datetime.strptime(commited_datetime.rsplit('-', 1)[0], '%Y-%m-%dT%H:%M:%S')
                 commited_datetime = commited_datetime + utc_offset_delta
@@ -153,15 +141,35 @@ def history(request):
                     'message' : commit['message'],
                 }
 
-                for day in days:
-                    if day.keys()[0] == record['date'].strftime('%A')\
-                       and record['date'].date() > day_one:
-                        day[day.keys()[0]].append(record)
+                days = in_date_range(days, record, day_one)
 
         # flickr
         #44f769edefafed6115fe0ceead554816
         #07b50c863cd8871e
-
+        
+        flickr = flickrapi.FlickrAPI('44f769edefafed6115fe0ceead554816')
+        
+        photos_json = flickr.photos_search(user_id='50685137@N00', per_page='10', format='json')
+        photos_json = photos_json.replace('jsonFlickrApi(', '')
+        photos_json = photos_json.rstrip(')')
+        photos = simplejson.loads(photos_json)
+        
+        for photo in photos['photos']['photo']:
+            # flickr.photos.getInfo
+            pic = flickr.photos_getInfo(photo_id=photo['id'], format='json')
+            pic = pic.replace('jsonFlickrApi(', '')
+            pic = pic.rstrip(')')
+            p = simplejson.loads(pic)
+            epoch = p['photo']['dateuploaded']
+            
+            record = { 
+                    'info' : p['photo']['title']['_content'] + ' : ' + p['photo']['urls']['url'][0]['_content'],
+                    'date' : datetime.fromtimestamp(float(epoch)),
+                    'class' : 'flickr',
+                }
+            
+            days = in_date_range(days, record, day_one)
+                    
         if days:
             for day in days:
                 day[day.keys()[0]].sort(key=lambda item:item['date'], reverse=True)
@@ -169,6 +177,14 @@ def history(request):
 
     return render_to_response('index.html',template_values,
                               context_instance=RequestContext(request))
+
+def in_date_range(days, record, day_one):
+    """Check if an entry is in our week date range"""
+    for day in days:
+        if day.keys()[0] == record['date'].strftime('%A')\
+           and record['date'].date() > day_one:
+            day[day.keys()[0]].append(record)
+    return days
 
 @login_required(redirect_field_name='redirect_to')
 def oauth_login(request, service=None):
