@@ -14,19 +14,19 @@ import httplib2
 
 def get_access_token(service, user):
     """Get token if it exists for the service specified."""
-     
+
     access_token = None
-     
+
     params = {
-            'user' : user,
-            'service' : service,
-       }
-     
+        'user' : user,
+        'service' : service,
+    }
+
     access_token_list = OAuthAccessToken.objects.filter(**params)
-     
+
     if access_token_list:
         access_token = access_token_list[0]
-     
+
     return access_token
 
 @login_required(redirect_field_name='redirect_to')
@@ -50,7 +50,7 @@ def history(request):
         geo_locations = []
 
         access_token = get_access_token('twitter', request.user)
-        
+
         if access_token:
 
             consumer = oauth.Consumer(OAUTH_APP_SETTINGS['twitter']['consumer_key'],
@@ -67,7 +67,7 @@ def history(request):
                 tweet['created_at'] = tweet['created_at'].replace(' +0000','')
                 tweet['date'] = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y') + hour
                 tweet['info'] = tweet['text']
-                if tweet['coordinates']:
+                if tweet['geo']:
                     tweet['coordinates'] = {'lat' : tweet['geo']['coordinates'][0], 'long' : tweet['geo']['coordinates'][1]}
                 tweet['class'] = 'twitter'
 
@@ -78,7 +78,7 @@ def history(request):
                         day[day.keys()[0]].append(tweet)
 
         access_token = get_access_token('foursquare', request.user)
-        
+
         if access_token:
             consumer = oauth.Consumer(OAUTH_APP_SETTINGS['foursquare']['consumer_key'],
                                       OAUTH_APP_SETTINGS['foursquare']['consumer_secret'])
@@ -121,50 +121,54 @@ def history(request):
 
 
         # get repo list http://github.com/api/v2/json/repos/show/bassdread
-	# get commits for repo thus http://github.com/api/v2/json/commits/list/bassdread/helios/master
-	# sort by date
-				
+        # get commits for repo thus http://github.com/api/v2/json/commits/list/bassdread/helios/master
+        # sort by date
+
         # http://github.com/api/v2/json/repos/show/bassdread
         url = 'http://github.com/api/v2/json/repos/show/bassdread'
         h = httplib2.Http()
         resp, content = h.request(url, "GET")
-        
+
         git_hub = simplejson.loads(content)
         repos = []
         for repo in git_hub['repositories']:
-	    
-	                 
-	    url = 'http://github.com/api/v2/json/commits/list/bassdread/%s/master' % repo['name']
-	    resp, content = h.request(url, "GET")
-	    commits = simplejson.loads(content)
-	    
-	    for commit in commits['commits']:
-		commited_datetime = commit['committed_date']
-		utc_offset = commited_datetime.rsplit('-', 1)[1]
-		utc_offset = utc_offset[:2]
-		utc_offset_delta = timedelta(hours=int(utc_offset))
-		
-		commited_datetime = datetime.strptime(commited_datetime.rsplit('-', 1)[0], '%Y-%m-%dT%H:%M:%S')
-		commited_datetime = commited_datetime + utc_offset_delta
-		record = { 
-		    'info' : 'Project: ' + repo['name'],
-		    'date' : commited_datetime,
-		    'class' : 'github',
-		    'message' : commit['message'],
-		}
-		
-		for day in days:
-		    if day.keys()[0] == record['date'].strftime('%A')\
-		       and record['date'].date() > day_one:
-			day[day.keys()[0]].append(record)
-	    
-	if days:
+
+
+            url = 'http://github.com/api/v2/json/commits/list/bassdread/%s/master' % repo['name']
+            resp, content = h.request(url, "GET")
+            commits = simplejson.loads(content)
+
+            for commit in commits['commits']:
+                commited_datetime = commit['committed_date']
+                utc_offset = commited_datetime.rsplit('-', 1)[1]
+                utc_offset = utc_offset[:2]
+                utc_offset_delta = timedelta(hours=int(utc_offset))
+
+                commited_datetime = datetime.strptime(commited_datetime.rsplit('-', 1)[0], '%Y-%m-%dT%H:%M:%S')
+                commited_datetime = commited_datetime + utc_offset_delta
+                record = { 
+                    'info' : 'Project: ' + repo['name'],
+                    'date' : commited_datetime,
+                    'class' : 'github',
+                    'message' : commit['message'],
+                }
+
+                for day in days:
+                    if day.keys()[0] == record['date'].strftime('%A')\
+                       and record['date'].date() > day_one:
+                        day[day.keys()[0]].append(record)
+
+        # flickr
+        #44f769edefafed6115fe0ceead554816
+        #07b50c863cd8871e
+
+        if days:
             for day in days:
                 day[day.keys()[0]].sort(key=lambda item:item['date'], reverse=True)
             template_values['days'] = days
-            
+
     return render_to_response('index.html',template_values,
-        context_instance=RequestContext(request))
+                              context_instance=RequestContext(request))
 
 @login_required(redirect_field_name='redirect_to')
 def oauth_login(request, service=None):
@@ -191,16 +195,16 @@ def oauth_login(request, service=None):
         token.save()
 
     return HttpResponseRedirect("%s?oauth_token=%s" % (oauth_details['user_auth_url'],
-                                         request_token_params['oauth_token']))
+                                                       request_token_params['oauth_token']))
 
 def oauth_callback(request, service=None):
     consumer = oauth.Consumer(OAUTH_APP_SETTINGS[service]['consumer_key'],
-                                  OAUTH_APP_SETTINGS[service]['consumer_secret'])
+                              OAUTH_APP_SETTINGS[service]['consumer_secret'])
 
     params = {
         'oauth_token' : request.GET['oauth_token'],
         'service' : service,
-        }
+    }
 
     request_token = OAuthRequestToken.objects.filter(**params)[0]
 
@@ -232,8 +236,8 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             User.objects.create_user(form.cleaned_data['email'],
-                form.cleaned_data['email'],
-                form.cleaned_data['password1'])
+                                     form.cleaned_data['email'],
+                                     form.cleaned_data['password1'])
 
             user = authenticate(username=form.cleaned_data['email'],
                                 password=form.cleaned_data['password1'])
@@ -244,7 +248,7 @@ def register(request):
     return render_to_response('accounts/register.html',{
         'form' : form,
         },
-        context_instance=RequestContext(request))
+                              context_instance=RequestContext(request))
 
 @login_required(redirect_field_name='redirect_to')
 def profile(request):
@@ -273,4 +277,4 @@ def profile(request):
         'twitter' : twitter,
         'foursquare' : foursquare,
         },
-        context_instance=RequestContext(request))
+                              context_instance=RequestContext(request))
