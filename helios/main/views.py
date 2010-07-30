@@ -12,6 +12,8 @@ from settings import OAUTH_APP_SETTINGS
 from django.utils import simplejson
 import httplib2
 import flickrapi
+import feedparser
+import time
 
 def get_access_token(service, user):
     """Get token if it exists for the service specified."""
@@ -170,6 +172,21 @@ def history(request):
             
             days = in_date_range(days, record, day_one)
                     
+            
+    # google http://www.google.com/reader/public/atom/user/06300323322621469299/state/com.google/broadcast
+    
+        d = feedparser.parse("http://www.google.com/reader/public/atom/user/06300323322621469299/state/com.google/broadcast")
+        
+        for article in d['entries']:
+            
+            record = { 
+                    'info' : article['title'],
+                    'date' : datetime.fromtimestamp(time.mktime(article['updated_parsed'])),
+                    'class' : 'reader',
+                }
+            
+            days = in_date_range(days, record, day_one)
+    
         if days:
             for day in days:
                 day[day.keys()[0]].sort(key=lambda item:item['date'], reverse=True)
