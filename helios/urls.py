@@ -26,7 +26,7 @@ urlpatterns = patterns('',
     #users
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'accounts/login.html'}, name='login'),
     url(r'^accounts/register/$', 'main.views.register', name='register'),
-    url(r'^accounts/profile/$', 'main.views.profile', name='register'),
+    url(r'^accounts/profile/$', 'main.views.profile', name='profile'),
     url(r'^password_reset/$', 'django.contrib.auth.views.password_reset', name='password-reset'),
     url(r'^password_reset/done/$','django.contrib.auth.views.password_reset_done', name='post-password-reset'),
     url(r'^$', 'main.views.register', name='register'),

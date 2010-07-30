@@ -1,0 +1,5 @@
+{% if not service.requesttoken_set.all %}
+    Not authenticated to Twitter. <a href="{% url helios-twitter-auth %}">Authenticate</a>?
+{% else %}
+    Twitter authenticated. <a href="{% url helios-twitter-auth %}">Re-authenticate</a>?
+{% endif %}

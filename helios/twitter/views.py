@@ -1,6 +1,6 @@
 from django.shortcuts import redirect
 from helios.main.models import UserService, RequestToken
-from helios.twitter.utils import get_model_instance
+from helios.twitter.utils import get_model_instance, user_login
 
 def verify_auth(request):
     service = get_model_instance(request.user)
@@ -9,3 +9,7 @@ def verify_auth(request):
     request_token.save()
     return_url = request.session.get('helios_twitter_oauth_return_url', None) or 'history'
     return redirect(return_url)
+
+def auth(request):
+    request.session['helios_twitter_oauth_return_url'] = request.GET.get('HTTP_REFERER', None)
+    return user_login(get_model_instance(request.user))

@@ -32,6 +32,10 @@ class UserService(models.Model):
     user = models.ForeignKey(User)
     app = models.ForeignKey(ServiceApp)
 
+    @property
+    def form_template_path(self):
+        return "%s/form.html" % (self.app.module_name,)
+
 class RequestToken(models.Model):
     """OAuth Request Token."""
 

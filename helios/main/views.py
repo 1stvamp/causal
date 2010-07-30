@@ -71,36 +71,19 @@ def register(request):
 
             return HttpResponseRedirect('/history/')
 
-    return render_to_response('accounts/register.html',{
-        'form' : form,
+    return render_to_response(
+        'accounts/register.html',
+        {
+            'form' : form,
         },
-        context_instance=RequestContext(request))
+        context_instance=RequestContext(request)
+    )
 
 @login_required(redirect_field_name='redirect_to')
 def profile(request):
-    form = LastFMSettingsForm()
-    twitter = None
-    foursquare = None
-    lastfm = None
-
-    if request.POST:
-        form = LastFMSettingsForm(request.POST)
-        if form.is_valid():
-            last = LastFMSettings()
-            last.user = request.user
-            last.username = form.cleaned_data['username']
-            last.save()
-
-    tokens = request.user.oauthaccesstoken_set.all()
-    for token in tokens:
-        if token.service == 'twitter':
-            twitter = True
-        if token.service == 'foursquare':
-            foursquare = True
-
-    return render_to_response('accounts/profile.html',{
-        'form' : form,
-        'twitter' : twitter,
-        'foursquare' : foursquare,
+    return render_to_response(
+        'accounts/profile.html',
+        {
         },
-        context_instance=RequestContext(request))
+        context_instance=RequestContext(request)
+    )

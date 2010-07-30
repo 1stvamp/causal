@@ -3,7 +3,7 @@ from datetime import datetime
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 
-from helios.main.models import RequestToken, AccessToken
+from helios.main.models import RequestToken, AccessToken, UserService
 
 def _auth(oauth, cust_callback_url=None):
     callback = cust_callback_url or reverse('helios-twitter-callback')

@@ -28,3 +28,5 @@ def get_items(user, since, model_instance=None):
             item.location['long'] = status.geo[1]
         item.service = serv
 
+def get_form():
+    return ''
