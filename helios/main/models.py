@@ -17,7 +17,7 @@ class OAuthSetting(models.Model):
     created = models.DateTimeField()
 
 class Service(models.Model):
-    """Service handler. e.g. twitter, flickr etc."""
+    """User service handler. e.g. twitter, flickr etc."""
 
     name = models.CharField(max_length=50)
     user = models.ForeignKey(User)
@@ -34,7 +34,6 @@ class Service(models.Model):
 class RequestToken(models.Model):
     """OAuth Request Token."""
 
-    user = models.ForeignKey(User, null=True, blank=True)
     service = models.ForeignKey(Service, null=True, blank=True)
     oauth_token = models.CharField(max_length=255)
     oauth_token_secret = models.CharField(max_length=255)
@@ -50,7 +49,7 @@ class ServiceItem(object):
     created = None #datetime
     title = None #str/unicode
     body = None #str/unicode
-    coords = {
+    location = {
         'long': None, #str
         'lat': None, #str
     } #dict
