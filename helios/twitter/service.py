@@ -6,7 +6,7 @@ from helios.twitter.utils import get_api, user_login
 
 display_name = 'Twitter'
 
-def get_items(user, model_instance=None):
+def get_items(user, since, model_instance=None):
     items = []
     serv = model_instance or get_model_instance(user)
 
@@ -18,7 +18,11 @@ def get_items(user, model_instance=None):
         else:
             return items
 
-    timeline = api.user_timeline(count=50)
+    timeline = api.search(
+        "from:%s" % (api.me.screen_name),
+        since=since.strftime("%Y-%m-%d"),
+        rpp=100
+    )
     for status in timeline:
         item = ServiceItem()
         item.body = status.text
