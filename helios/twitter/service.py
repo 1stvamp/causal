@@ -12,7 +12,7 @@ def get_items(user, model_instance=None):
 
     api = get_api(serv)
     if not api:
-        r = user_login(serv.oauth)
+        r = user_login(serv)
         if r:
             return r
         else:

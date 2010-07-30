@@ -32,7 +32,7 @@ def history(request):
 
         for service in services:
             app = service.app
-            items = app.service.get_items(user=request.user)
+            items = app.service.get_items(request.user, service)
             for item in items:
                 if item.created.date > day_one:
                     days[days_to_i[item.created.strftime('%A')]].append(item)
