@@ -118,7 +118,34 @@ def history(request):
                              'date' : datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M') + hour,
                              'class': 'lastfm'}
                         days = in_date_range(days, record, day_one)
-
+                url = 'http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=bassdread&api_key=09f1c061fc65a7bc08fb3ad95222d16e&period=7day&format=json'
+                h = httplib2.Http()
+                resp, content = h.request(url, "GET")
+                fav_artists = simplejson.loads(content)
+                template_values['lastfm_artists'] = []
+                for artist in fav_artists['topartists']['artist']:
+                    artist_save = {
+                        'name' : artist['name'],
+                        'rank' : artist['@attr']['rank'],
+                        'plays' : artist['playcount'],
+                        'image' : artist['image'][2]['#text'],
+                        }
+                    # fetch up coming gigs
+                    url = 'http://ws.audioscrobbler.com/2.0/?method=artist.getevents&artist=%s&api_key=09f1c061fc65a7bc08fb3ad95222d16e&format=json' % artist['name'].replace(' ', '+')
+                    h = httplib2.Http()
+                    resp, content = h.request(url, "GET")
+                    events = simplejson.loads(content)
+                    if events['events'].has_key('event'):
+                        artist_save['venue_name'] = events['events']['event'][0]['venue']['name']
+                        artist_save['date'] = events['events']['event'][0]['startDate']
+                    
+                    template_values['lastfm_artists'].append(artist_save)
+                
+        ##########################################################
+        #
+        # Git Hub
+        #
+        ##########################################################
         url = 'http://github.com/api/v2/json/repos/show/bassdread'
         h = httplib2.Http()
         resp, content = h.request(url, "GET")
