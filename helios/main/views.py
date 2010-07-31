@@ -13,7 +13,7 @@ from django.utils import simplejson
 import httplib2
 import flickrapi
 import feedparser
-import time
+import time, re
 
 def get_access_token(service, user):
     """Get token if it exists for the service specified."""
@@ -39,7 +39,6 @@ def history(request):
 
     if request.method == 'GET':
 
-
         days = []
         day_one = date.today() - timedelta(days=7)
 
@@ -51,7 +50,7 @@ def history(request):
 
         # final averaged list
         geo_locations = []
-
+        # http://search.twitter.com/search.json?q=from:bassdread&since:2010-07-24
         access_token = get_access_token('twitter', request.user)
 
         if access_token:
@@ -61,21 +60,27 @@ def history(request):
             token = oauth.Token(access_token.oauth_token , access_token.oauth_token_secret)
 
             client = oauth.Client(consumer, token)
-            url = OAUTH_APP_SETTINGS['twitter']['default_api_prefix'] + '/statuses/user_timeline' + OAUTH_APP_SETTINGS['twitter']['default_api_suffix'] + '?count=70'
+            url = OAUTH_APP_SETTINGS['twitter']['default_api_prefix'] + '/statuses/user_timeline' + OAUTH_APP_SETTINGS['twitter']['default_api_suffix'] + '?count=140&include_rts=true'
             resp, content = client.request(url, "GET")
 
             tweets = simplejson.loads(content)
             for tweet in tweets:
                 hour = timedelta(hours=1)
                 tweet['created_at'] = tweet['created_at'].replace(' +0000','')
+                p = re.compile('http://twitpic.com/[\S]*')
+                pic = p.findall(tweet['text'])
+                
                 record = {
                     'date' : datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y') + hour,
                     'info' : tweet['text'],
-                    'class' : 'twitter'
+                    'class' : 'twitter',
+                    
                 }
                 if tweet['geo']:
                     record['coordinates'] = {'lat' : tweet['geo']['coordinates'][0], 'long' : tweet['geo']['coordinates'][1]}
-                    
+                if len(pic) > 0:
+                    a = pic[0].rsplit('/', 1)
+                    record['pic'] = 'http://twitpic.com/show/thumb/' + a[1] + '.jpg'
                 days = in_date_range(days, record, day_one)
 
         access_token = get_access_token('foursquare', request.user)
@@ -122,8 +127,6 @@ def history(request):
         repos = []
         
         for repo in git_hub['repositories']:
-
-
             url = 'http://github.com/api/v2/json/commits/list/bassdread/%s/master' % repo['name']
             resp, content = h.request(url, "GET")
             commits = simplejson.loads(content)
@@ -171,10 +174,7 @@ def history(request):
                 }
             
             days = in_date_range(days, record, day_one)
-                    
-            
-    # google http://www.google.com/reader/public/atom/user/06300323322621469299/state/com.google/broadcast
-    
+   
         d = feedparser.parse("http://www.google.com/reader/public/atom/user/06300323322621469299/state/com.google/broadcast")
         
         for article in d['entries']:

@@ -7,7 +7,18 @@
 <h1>{{ key }}</h1>
 <ul>
 {% for i in value %}
-<li class="{{i.class}}"><img src="/static/images/{{i.class}}.jpg"/>{{i.date}} : {{i.info|urlize}}{% if i.message %} : Commit message: {{i.message}} {% endif %}</li>
+<li class="{{i.class}}">
+    <img src="/static/images/{{i.class}}.jpg"/>
+    {{i.date}} : {{i.info|urlize}}
+    {% if i.message %} 
+        : Commit message: {{i.message}} 
+    {% endif %}
+    {% if i.pic %} 
+    <br/>
+    <img src="{{i.pic}}"/> 
+    {% endif %}
+    
+</li>
 {% endfor %}
 </ul>
 {% endfor %}
