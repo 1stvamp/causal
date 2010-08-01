@@ -3,22 +3,41 @@
 {% block content %}
 
 <script type="text/javascript">
+
+function add_marker(map, lat, longg, contentString){
+    var myLatlng = new google.maps.LatLng(lat, longg);
+    var marker = new google.maps.Marker({
+      position: myLatlng, 
+      map: map,
+    });
+
+    var infowindow = new google.maps.InfoWindow({
+    content: contentString
+    }); 
+      
+    google.maps.event.addListener(marker, 'click', function() {
+      infowindow.open(map,marker);
+    });
+}  
+
   function initialize() {
-    var latlng = new google.maps.LatLng(-34.397, 150.644);
+    var latlng = new google.maps.LatLng(53.853418499999997, -0.44196809999999997);
     var myOptions = {
-      zoom: 8,
+      zoom: 10,
       center: latlng,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     var map = new google.maps.Map(document.getElementById("map_canvas"),
         myOptions);
+        
+    {% if geo_locations %}
+        {% for event in geo_locations %}
+            add_marker(map, {{event.lat}}, {{event.long}}, "{{event.info}}");        
+         {% endfor %}    
+    {% endif %}
   }
-
+  
 </script>
-
-{% for i in geo_locations %}
-  {{i}}
-{% endfor %}
 
 {% for day in days %}
 {% for key,value in day.items %}
@@ -54,5 +73,8 @@ Venue: {{artist.venue_name}} at {{artist.date}}
 None coming up.
 {% endif %}
 {% endfor %}
+
+<h1> Twitter Stats</h1>
+<div id="map_canvas" style="width:100%; height:100%"></div>
 
 {% endblock %}
