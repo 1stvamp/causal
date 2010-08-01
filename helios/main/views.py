@@ -49,7 +49,7 @@ def history(request):
             days.append({lasttime.strftime('%A') : []})
 
         # final averaged list
-        geo_locations = []
+        template_values['geo_locations'] = []
         # http://search.twitter.com/search.json?q=from:bassdread&since:2010-07-24
         access_token = get_access_token('twitter', request.user)
 
@@ -73,11 +73,18 @@ def history(request):
                 record = {
                     'date' : datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y') + hour,
                     'info' : tweet['text'],
-                    'class' : 'twitter',
-                    
+                    'class' : 'twitter',   
                 }
+                
                 if tweet['geo']:
-                    record['coordinates'] = {'lat' : tweet['geo']['coordinates'][0], 'long' : tweet['geo']['coordinates'][1]}
+                    template_values['geo_locations'].append(
+                        {'lat' : tweet['geo']['coordinates'][0], 
+                         'long' : tweet['geo']['coordinates'][1],
+                         'info' : tweet['text'],
+                         'date' : datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %Y') + hour,
+                         }
+                        )
+                    
                 if len(pic) > 0:
                     a = pic[0].rsplit('/', 1)
                     record['pic'] = 'http://twitpic.com/show/thumb/' + a[1] + '.jpg'

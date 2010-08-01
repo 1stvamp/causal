@@ -16,11 +16,15 @@
 
 </script>
 
+{% for i in geo_locations %}
+  {{i}}
+{% endfor %}
+
 {% for day in days %}
 {% for key,value in day.items %}
 <h1>{{ key }}</h1>
 <ul>
-{% for i in value %}{{i.coordinates}}
+{% for i in value %}
 <li class="{{i.class}}">
     <img src="/static/images/{{i.class}}.jpg"/>
     {{i.date}} : {{i.info|urlize}}
