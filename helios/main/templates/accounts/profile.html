@@ -6,5 +6,23 @@
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="save" class="button-submit" />
+    
+    <ul>
+        <li>Four Square Status: 
+        {% if foursquare %}
+        Sorted!
+        {% else %}
+        <a href="/oauth/foursquare/login">Login to Four Square</a>
+        {% endif %}
+        </li>
+        <li>Twitter Status: 
+        {% if twitter %}
+        Sorted!
+        {% else %}
+        <a href="/oauth/twitter/login">Login to Twitter</a>
+        {% endif %}
+        </li>
+    </ul>
+    
 </div>
 {% endblock %}

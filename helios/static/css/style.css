@@ -3,6 +3,10 @@ BODY {
     margin: 0;
     background: #333;
 }
+li {
+    list-style: none;
+}
+
 .lastfm {
     color: red;
 }

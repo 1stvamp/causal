@@ -9,8 +9,7 @@ class LastFMSettingsForm(forms.ModelForm):
     class Meta:
         model = LastFMSettings
         exclude =('user')
-
-
+        
 attrs_dict = { 'class': 'required' }
 
 class RegistrationForm(forms.Form):

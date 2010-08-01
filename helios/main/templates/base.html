@@ -1,27 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-	<title>Application Form</title>
+	<title>History</title>
 	<link rel="stylesheet" type="text/css" media="screen" href="/static/css/style.css" />
-    </head>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+  html { height: 100% }
+  body { height: 100%; margin: 0px; padding: 0px }
+  #map_canvas { height: 100% }
+</style>
+<script type="text/javascript"
+    src="http://maps.google.com/maps/api/js?sensor=false">
+</script>
+
+</head>
     
-	<body>
-	<div id="wrapper" class="clearfix">
+<body onload="initialize()">
+    <div id="wrapper" class="clearfix">
 	        
-		<div id="header" class="clearfix">
-		</div>
-		<div id="content">
-    		<div id="primary" class="clearfix">
+	<div id="header" class="clearfix">
+	    <ul>
+	        <li><a href="/history/">home</a></li>
+	        <li><a href="/accounts/profile/">profile</a></li>
+	    </ul>
+
+	</div>
+	<div id="content">
+    	    <div id="primary" class="clearfix">
 		{% block content %}
 		{% endblock content %}
-	    	</div>
-	    	<div id="secondary">
-	    	</div>
-		</div>
+	    </div>
+	    <div id="secondary">
+	    </div>
+	</div>
 
-		<div id="footer">
-		</div>
-	</div> <!-- /wrapper -->
-	</body>
-</html>
+	<div id="footer">
+	</div>
+    </div> <!-- /wrapper -->
+</body>
 </html>

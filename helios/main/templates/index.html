@@ -2,22 +2,53 @@
 
 {% block content %}
 
-  <ul>
-  <li><a href="/oauth/twitter/login">Login to Twitter</a></li>
-  <li><a href="/oauth/foursquare/login">Login to Foursquare</a></li>
-  </ul>
-  
-  <a href="/oauth/twitter/logout">Logout from Twitter</a><br /><br />
-  <a href="/oauth/foursquare/logout">Logout from Foursquare</a><br /><br />
-  <strong>Screen Name:</strong>{{screen_name}}<br />
-  <strong>Location:</strong>{{location}}<br />
-  
-  <ul>
-  {% for res in results %}
-    <li class="{{res.class}}">
-      {{res.date}} : {{res.info}}
-    </li>
-  {% endfor %}
-  </ul>
-  
+<script type="text/javascript">
+  function initialize() {
+    var latlng = new google.maps.LatLng(-34.397, 150.644);
+    var myOptions = {
+      zoom: 8,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    var map = new google.maps.Map(document.getElementById("map_canvas"),
+        myOptions);
+  }
+
+</script>
+
+{% for day in days %}
+{% for key,value in day.items %}
+<h1>{{ key }}</h1>
+<ul>
+{% for i in value %}{{i.coordinates}}
+<li class="{{i.class}}">
+    <img src="/static/images/{{i.class}}.jpg"/>
+    {{i.date}} : {{i.info|urlize}}
+    {% if i.message %} 
+        : Commit message: {{i.message}} 
+    {% endif %}
+    {% if i.pic %} 
+    <br/>
+    <img src="{{i.pic}}"/> 
+    {% endif %}
+    
+</li>
+{% endfor %}
+</ul>
+{% endfor %}
+
+{% endfor %}
+
+<h1> Last.fm Stats </h1>
+{% for artist in lastfm_artists %}
+<h2>{{artist.rank}}. {{artist.name}}</h2>
+<a href="{{artist.url}}"><img src="{{artist.image}}"/></a>
+<h2>Next Gig </h2>
+{% if artist.date%}
+Venue: {{artist.venue_name}} at {{artist.date}}
+{% else %}
+None coming up.
+{% endif %}
+{% endfor %}
+
 {% endblock %}
