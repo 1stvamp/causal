@@ -47,7 +47,10 @@ class RequestToken(models.Model):
 
 class AccessToken(RequestToken):
     """OAuth Access Token."""
-    pass
+
+    # For services such as Github et al that use user/API key auth
+    username = models.CharField(max_length=255, blank=True, null=True)
+    api_token = models.CharField(max_length=255, blank=True, null=True)
 
 # Not a django.db.models.Model, just a common container for service data
 
