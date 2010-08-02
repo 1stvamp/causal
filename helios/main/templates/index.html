@@ -7,7 +7,7 @@
         {% if items %}
             <ul>
                 {% for item in items %}
-                    <li class="{{ item.class_name }}">{{ item.created.date }}:{{ item.body }}</li>
+                    <li class="{{ item.class_name }}">{{ item.created.date }}: {{ item.body }}</li>
                 {% endfor %}
             </ul>
         {% endif %}

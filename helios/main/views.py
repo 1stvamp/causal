@@ -34,7 +34,7 @@ def history(request):
             items = service.app.module.get_items(request.user, day_one, service)
             if items:
                 for item in items:
-                    if item.created.date() >= day_one:
+                    if item.created.date() > day_one:
                         days[days_to_i[item.created.strftime('%A')]].append(item)
 
         if days:
