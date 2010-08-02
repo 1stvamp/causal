@@ -2,14 +2,67 @@
 {% load extras %}
 
 {% block content %}
+    <script type="text/javascript">
+    // <![CDATA[
+    function add_marker(map, lat, longg, contentString){
+        var myLatlng = new google.maps.LatLng(lat, longg);
+        var marker = new google.maps.Marker({
+          position: myLatlng,
+          map: map,
+        });
+
+        var infowindow = new google.maps.InfoWindow({
+        content: contentString
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.open(map,marker);
+        });
+    }
+
+      function initialize() {
+        var latlng = new google.maps.LatLng(53.853418499999997, -0.44196809999999997);
+        var myOptions = {
+          zoom: 10,
+          center: latlng,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map_canvas"),
+            myOptions);
+
+        {% if geo_locations %}
+            {% for event in geo_locations %}
+                add_marker(map, {{event.lat}}, {{event.long}}, "{{event.info}}");
+             {% endfor %}
+        {% endif %}
+      }
+    // ]]>
+    </script>
+
     {% for items in days %}
         <h1>{{ day_names|get:forloop.counter0 }}</h1>
         {% if items %}
             <ul>
                 {% for item in items %}
-                    <li class="{{ item.class_name }}">{{ item.created.date }}:{{ item.body }}</li>
+                    <li class="{{ item.class_name }}">{{ item.created.date }}: {{ item.body|urlize }}</li>
                 {% endfor %}
             </ul>
         {% endif %}
     {% endfor %}
+
+
+    <h1> Last.fm Stats </h1>
+    {% for artist in lastfm_artists %}
+    <h2>{{artist.rank}}. {{artist.name}}</h2>
+    <a href="{{artist.url}}"><img src="{{artist.image}}"/></a>
+    <h2>Next Gig </h2>
+    {% if artist.date%}
+    Venue: {{artist.venue_name}} at {{artist.date}}
+    {% else %}
+    None coming up.
+    {% endif %}
+    {% endfor %}
+
+    <h1> Twitter Stats</h1>
+    <div id="map_canvas" style="width:100%; height:100%"></div>
 {% endblock %}
