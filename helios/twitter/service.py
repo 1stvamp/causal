@@ -1,6 +1,7 @@
 __version__ = '0.1.1'
 
 from tweepy import TweepError
+from datetime import timedelta
 from django.shortcuts import render_to_response, redirect
 from helios.main.models import UserService, ServiceItem
 from helios.twitter.utils import get_api, user_login, get_model_instance
@@ -22,20 +23,20 @@ def get_items(user, since, model_instance=None):
             "from:%s since:%s until:%s" % \
                 (
                     api.me().screen_name,
-                    since.strftime("%Y-%m-%d"),
+                    (since-timedelta(days=1)).strftime("%Y-%m-%d"),
                     since.strftime("%Y-%m-%d"),
                 ),
             rpp=1
         )
     except TweepError, e:
-        if "Couldn't find Status with ID=" in e:
-            since_id = str(e).split('=')[1]
+        if "Couldn't find Status with ID=" in e.reason:
+            since_id = e.reason.split('=')[1]
     else:
         if len(timeline):
             since_id = timeline[0].id
 
     try:
-        timeline = api.user_timeline(count=200, sice_id=since_id)
+        timeline = api.user_timeline(count=200, since_id=since_id)
     except TweepError, e:
         print e
     else:
