@@ -22,9 +22,9 @@ def history(request):
         day_names = {}
         days_to_i = {}
         day_one = date.today() - timedelta(days=7)
+        today = date.today()
 
         for i in range(0,7):
-            today = date.today()
             last = today - timedelta(days=i)
             days.append([])
             day_names[i] = last.strftime('%A')
@@ -34,13 +34,12 @@ def history(request):
             items = service.app.module.get_items(request.user, day_one, service)
             if items:
                 for item in items:
-                    if item.created.date > day_one:
+                    if item.created.date() >= day_one:
                         days[days_to_i[item.created.strftime('%A')]].append(item)
 
         if days:
             for day in days:
-                day.sort(key=lambda item:item.created.date, reverse=True)
-            template_values['days'] = days
+                day.sort(key=lambda item:item.created.date(), reverse=True)
 
         template_values['days'] = days
         template_values['day_names'] = day_names

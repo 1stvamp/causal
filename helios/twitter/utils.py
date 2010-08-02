@@ -17,12 +17,18 @@ def user_login(service, cust_callback_url=None):
 
         redirect_url = auth.get_authorization_url()
 
-        RequestToken.objects.create(
-            service=service,
-            oauth_token=auth.request_token.key,
-            oauth_token_secret=auth.request_token.secret,
-            created=datetime.now()
-        )
+        update_attrs = {
+            'oauth_token': auth.request_token.key,
+            'oauth_token_secret': auth.request_token.secret,
+        }
+        insert_attrs = {
+            'service': service,
+        }
+        rows = RequestToken.objects.filter(**insert_attrs).update(**update_attrs)
+        if not rows:
+            insert_attrs.update(update_attrs)
+            insert_attrs['created'] = datetime.now()
+            RequestToken.objects.create(**insert_attrs)
     except tweepy.TweepError:
         return False
 
@@ -49,12 +55,18 @@ def get_api(service):
         except tweepy.TweepError:
             return False
 
-        AccessToken.objects.create(
-            service=service,
-            oauth_token=auth.access_token.key,
-            oauth_token_secret=auth.access_token.secret,
-            created=datetime.now()
-        )
+        update_attrs = {
+            'oauth_token': auth.access_token.key,
+            'oauth_token_secret': auth.access_token.secret,
+        }
+        insert_attrs = {
+            'service': service,
+        }
+        rows = AccessToken.objects.filter(**insert_attrs).update(**update_attrs)
+        if not rows:
+            insert_attrs.update(update_attrs)
+            insert_attrs['created'] = datetime.now()
+            AccessToken.objects.create(**insert_attrs)
     else:
         auth.set_access_token(access_token.oauth_token, access_token.oauth_token_secret)
 
