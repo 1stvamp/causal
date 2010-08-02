@@ -3,11 +3,14 @@
 
 {% block content %}
     {% for items in days %}
-        <h1>{{ day_names|get:forloop.counter0 }}</h1>
+        <h3>{{ day_names|get:forloop.counter0 }}</h3>
         {% if items %}
             <ul>
                 {% for item in items %}
-                    <li class="{{ item.class_name }}">{{ item.created.date }}: {{ item.body }}</li>
+                    <li class="{{ item.class_name }}">
+                        {% if item.title %}<h4>{{ item.title }}</h4>{% endif %}
+                        {{ item.created.date }}: {{ item.body }}
+                    </li>
                 {% endfor %}
             </ul>
         {% endif %}

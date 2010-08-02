@@ -39,7 +39,7 @@ def history(request):
 
         if days:
             for day in days:
-                day.sort(key=lambda item:item.created.date(), reverse=True)
+                day.sort(key=lambda item:item.created, reverse=True)
 
         template_values['days'] = days
         template_values['day_names'] = day_names
