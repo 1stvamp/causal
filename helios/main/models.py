@@ -63,4 +63,4 @@ class ServiceItem(object):
 
     @property
     def class_name(self):
-        return self.service.app_name.replace('.', '-')
+        return self.service.app.module_name.replace('.', '-')
