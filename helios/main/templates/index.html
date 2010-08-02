@@ -1,18 +1,15 @@
 {% extends "base.html" %}
+{% load extras %}
 
 {% block content %}
-
-{% for day in days %}
-{% for key,value in day.items %}
-<h1>{{ key }}</h1>
-<ul>
-{% for i in value %}
-<li class="{{i.class}}"><img src="/static/images/{{i.class}}.jpg"/>{{i.date}}:{{i.info}}</li>
-{% endfor %}
-</ul>
-{% endfor %}
-
-{% endfor %}
-
-
+    {% for items in days %}
+        <h1>{{ day_names|get:forloop.counter0 }}</h1>
+        {% if items %}
+            <ul>
+                {% for item in items %}
+                    <li class="{{ item.class_name }}">{{ item.created.date }}:{{ item.body }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endfor %}
 {% endblock %}

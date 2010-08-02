@@ -1,21 +1,22 @@
-from main.models import OAuthAccessToken, OAuthRequestToken, LastFMSettings
+from main.models import *
 from django.contrib import admin
 
-class OAuthAccessTokenAdmin(admin.ModelAdmin):
-    list_display = ('user', 'service', 
-                    'oauth_token', 'oauth_token_secret',
-                    'created')    
-    
-admin.site.register(OAuthAccessToken, OAuthAccessTokenAdmin)
+class AccessTokenAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(AccessToken, AccessTokenAdmin)
 
-class OAuthRequestTokenAdmin(admin.ModelAdmin):
-    list_display = ('user', 'service', 
-                    'oauth_token', 'oauth_token_secret',
-                    'created')
+class RequestTokenAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(RequestToken, RequestTokenAdmin)
 
-admin.site.register(OAuthRequestToken, OAuthRequestTokenAdmin)    
+class UserServiceAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(UserService, UserServiceAdmin)
 
-class LastFMSettingsAdmin(admin.ModelAdmin):
-    list_display = ('username',)
-    
-admin.site.register(LastFMSettings, LastFMSettingsAdmin)  
+class ServiceAppAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(ServiceApp, ServiceAppAdmin)
+
+class OAuthSettingAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(OAuthSetting, OAuthSettingAdmin)

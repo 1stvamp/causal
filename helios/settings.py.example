@@ -14,7 +14,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': './helios.db',                      # Or path to database file if using sqlite3.
+        'NAME': '/var/db/helios.db',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -93,10 +93,20 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     # Uncomment the next line to enable the admin:
-    'django.contrib.admin',
+    #'django.contrib.admin',
     'south',
-    'main',
+    'helios.main',
 )
+INSTALLED_SERVICES = (
+    #'helios.twitter',
+    #'helios.foursquare',
+    #'helios.flickr',
+    #'helios.feed',
+    #'helios.facebook',
+    #'helios.github',
+    #'helios.lastfm',
+)
+INSTALLED_APPS += INSTALLED_SERVICES
 
 AUTHENTICATION_BACKENDS = (
     'main.email-auth.EmailBackend',
@@ -106,8 +116,8 @@ OAUTH_APP_SETTINGS = {
 
     'twitter': {
 
-        'consumer_key': 'hX6Da559MW6IIo0yVAcRrQ',
-        'consumer_secret': 'AHEh5NwOfIWL1K32xmqHQdTrztJnvayxzzy81BPTdbY',
+        'consumer_key': '',
+        'consumer_secret': '',
 
         'request_token_url': 'https://twitter.com/oauth/request_token',
         'access_token_url': 'https://twitter.com/oauth/access_token',
@@ -120,8 +130,8 @@ OAUTH_APP_SETTINGS = {
 
     'foursquare': {
 
-        'consumer_key': 'WZG3BFLERY1FOCNVA2D5NNZZ3IG0MR4DOYHA4BQAQT40PWX5',
-        'consumer_secret': 'DI1SYWTW4VK53UEJGNCJ2VGTWGMCVPV5NGMYZ20YXMJD5YQ3',
+        'consumer_key': '',
+        'consumer_secret': '',
 
         'request_token_url': 'http://foursquare.com/oauth/request_token',
         'access_token_url': 'http://foursquare.com/oauth/access_token',
