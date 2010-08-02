@@ -54,6 +54,3 @@ def get_items(user, since, model_instance=None):
             item.service = serv
             items.append(item)
     return items
-
-def get_form():
-    return ''
