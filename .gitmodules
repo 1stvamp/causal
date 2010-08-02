@@ -1,3 +1,0 @@
-[submodule "vendor/twitter-text-python"]
-	path = vendor/twitter-text-python
-	url = git://github.com/1stvamp/twitter-text-python.git
