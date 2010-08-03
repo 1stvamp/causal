@@ -9,8 +9,9 @@
                 {% for item in items %}
                     <li class="{{ item.class_name }}">
                         {{ item.created.date }}:
-                        {% if item.title %}{{ item.title }} &ndash;{% endif %}
-                        {% if item.body %}{{ item.body }}{% endif %}
+                        {% if item.title %}{{ item.title }}{% endif %}
+                        {% if item.title and item.body %}&ndash;{% endif %}
+                        {% if item.body %}{{ item.body|urlize }}{% endif %}
                     </li>
                 {% endfor %}
             </ul>
