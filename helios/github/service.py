@@ -2,9 +2,8 @@ import time
 import feedparser
 from BeautifulSoup import Tag, BeautifulSoup as soup
 from datetime import datetime
-from django.utils import simplejson
 from django.utils.safestring import mark_safe
-from helios.main.models import AccessToken, UserService, ServiceItem
+from helios.main.models import AccessToken, ServiceItem
 from helios.main.service_utils import get_model_instance
 
 display_name = 'Github'
