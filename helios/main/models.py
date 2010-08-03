@@ -17,7 +17,7 @@ class OAuthSetting(models.Model):
 
 class ServiceApp(models.Model):
     module_name = models.CharField(max_length=255)
-    oauth = models.ForeignKey(OAuthSetting)
+    oauth = models.ForeignKey(OAuthSetting, blank=True, null=True)
     _module = None
 
     @property
@@ -25,6 +25,9 @@ class ServiceApp(models.Model):
         if not self._module:
             self._module = import_module("%s.service" % (self.module_name,))
         return self._module
+
+    def __unicode__(self):
+        return u'%s service app' % (self.module.display_name,)
 
 class UserService(models.Model):
     """User service handler. e.g. twitter, flickr etc."""
@@ -36,14 +39,20 @@ class UserService(models.Model):
     def form_template_path(self):
         return "%s/form.html" % (self.app.module_name,)
 
+    def __unicode__(self):
+        return u'%s service for %s' % (self.app, self.user,)
+
 class RequestToken(models.Model):
     """OAuth Request Token."""
 
     service = models.ForeignKey(UserService, null=True, blank=True)
-    oauth_token = models.CharField(max_length=255)
-    oauth_token_secret = models.CharField(max_length=255)
+    oauth_token = models.CharField(max_length=255, blank=True, null=True)
+    oauth_token_secret = models.CharField(max_length=255, blank=True, null=True)
     created = models.DateTimeField()
     oauth_verify = models.CharField(max_length=255, blank=True, null=True)
+
+    def __unicode__(self):
+        return u'%s request token for %s' % (self.service.app.module.display_name, self.service.user,)
 
 class AccessToken(RequestToken):
     """OAuth Access Token."""
@@ -51,6 +60,9 @@ class AccessToken(RequestToken):
     # For services such as Github et al that use user/API key auth
     username = models.CharField(max_length=255, blank=True, null=True)
     api_token = models.CharField(max_length=255, blank=True, null=True)
+
+    def __unicode__(self):
+        return u'%s access token for %s' % (self.service.app.module.display_name, self.service.user,)
 
 # Not a django.db.models.Model, just a common container for service data
 

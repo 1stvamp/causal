@@ -40,11 +40,15 @@
     </script>
 
     {% for items in days %}
-        <h1>{{ day_names|get:forloop.counter0 }}</h1>
+        <h3>{{ day_names|get:forloop.counter0 }}</h3>
         {% if items %}
             <ul>
                 {% for item in items %}
-                    <li class="{{ item.class_name }}">{{ item.created.date }}: {{ item.body|urlize }}</li>
+                    <li class="{{ item.class_name }}">
+                        {{ item.created.date }}:
+                        {% if item.title %}{{ item.title }} &ndash;{% endif %}
+                        {{ item.body }}
+                    </li>
                 {% endfor %}
             </ul>
         {% endif %}
