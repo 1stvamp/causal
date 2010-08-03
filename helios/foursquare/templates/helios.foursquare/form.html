@@ -1,0 +1,5 @@
+{% if not service.requesttoken_set.all %}
+    Not authenticated to Foursquare. <a href="{% url helios-foursquare-auth %}">Authenticate</a>?
+{% else %}
+    Foursquare authenticated. <a href="{% url helios-foursquare-auth %}">Re-authenticate</a>?
+{% endif %}

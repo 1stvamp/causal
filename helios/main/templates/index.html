@@ -10,7 +10,7 @@
                     <li class="{{ item.class_name }}">
                         {{ item.created.date }}:
                         {% if item.title %}{{ item.title }} &ndash;{% endif %}
-                        {{ item.body }}
+                        {% if item.body %}{{ item.body }}{% endif %}
                     </li>
                 {% endfor %}
             </ul>
