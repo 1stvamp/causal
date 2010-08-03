@@ -5,13 +5,14 @@ from datetime import datetime
 from django.utils import simplejson
 from django.utils.safestring import mark_safe
 from helios.main.models import AccessToken, UserService, ServiceItem
+from helios.main.service_utils import get_model_instance
 
 display_name = 'Github'
 
 KEEP_TAGS = ('a', 'span', 'code',)
 
 def get_items(user, since, model_instance=None):
-    serv = model_instance or get_model_instance(user)
+    serv = model_instance or get_model_instance(user, __package__)
     items = []
     try:
         at = AccessToken.objects.get(service=serv)
@@ -36,6 +37,3 @@ def get_items(user, since, model_instance=None):
         return False
 
     return items
-
-def get_model_instance(user):
-    return UserService.objects.get(user=user, app__module_name=__package__)
