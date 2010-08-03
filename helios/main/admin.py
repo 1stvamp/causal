@@ -1,4 +1,4 @@
-from main.models import *
+from helios.main.models import *
 from django.contrib import admin
 
 class AccessTokenAdmin(admin.ModelAdmin):
