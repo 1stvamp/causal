@@ -6,13 +6,14 @@ from datetime import timedelta
 from django.shortcuts import render_to_response, redirect
 from django.utils.safestring import mark_safe
 from helios.main.models import UserService, ServiceItem
-from helios.twitter.utils import get_api, user_login, get_model_instance
+from helios.twitter.utils import get_api, user_login
+from helios.main.service_utils import get_model_instance
 
 display_name = 'Twitter'
 
 def get_items(user, since, model_instance=None):
     items = []
-    serv = model_instance or get_model_instance(user)
+    serv = model_instance or get_model_instance(user, __package__)
 
     api = get_api(serv)
     if not api:

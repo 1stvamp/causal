@@ -72,6 +72,3 @@ def get_api(service):
 
     # API instance
     return tweepy.API(auth)
-
-def get_model_instance(user):
-    return UserService.objects.get(user=user, app__module_name=__package__)
