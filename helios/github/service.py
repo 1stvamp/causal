@@ -1,10 +1,14 @@
-import httplib2
-from datetime import datetime, timedelta
+import time
+import feedparser
+from BeautifulSoup import Tag, BeautifulSoup as soup
+from datetime import datetime
 from django.utils import simplejson
 from django.utils.safestring import mark_safe
 from helios.main.models import AccessToken, UserService, ServiceItem
 
 display_name = 'Github'
+
+KEEP_TAGS = ('a', 'span', 'code',)
 
 def get_items(user, since, model_instance=None):
     serv = model_instance or get_model_instance(user)
@@ -12,33 +16,21 @@ def get_items(user, since, model_instance=None):
     try:
         at = AccessToken.objects.get(service=serv)
 
-        url = 'http://github.com/api/v2/json/repos/show/%s' % at.username
-        h = httplib2.Http()
-        resp, content = h.request(url, "GET")
+        url = 'https://github.com/%s.private.actor.atom?token=%s' % (at.username, at.api_token,)
 
-        git_hub = simplejson.loads(content)
-        repos = []
+        feed = feedparser.parse(url)
 
-        for repo in git_hub['repositories']:
-            url = 'http://github.com/api/v2/json/commits/list/%s/%s/master' % (at.username, repo['name'],)
-            resp, content = h.request(url, "GET")
-            commits = simplejson.loads(content)
-
-            for commit in commits['commits']:
-                commited_datetime = commit['committed_date']
-                utc_offset = commited_datetime.rsplit('-', 1)[1]
-                utc_offset = utc_offset[:2]
-                utc_offset_delta = timedelta(hours=int(utc_offset) + 1)
-
-                commited_datetime = datetime.strptime(commited_datetime.rsplit('-', 1)[0], '%Y-%m-%dT%H:%M:%S')
-                commited_datetime = commited_datetime + utc_offset_delta
-
-                item = ServiceItem()
-                item.title = 'Project: ' + repo['name']
-                item.body = commit['message']
-                item.created = commited_datetime
-                item.service = serv
-                items.append(item)
+        for entry in feed.entries:
+            item = ServiceItem()
+            item.title = entry.title
+            content = soup(entry.content[0].value)
+            for tag in content.findAll(True):
+                if tag.name not in KEEP_TAGS:
+                    tag.hidden = True
+            item.body = mark_safe(content)
+            item.created = datetime.fromtimestamp(time.mktime(entry.updated_parsed))
+            item.service = serv
+            items.append(item)
     except Exception, e:
         print e
         return False
