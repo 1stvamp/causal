@@ -31,8 +31,7 @@ def get_items(user, since, model_instance=None):
             item.created = datetime.fromtimestamp(time.mktime(entry.updated_parsed))
             item.service = serv
             items.append(item)
-    except Exception, e:
-        print e
+    except:
         return False
 
     return items
