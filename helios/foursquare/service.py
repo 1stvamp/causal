@@ -12,7 +12,7 @@ def get_items(user, since, model_instance=None):
     items = []
 
     checkins = get_data(serv, 'http://api.foursquare.com/v1/history.json')
-    if checkins:
+    if checkins and checkins.has_key('checkins'):
         for checkin in checkins['checkins']:
             item = ServiceItem()
             item.title = "Checked in: %s" % (checkin['venue']['name'],)
