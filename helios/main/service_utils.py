@@ -66,18 +66,21 @@ def generate_access_token(service, request_token):
         insert_attrs['created'] = datetime.now()
         AccessToken.objects.create(**insert_attrs)
 
-def get_data(service, url):
-    at = AccessToken.objects.get(service=service)
-    if at:
-        consumer = oauth.Consumer(service.app.oauth.consumer_key, service.app.oauth.consumer_secret)
-        token = oauth.Token(at.oauth_token , at.oauth_token_secret)
-
-        client = oauth.Client(consumer, token)
-        resp, content = client.request(url, "GET")
-        data = simplejson.loads(content)
-        return data
+def get_data(service, url, disable_oauth=False):
+    if disable_oauth:
+        h = httplib2.Http()
+        resp, content = h.request(url, "GET")
     else:
-        return False
+        at = AccessToken.objects.get(service=service)
+        if at:
+            consumer = oauth.Consumer(service.app.oauth.consumer_key, service.app.oauth.consumer_secret)
+            token = oauth.Token(at.oauth_token , at.oauth_token_secret)
+
+            client = oauth.Client(consumer, token)
+            resp, content = client.request(url, "GET")
+        else:
+            return False
+    return simplejson.loads(content)
 
 def get_model_instance(user, module_name):
     return UserService.objects.get(user=user, app__module_name=module_name)
