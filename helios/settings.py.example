@@ -1,9 +1,9 @@
 import os,settings
 # Django settings for helios project.
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
-SERVE_STATIC = True
+SERVE_STATIC = False
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -57,10 +57,13 @@ MEDIA_URL = ''
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/'
+ADMIN_MEDIA_PREFIX = '/_ha-media/'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 't)v4es3)&9un7^2pmsv7t35mj%(_k3wf0y_+4#_z^@x7)nq08z'
+SECRET_KEY = None
+
+if SECRET_KEY is None:
+	raise Exception('SECRET_KEY needs to be changed to a unique, sekrit, random string')
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -92,8 +95,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-    # Uncomment the next line to enable the admin:
-    #'django.contrib.admin',
+    'django.contrib.admin',
     'south',
     'helios.main',
 )
@@ -109,5 +111,5 @@ INSTALLED_SERVICES = (
 INSTALLED_APPS += INSTALLED_SERVICES
 
 AUTHENTICATION_BACKENDS = (
-    'main.email-auth.EmailBackend',
+    'helios.main.email-auth.EmailBackend',
  )
