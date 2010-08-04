@@ -2,6 +2,7 @@ from django.conf.urls.defaults import *
 from django.conf import settings
 from django.utils.importlib import import_module
 from django.template.loader import render_to_string
+from django.http import HttpResponseNotFound, HttpResponseServerError
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
