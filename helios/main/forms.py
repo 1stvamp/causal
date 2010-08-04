@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.core.exceptions import MultipleObjectsReturned
 attrs_dict = { 'class': 'required' }
 
 class RegistrationForm(forms.Form):
@@ -25,17 +26,20 @@ class RegistrationForm(forms.Form):
     password2 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict, render_value=False),
                                 label=u'password (again)')
 
-    def clean_username(self):
+    def clean_email(self):
         """
         Validate that the username is alphanumeric and is not already
         in use.
 
         """
         try:
-            user = User.objects.get(username__iexact=self.cleaned_data['username'])
+            user = User.objects.get(username__iexact=self.cleaned_data['email'])
         except User.DoesNotExist:
-            return self.cleaned_data['username']
-        raise forms.ValidationError(u'That username is already taken. Please choose another.')
+            return self.cleaned_data['email']
+        except MultipleObjectsReturned:
+            pass
+        self.errors['email'] = u'That email is already taken. Please choose another.'
+    
 
     def clean(self):
         """
