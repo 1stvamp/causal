@@ -12,8 +12,6 @@ from helios.main.service_utils import get_model_instance
 display_name = 'Twitter'
 
 def get_items(user, since, model_instance=None):
-    if True:
-        return []
     items = []
     serv = model_instance or get_model_instance(user, __package__)
 
