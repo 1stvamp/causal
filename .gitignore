@@ -1,3 +1,4 @@
 *.wpr
 *.pyc
 ./helios.wsgi
+pip-log.txt
