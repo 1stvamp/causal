@@ -3,7 +3,10 @@ from django.conf import settings
 from django.utils.importlib import import_module
 from django.template.loader import render_to_string
 from django.http import HttpResponseNotFound, HttpResponseServerError
-# Uncomment the next two lines to enable the admin:
+from django.views.decorators.cache import cache_page
+
+from main.views import *
+
 from django.contrib import admin
 admin.autodiscover()
 
@@ -14,38 +17,33 @@ if settings.DEBUG:
         pass
 
 urlpatterns = patterns('',
-    # Example:
-    # (r'^helios/', include('helios.foo.urls')),
-
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
-    # Uncomment the next line to enable the admin:
-    url(r'^admin/', include(admin.site.urls), name='admin'),
-    url(r'^oauth/', include(admin.site.urls), name='oath'),
+    url(settings.ADMIN_URL, include(admin.site.urls), name='admin'),
 
-    #users
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'accounts/login.html'}, name='login'),
-    url(r'^accounts/register/$', 'helios.main.views.register', name='register'),
-    url(r'^accounts/profile/$', 'helios.main.views.profile', name='profile'),
     url(r'^password_reset/$', 'django.contrib.auth.views.password_reset', name='password-reset'),
     url(r'^password_reset/done/$','django.contrib.auth.views.password_reset_done', name='post-password-reset'),
-    url(r'^$', 'helios.main.views.register', name='register'),
-    url(r'^history/$', 'helios.main.views.history', name='history'),
+
+    url(r'^accounts/register/$', register, name='register'),
+    url(r'^accounts/profile/$', profile, name='profile'),
+    url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/history/'}, name='home'),
+    url(r'^history/$', history, name='history'),
 )
 
 for service_name in settings.INSTALLED_SERVICES:
     service_urls = import_module("%s.urls" % (service_name,))
     if service_urls:
 	urlpatterns += patterns('',
-	    url(service_urls.base_path, include(service_urls), name=service_urls.shortcut),
+        url(service_urls.base_path, include(service_urls), name=service_urls.shortcut),
 	)
 
 if settings.SERVE_STATIC:
 	urlpatterns += patterns('',
-	    (r'^static/(?P<path>.*)$', 'django.views.static.serve', {
-	    	'document_root': settings.MEDIA_ROOT }),
+        (r'^static/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.MEDIA_ROOT }),
 	)
 
 # These custom error handlers return the correct Http codes for their respective
