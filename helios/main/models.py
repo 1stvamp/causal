@@ -79,3 +79,6 @@ class ServiceItem(object):
     @property
     def class_name(self):
         return self.service.app.module_name.replace('.', '-')
+
+    def has_location(self):
+        return self.location['long'] is not None and self.location['lat'] is not None
