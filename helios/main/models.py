@@ -2,6 +2,7 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.importlib import import_module
+from django.core.urlresolvers import reverse
 
 
 class OAuthSetting(models.Model):
@@ -45,6 +46,9 @@ class UserService(models.Model):
 
     def __unicode__(self):
         return u'%s service for %s' % (self.app, self.user,)
+
+    def get_absolute_url(self):
+        return reverse('history-callback', kwargs={'service_id': self.pk})
 
 class RequestToken(models.Model):
     """OAuth Request Token."""

@@ -31,6 +31,7 @@ urlpatterns = patterns('',
     url(r'^accounts/profile/$', profile, name='profile'),
     url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/history/'}, name='home'),
     url(r'^history/$', history, name='history'),
+    url(r'^history/ajax/(?P<service_id>\d+)$', history_callback, name='history-callback'),
 )
 
 for service_name in settings.INSTALLED_SERVICES:
