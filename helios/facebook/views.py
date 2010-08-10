@@ -41,4 +41,9 @@ def auth(request):
     request.session['helios_facebook_oauth_return_url'] = request.GET.get('HTTP_REFERER', None)
     service = get_model_instance(request.user, __package__)
     callback = "%s%s" % (service.app.oauth.callback_url_base, reverse('helios-facebook-callback'),)
-    return redirect("%s&redirect_uri=%s" % (service.app.oauth.request_token_url, callback,))
+    return redirect("%s&redirect_uri=%s&scope=%s" % (
+            service.app.oauth.request_token_url,
+            callback,
+            'read_stream',
+        )
+    )
