@@ -14,7 +14,7 @@ WHERE filter_key
 IN (
     SELECT filter_key
     FROM stream_filter
-    WHERE uid = %%s AND type = 'newsfeed'
+    WHERE uid = me() AND type = 'newsfeed'
 )"""
 
 def get_items(user, since, model_instance=None):
@@ -24,8 +24,8 @@ def get_items(user, since, model_instance=None):
     try:
         at = AccessToken.object.get(service=serv)
 
-        q = FQL(serv.app.oauth.consumer_secret)
-        results = q(SELECT_FQL % (at.username,))
+        q = FQL(at.oauth_token)
+        results = q(SELECT_FQL)
 
         for result in results:
             item = ServiceItem()

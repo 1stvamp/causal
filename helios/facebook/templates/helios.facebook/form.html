@@ -1,0 +1,5 @@
+{% if not service.requesttoken_set.all %}
+    Not authenticated to Facebook. <a href="{% url helios-facebook-auth %}">Authenticate</a>?
+{% else %}
+    Facebook authenticated. <a href="{% url helios-facebook-auth %}">Re-authenticate</a>?
+{% endif %}
