@@ -15,6 +15,10 @@ class OAuthSetting(models.Model):
     created = models.DateTimeField()
     callback_url_base = models.CharField(max_length=255)
 
+    def __unicode__(self):
+        url = self.request_token_url
+        return u'OAuth (%s%s)' % (url[:19], len(url) > 20 and '...' or '')
+
 class ServiceApp(models.Model):
     module_name = models.CharField(max_length=255)
     oauth = models.ForeignKey(OAuthSetting, blank=True, null=True)
