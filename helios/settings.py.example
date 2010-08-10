@@ -65,7 +65,7 @@ ADMIN_MEDIA_PREFIX = '/_ha-media/'
 
 # URLConf regex that defines the base dir for the admin URL.
 # Should be set to something other than admin
-ADMIN_URL = r'_ha-admin'
+ADMIN_URL = r'^_ha-admin/$'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = None
