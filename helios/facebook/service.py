@@ -33,7 +33,7 @@ def get_items(user, since, model_instance=None):
             item.body = result.message
             item.service = serv
             items.append(item)
-    except Exception, e:
-        print e
+    except:
+        pass
 
     return items
