@@ -76,7 +76,11 @@ def history_callback(request, service_id):
                 }
                 days[days_to_i[item.created.strftime('%A')]].append(item_dict)
 
-    return HttpResponse(simplejson.dumps(days))
+    response = {
+        'class': service.class_name,
+        'items': days,
+    }
+    return HttpResponse(simplejson.dumps(response))
 
 def register(request):
     form = RegistrationForm()

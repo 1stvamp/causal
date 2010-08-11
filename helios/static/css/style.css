@@ -53,17 +53,17 @@ HR {
     background: #fff;
 }
 #header {
-    background: #e5dd00; 
+    background: #e5dd00;
     border-bottom: 4px solid #8cb202;
-  /*   
+  /*
     background-color: #f4272d;
     background-image: -moz-linear-gradient(100% 100% 90deg, #c9272d, #f4272d);
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f4272d), to(#c9272d));     
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f4272d), to(#c9272d));
    */
     padding: 10px;
 }
 #header ul,
-#index-options 
+#index-options
  {
     list-style: none;
     padding: 0;
@@ -94,7 +94,7 @@ HR {
 #index-options A:active {
    position:relative;
    top: 1px;
-   left: 1px;  
+   left: 1px;
 }
 #header A:focus,
 #index-options A:active {
@@ -194,7 +194,7 @@ form {
     border: 0;
     margin: 0;
     padding: 0;
-    
+
 }
 div.field {
     margin-bottom: 0.4em;
@@ -319,7 +319,7 @@ fieldset legend {
     color: #333;
 }
 .fieldwrapper {
-    margin:10px; 
+    margin:10px;
 }
 #login-form {
     color: #fff;
@@ -353,13 +353,13 @@ fieldset legend {
 }
 .form-data LABEL {
     display: inline-block;
-    width: 125px;  
+    width: 125px;
 }
 .form-data SELECT {
     font-size: 1.6em;
     height: 1.6em;
     position: relative;
-    top: 3px;    
+    top: 3px;
 }
 .form-data INPUT,
 .form-data LABEL {
@@ -367,7 +367,7 @@ fieldset legend {
 }
 .form-data .button-submit {
     font-size: 1em;
-    margin:0; 
+    margin:0;
 }
 
 /***************************************************************
@@ -382,7 +382,7 @@ table.list-table caption {
 }
 
 table.list-table {
-    
+
 width: 100%;
 
 
@@ -392,8 +392,8 @@ width: 100%;
 table.list-table th, table.list-table td {
     word-wrap: break-word;
     max-width: 600px;
-    
-    
+
+
     font: normal 0.8em sans;
     padding: 0.4em;
     border-bottom: 0.1em solid #CCC;
@@ -576,7 +576,7 @@ table.list-table thead {
     padding: 10px;
     border: none;
     color: #fff;
-    font-weight: bold;    
+    font-weight: bold;
 }
 /***************************************************************
  CSS3
@@ -623,13 +623,21 @@ table.list-table thead {
 
 }
 .clearfix:after {
-    content: "."; 
-    display: block; 
-    height: 0; 
-    clear: both; 
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
     visibility: hidden;
 }
 .clearfix {display:inline-block;}
 /* Hide from IE Mac \*/
-.clearfix {display:block;} /*additional bit in -ie56.css*/ 
+.clearfix {display:block;} /*additional bit in -ie56.css*/
 /* End hide from IE Mac */
+
+/* Services */
+UL#loading-services LI {
+    list-style-image: url(/static/images/throbber.gif);
+}
+UL#loading-services LI.loaded {
+    list-style-image: url(/static/images/tick.png);
+}
