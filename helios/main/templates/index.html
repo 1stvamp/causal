@@ -13,6 +13,8 @@
         return a['created'] - b['created'];
     }
     var success = function(data) {
+        $('li#service_load_' + data['class']).addClass('loaded');
+        data = data['items'];
         for (i in data) {
             days[i] = days[i].concat(data[i]);
             day = days[i];
@@ -25,17 +27,24 @@
             }
         }
     }
-    $(function() {
+    var load_services = function() {
         {% for service in services %}
             $.get("{{ service.get_absolute_url }}", {}, success, 'json');
         {% endfor %}
     }
+    $(function() {
+        setTimeout(load_services, 500);
     );
     // ]]>
     </script>
 {% endblock %}
 
 {% block content %}
+    <ul id="loading-services">
+        {% for service in services %}
+            <li id="service_load_{{ service.class_name }}">{{ service.app.module.display_name }}</li>
+        {% endfor %}
+    </ul>
     {% for items in days %}
         <ul id="day_{{ forloop.counter0 }}">
             <lh>{{ day_names|get:forloop.counter0 }}</lh>

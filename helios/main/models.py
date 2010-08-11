@@ -50,6 +50,10 @@ class UserService(models.Model):
     def get_absolute_url(self):
         return reverse('history-callback', kwargs={'service_id': self.pk})
 
+    @property
+    def class_name(self):
+        return self.app.module_name.replace('.', '-')
+
 class RequestToken(models.Model):
     """OAuth Request Token."""
 
@@ -86,7 +90,7 @@ class ServiceItem(object):
 
     @property
     def class_name(self):
-        return self.service.app.module_name.replace('.', '-')
+        return self.service and self.service.app.module_name.replace('.', '-') or ''
 
     def has_location(self):
         return self.location['long'] is not None and self.location['lat'] is not None
