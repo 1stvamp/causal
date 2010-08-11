@@ -8,3 +8,4 @@ south==0.7.1
 tweepy==1.7.1
 twitter-text-py==1.0.3
 pyfacegraph==0.0.4
+py-pretty==1
