@@ -21,7 +21,7 @@
             days[i].sort(item_sort_callback);
             for (j in day) {
                 item = day[j];
-                day_ul.append('<li>'+item['title']+' - '+item['body']+'</li>');
+                day_ul.append($('#item_template').jqote(item, '*'));
             }
         }
     }
@@ -39,14 +39,16 @@
     {% for items in days %}
         <ul id="day_{{ forloop.counter0 }}">
             <lh>{{ day_names|get:forloop.counter0 }}</lh>
-            {% for item in items %}
-                <li class="{{ item.class_name }}">
-                    {{ item.created.date }}:
-                    {% if item.title %}{{ item.title }}{% endif %}
-                    {% if item.title and item.body %}&ndash;{% endif %}
-                    {% if item.body %}{{ item.body|urlize }}{% endif %}
-                </li>
-            {% endfor %}
         </ul>
     {% endfor %}
+    <script type="text/x-jqote-template" id="item_template">
+        <![CDATA[
+        <li class="<*= this.class_name *>">
+            <*= this.created_date *>:
+            <*= this.title ? this.title : '' *>
+            <*= (this.title && this.body) ? '&ndash;' : '' *>
+            <*= this.body ? this.body : '' *>
+        </li>
+        ]]>
+    </script>
 {% endblock %}

@@ -1,5 +1,6 @@
 from time import mktime
 from datetime import datetime, timedelta, date
+import pretty
 
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -70,6 +71,7 @@ def history_callback(request, service_id):
                     'title': item.title,
                     'body': urlize(item.body),
                     'created': mktime(item.created.timetuple()),
+                    'created_date': pretty.date(item.created),
                     'location': item.location,
                     'class_name' : item.class_name,
                     'has_location': item.has_location(),
