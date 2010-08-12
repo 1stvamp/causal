@@ -16,6 +16,8 @@ if settings.DEBUG:
     except ImportError:
         pass
 
+cache_time = getattr(settings, 'ITEM_CACHE_TIME', 60 * 30)
+
 urlpatterns = patterns('',
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
     # to INSTALLED_APPS to enable admin documentation:
@@ -31,20 +33,22 @@ urlpatterns = patterns('',
     url(r'^accounts/profile/$', profile, name='profile'),
     url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/history/'}, name='home'),
     url(r'^history/$', history, name='history'),
+    url(r'^history/ajax/(?P<service_id>\d+)$', cache_page(history_callback, cache_time), name='history-callback'),
 )
 
 for service_name in settings.INSTALLED_SERVICES:
     service_urls = import_module("%s.urls" % (service_name,))
     if service_urls:
-	urlpatterns += patterns('',
-        url(service_urls.base_path, include(service_urls), name=service_urls.shortcut),
-	)
+        urlpatterns += patterns('',
+            url(service_urls.base_path, include(service_urls), name=service_urls.shortcut),
+        )
 
 if settings.SERVE_STATIC:
-	urlpatterns += patterns('',
+    urlpatterns += patterns('',
         (r'^static/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.MEDIA_ROOT }),
-	)
+            'document_root': settings.MEDIA_ROOT }
+         ),
+    )
 
 # These custom error handlers return the correct Http codes for their respective
 # errors, as opposed to a 200 as normally returned.
@@ -53,8 +57,8 @@ handler404 = '%s.return_404' % (settings.ROOT_URLCONF,)
 handler500 = '%s.return_500' % (settings.ROOT_URLCONF,)
 
 def return_404(request):
-	return HttpResponseNotFound(render_to_string("404.html"))
+    return HttpResponseNotFound(render_to_string("404.html"))
 
 def return_500(request):
-	return HttpResponseServerError(render_to_string("500.html"))
+    return HttpResponseServerError(render_to_string("500.html"))
 

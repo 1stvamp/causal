@@ -2,6 +2,7 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.importlib import import_module
+from django.core.urlresolvers import reverse
 
 
 class OAuthSetting(models.Model):
@@ -14,6 +15,10 @@ class OAuthSetting(models.Model):
     user_auth_url = models.URLField(verify_exists=False)
     created = models.DateTimeField()
     callback_url_base = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        url = self.request_token_url
+        return u'OAuth (%s%s)' % (url[:19], len(url) > 20 and '...' or '')
 
 class ServiceApp(models.Model):
     module_name = models.CharField(max_length=255)
@@ -41,6 +46,14 @@ class UserService(models.Model):
 
     def __unicode__(self):
         return u'%s service for %s' % (self.app, self.user,)
+
+    def get_absolute_url(self):
+        return reverse('history-callback', kwargs={'service_id': self.pk})
+
+    @property
+    def class_name(self):
+        return self.app.module_name.replace('.', '-')
+
 
 class RequestToken(models.Model):
     """OAuth Request Token."""
@@ -78,4 +91,7 @@ class ServiceItem(object):
 
     @property
     def class_name(self):
-        return self.service.app.module_name.replace('.', '-')
+        return self.service and self.service.app.module_name.replace('.', '-') or ''
+
+    def has_location(self):
+        return self.location['long'] is not None and self.location['lat'] is not None

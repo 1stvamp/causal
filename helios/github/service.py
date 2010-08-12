@@ -2,7 +2,6 @@ import time
 import feedparser
 from BeautifulSoup import Tag, BeautifulSoup as soup
 from datetime import datetime
-from django.utils.safestring import mark_safe
 from helios.main.models import AccessToken, ServiceItem
 from helios.main.service_utils import get_model_instance
 
@@ -27,7 +26,7 @@ def get_items(user, since, model_instance=None):
             for tag in content.findAll(True):
                 if tag.name not in KEEP_TAGS:
                     tag.hidden = True
-            item.body = mark_safe(content)
+            item.body = content
             item.created = datetime.fromtimestamp(time.mktime(entry.updated_parsed))
             item.service = serv
             items.append(item)

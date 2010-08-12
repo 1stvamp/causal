@@ -1,7 +1,6 @@
 import httplib2
 import oauth2 as oauth
 from datetime import datetime, timedelta
-from django.utils.safestring import mark_safe
 from helios.main.models import ServiceItem
 from helios.main.service_utils import get_model_instance, get_data
 
