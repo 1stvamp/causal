@@ -7,7 +7,7 @@ from helios.main.service_utils import get_model_instance
 display_name = 'Flickr'
 
 def get_items(user, since, model_instance):
-    serv = model_instance or get_model_instance(user, __package__)
+    serv = model_instance or get_model_instance(user, __name__)
     items = []
 
     at = AccessToken.objects.get(service=serv)

@@ -11,7 +11,7 @@ display_name = 'Github'
 KEEP_TAGS = ('a', 'span', 'code',)
 
 def get_items(user, since, model_instance=None):
-    serv = model_instance or get_model_instance(user, __package__)
+    serv = model_instance or get_model_instance(user, __name__)
     items = []
     try:
         at = AccessToken.objects.get(service=serv)

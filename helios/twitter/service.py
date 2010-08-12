@@ -13,7 +13,7 @@ display_name = 'Twitter'
 
 def get_items(user, since, model_instance=None):
     items = []
-    serv = model_instance or get_model_instance(user, __package__)
+    serv = model_instance or get_model_instance(user, __name__)
 
     api = get_api(serv)
     if not api:
