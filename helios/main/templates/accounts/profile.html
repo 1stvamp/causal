@@ -3,6 +3,17 @@
 {% block content %}
 <div class="form-data">
     <ul>
+        {% for service in services %}
+        {% if service == 'twitter' %}
+            <li><a href="/twitter">click to sign up to twitter!</a><li>
+        {%endif%}
+        {% if service == 'foursquare' %}
+            <li>click to sign up to foursquare!<li>
+        {%endif%}
+        {% endfor %}
+        
+    </ul>
+    <ul>
         {% for service in user.userservice_set.all %}
             <li>{% include service.form_template_path %}</li>
         {% endfor %}
