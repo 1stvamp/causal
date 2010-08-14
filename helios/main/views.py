@@ -88,7 +88,7 @@ def register(request):
     form = RegistrationForm()
 
     if request.user.is_authenticated():
-        return redirect('history')
+        return redirect('/')
 
     if request.method == 'POST':
 
@@ -116,6 +116,14 @@ def register(request):
 def profile(request):
     return render_to_response(
         'accounts/profile.html',
+        {
+        },
+        context_instance=RequestContext(request)
+    )
+
+def index(request):
+    return render_to_response(
+        'homepage.html',
         {
         },
         context_instance=RequestContext(request)
