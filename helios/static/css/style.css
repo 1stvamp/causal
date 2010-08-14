@@ -1,7 +1,7 @@
 BODY {
     font-family: Helvetica,  Arial, FreeSans, sans-serif;
     margin: 0;
-    background: #333;
+    background: #D4EDF4;
 }
 li {
     list-style: none;
@@ -53,13 +53,8 @@ HR {
     background: #fff;
 }
 #header {
-    background: #e5dd00;
-    border-bottom: 4px solid #8cb202;
-  /*
-    background-color: #f4272d;
-    background-image: -moz-linear-gradient(100% 100% 90deg, #c9272d, #f4272d);
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f4272d), to(#c9272d));
-   */
+    background: #6FBB3D;
+    border-bottom: 4px solid #AFBFC3;
     padding: 10px;
 }
 #header ul,
@@ -73,22 +68,9 @@ HR {
 #index-options li {
     float: left;
 }
-#header A,
-#index-options A
- {
-    background-color: #fff;
-    font-weight: bold;
-    display: block;
-    padding: 10px;
-    margin: 0 0 0 5px;
-    text-decoration: none;
-    color: #000;
-    border: 1px solid #aaa
-}
 #header A:hover,
 #index-options A:hover {
     position: static;
-    background: #ddd;
 }
 #header A:active,
 #index-options A:active {
@@ -101,29 +83,7 @@ HR {
    outline: none;
    background-color: #ccc;
 }
-#sys_message {
-   text-align: center;
-   padding: 0.8em;
-   border-bottom: 0.1em solid #CCC;
-   background: #ECC;
-   position: absolute;
-   width: 100%;
-   z-index: 1000;
-   opacity: .70;
-   filter: Alpha(Opacity=70);
-}
-#site_nav {
-   width: 200px;
-   height: 100%;
-   position: fixed;
-   top: 51px;
-    left: 0;
-    text-align: right;
-    margin-right: 1em;
-    border-right: 0.1em solid #CCC;
-    font: normal 0.8em sans;
-    padding: 0.8em 0.8em 1em;
-}
+
 #site_nav dl {
     margin: 0;
     padding: 0;
@@ -132,7 +92,7 @@ HR {
 #site_nav dt {
     font-size: 1.1em;
     padding: 0.6em 0 0 0;
-    color: #333;
+    color: #D4EDF4;
 }
 
 #site_nav dt:first-child {
@@ -156,380 +116,6 @@ HR {
 
 #content {
     padding: 0.8em;
-}
-
-ul.submenu {
-    list-style: none;
-    padding: 0.8em 0.4em;
-    margin: 0;
-    position: absolute;
-    top: 50px;
-    right: 0;
-}
-
-ul.submenu li {
-    font: normal 0.8em sans;
-    display: inline-block;
-    margin-left: 0.4em;
-    border-left: 0.2em solid #CCC;
-    padding-left: 0.4em;
-}
-
-ul.submenu li:first-child {
-    border-left: none;
-}
-
-ul.submenu li a {
-    text-decoration: none;
-}
-#index-options {
-    margin-top: 20px;
-}
-
-/***************************************************************
- Form
-***************************************************************/
-
-form {
-    border: 0;
-    margin: 0;
-    padding: 0;
-
-}
-div.field {
-    margin-bottom: 0.4em;
-    position: relative;
-}
-td div.field p.help {
-    left: 0px;
-    top: 20px;
-    width: auto;
-    z-index: 500;
-}
-div.field p.help {
-    position: absolute;
-    left: 510px;
-    width: 300px;
-    top: -15px;
-    display: none;
-    padding: 5px;
-    background: #EFEFEF;
-    border: 0.1em solid #CCC;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-}
-div.select select,
-div.text input {
-    width: 200px;
-}
-div.text textarea {
-    width: 280px;
-    height: 150px;
-}
-div.boilerplate span {
-    font: bold 0.8em sans;
-    line-height: 2em;
-}
-div.field.date input {
-    width: 90px;
-}
-div.field label {
-    font: normal 0.8em sans;
-    display: inline-block;
-    width: 200px;
-    padding: 5px 5px 0 0;
-    text-align: right;
-    float: left;
-}
-div.text.extended label {
-    display: block;
-    float: none;
-    text-align: left;
-}
-div.text.extended textarea {
-    width: auto;
-    width: 490px;
-    height: 400px;
-}
-div.field.file p.preview {
-    margin-left: 210px;
-}
-div.field.file p.preview img {
-    width: 20px;
-    height: 20px;
-}
-div.field.file p.preview a {
-    text-decoration: none;
-}
-div.field.select ul {
-    float: left;
-    list-style: none;
-    margin: 0;
-    padding: 0 0 15px 0;
-}
-div.field.select ul label {
-    float: none;
-    text-align: left;
-}
-td ul.errorlist {
-    margin: 0 0 0 0;
-    min-height: 15px;
-}
-ul.errorlist li {
-    list-style: none;
-    font: normal 0.8em sans;
-    color: #C00;
-}
-div.actions {
-    margin-top: 0.8em;
-    margin-bottom: 3em;
-    border-top: 0.1em solid #CCC;
-    padding-top: 0.4em;
-    font: normal 0.8em sans;
-    clear: both;
-}
-form.inline {
-    width: 100%;
-    margin: 0;
-    padding-bottom: 0.4em;
-}
-form.inline div.field {
-    display: inline;
-}
-form.inline div.actions {
-    margin: 0;
-    padding: 0;
-    border: none;
-    z-index: 200;
-}
-form.inline div.field label {
-    display: inline;
-    float: none;
-    padding: 0.4em 0.4em 0.4em 0;
-}
-form.inline div.field_container {
-    margin-bottom: 0.4em;
-}
-fieldset {
-    border: 0.1em solid #CCC;
-    margin-bottom: 0.8em;
-}
-fieldset legend {
-    font: bold 0.8em sans;
-    color: #333;
-}
-.fieldwrapper {
-    margin:10px;
-}
-#login-form {
-    color: #fff;
-    width: 300px;
-    margin: 40px auto 40px auto;
-    padding: 10px;
-    background: #004c66;
-}
-#login-form LABEL {
-    color: #fff;
-    width: 100px;
-    margin :0;
-    display: inline-block;
-}
-#login-form TABLE INPUT {
-    border: none;
-    padding: 3px;
-    margin-left:0;
-}
-#login-form FORM {
-    width: auto;
-}
-#login-form .button-submit {
-    font-weight: bold;
-    margin-left: 105px;
-    margin-top: 10px;
-}
-.form-data {
-    background-color: #eee;
-    padding: 20px 0;
-}
-.form-data LABEL {
-    display: inline-block;
-    width: 125px;
-}
-.form-data SELECT {
-    font-size: 1.6em;
-    height: 1.6em;
-    position: relative;
-    top: 3px;
-}
-.form-data INPUT,
-.form-data LABEL {
-     font-size: 1.6em;
-}
-.form-data .button-submit {
-    font-size: 1em;
-    margin:0;
-}
-
-/***************************************************************
- Table
-***************************************************************/
-
-table.list-table caption {
-    font: 120%;
-    font-weight: bold;
-    text-align: left;
-    padding-bottom: 1em;
-}
-
-table.list-table {
-
-width: 100%;
-
-
-    border-top: 1px solid #CCC;
-    margin: 0.5em 0;
-}
-table.list-table th, table.list-table td {
-    word-wrap: break-word;
-    max-width: 600px;
-
-
-    font: normal 0.8em sans;
-    padding: 0.4em;
-    border-bottom: 0.1em solid #CCC;
-    border-left: 0.1em solid #CCC;
-}
-
-table.list-table th:last-child, table.list-table td:last-child {
-    border-right: 0.1em solid #CCC;
-}
-
-table.list-table thead {
-    background: #EEE;
-    color: #333;
-}
-
-table.list-table tfoot td {
-    font-weight: bold;
-}
-
-table.list-table tfoot td.empty {
-    border: none;
-}
-
-table.list-table th {
-    font-weight: bold;
-    text-align: left;
-    cursor: pointer;
-    background: Transparent url(../images/sort.gif) no-repeat right center;
-    padding-right: 18px;
-}
-
-table.list-table th.nosort {
-    cursor: auto;
-    background: none;
-}
-
-table.list-table tr.even {
-    background-color: #FAFAFA;
-}
-
-table.list-table tr.odd {
-    background-color: #FFF;
-}
-
-table.list-table tbody tr:hover {
-    background-color: #EEE;
-}
-
-table.list-table tr.deleted td, table.list-table tr.deleted td a {
-    color: #CCC;
-}
-
-table.list-table th.headerSortDown, table.list-table th.headerSortUp {
-    background: #DDD;
-}
-
-table.list-table th.headerSortDown {
-    background: #DDD url(../images/sort-desc.gif) no-repeat right center;
-}
-
-table.list-table th.headerSortUp {
-    background: #DDD url(../images/sort-asc.gif) no-repeat right center;
-}
-
-/***************************************************************
- Paginator
-***************************************************************/
-#pagination {
-    position: relative;
-    width: 100%;
-}
-
-#pagination .paginator {
-    width: 50%;
-    padding: 0;
-    margin: 0;
-}
-
-.paginator a {
-    text-decoration: none;
-}
-
-.paginator span {
-    font-weight: bold;
-    font-size: 110%;
-}
-
-.paginator span.next, .paginator span.prev,
-.paginator span.first, .paginator span.last {
-    color: #CCC;
-}
-
-.paginator .next, .paginator .prev, .paginator .first, .paginator .last {
-    font-weight: bold;
-}
-
-.paginator .next, .paginator .prev {
-    font-size: 90%;
-}
-
-.paginator .first, .paginator .last {
-    font-size: 120%;
-}
-
-/***************************************************************
- Rates
-***************************************************************/
-
-#rates,
-#new-rates {
-    float: left;
-    margin: 5px;
-    padding: 4px;
-    width: 300px;
-}
-#new-rates a.create-new-rates {
-    display: block;
-    margin-top: 80px;
-    text-align: center;
-    font-size: 85%;
-}
-#effective-date,
-#new-rates table.rates {
-    display: none;
-}
-#new-rates form {
-    width: auto;
-}
-
-/***************************************************************
- Signup graphs
-***************************************************************/
-
-#signup_graph {
-    width:1000px;
-    height:500px;
 }
 
 /***************************************************************
@@ -567,24 +153,13 @@ table.list-table thead {
     font-size: 0.9em;
 }
 
-/***************************************************************
- Buttons
-***************************************************************/
 
-.button-submit {
-    background-color: #8cb202;
-    padding: 10px;
-    border: none;
-    color: #fff;
-    font-weight: bold;
-}
 /***************************************************************
  CSS3
 ***************************************************************/
 
 .button-submit,
 #wrapper,
-#header A,
 #index-options A,
 #login-form {
     -webkit-border-radius: 8px;
@@ -606,7 +181,6 @@ table.list-table thead {
     -moz-box-shadow: rgba(0, 0, 0, 0.4) 1px 1px 5px;
     box-shadow: rgba(0, 0, 0, 0.4) 1px 1px 5px;
 }
-#header A,
 #index-options A {
     -webkit-box-shadow: rgba(0, 0, 0, 0.4) 1px 1px 1px;
     -moz-box-shadow: rgba(0, 0, 0, 0.4) 1px 1px 1px;

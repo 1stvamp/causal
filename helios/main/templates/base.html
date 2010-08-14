@@ -20,9 +20,20 @@
 
 	<div id="header" class="clearfix">
 	    <ul>
+		{%if request.user.is_authenticated%}
 	        <li><a href="/history/">home</a></li>
 	        <li><a href="/accounts/profile/">profile</a></li>
-		<li><a href="/accounts/register/">signup</a></li>
+		{% else %}
+		<form action="/accounts/login/" method="post">
+		    {% csrf_token %}
+		    <label for="id_username">username:</label>
+		    <input id="id_username" type="text" name="username" maxlength="100" />
+		    <label for="id_password">password:</label>
+		    <input id="id_password" type="text" name="password" maxlength="100" />
+		    <input type="submit" value="login" />
+		    <a href="register/">sign up</a>
+		</form>
+		{% endif %}
 	    </ul>
 
 	</div>
