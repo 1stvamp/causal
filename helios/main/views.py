@@ -2,7 +2,7 @@ from time import mktime
 from datetime import datetime, timedelta, date
 import pretty
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404, redirect
@@ -128,3 +128,7 @@ def index(request):
         },
         context_instance=RequestContext(request)
     )
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect('/')

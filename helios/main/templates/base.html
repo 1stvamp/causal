@@ -19,10 +19,11 @@
     <div id="wrapper" class="clearfix">
 
 	<div id="header" class="clearfix">
-	    <ul>
+	    
 		{%if request.user.is_authenticated%}
-	        <li><a href="/history/">home</a></li>
-	        <li><a href="/accounts/profile/">profile</a></li>
+	        <a href="/history/">home</a> | 
+	        <a href="/accounts/profile/">profile</a> |
+		<a href="/accounts/logout/">logout</a> 
 		{% else %}
 		<form action="/accounts/login/" method="post">
 		    {% csrf_token %}
@@ -34,7 +35,7 @@
 		    <a href="register/">sign up</a>
 		</form>
 		{% endif %}
-	    </ul>
+	    
 
 	</div>
 	<div id="content">
