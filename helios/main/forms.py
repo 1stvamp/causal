@@ -38,7 +38,7 @@ class RegistrationForm(forms.Form):
             return self.cleaned_data['email']
         except MultipleObjectsReturned:
             pass
-        self.errors['email'] = u'That email is already taken. Please choose another.'
+        raise forms.ValidationError(u'That email is already taken. Please choose another.')
     
 
     def clean(self):
