@@ -49,8 +49,8 @@ def get_items(user, since, model_instance=None):
             item.body = unicode(TwitterText(tt.text))
             item.created =status.created_at
             if status.geo:
-                item.location['lat'] = status.geo[0]
-                item.location['long'] = status.geo[1]
+                item.location['lat'] = status.geo['coordinates'][0]
+                item.location['long'] = status.geo['coordinates'][1]
             item.service = serv
             items.append(item)
     return items
