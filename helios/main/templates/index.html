@@ -21,6 +21,7 @@
             day_ul = $('ul#day_' + i);
             day_ul.children('li').remove();
             days[i].sort(item_sort_callback);
+            days[i].reverse();
             for (j in day) {
                 item = day[j];
                 day_ul.append($('#item_template').jqote(item, '*'));
