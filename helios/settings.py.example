@@ -122,3 +122,8 @@ INSTALLED_APPS += INSTALLED_SERVICES
 AUTHENTICATION_BACKENDS = (
     'helios.main.email-auth.EmailBackend',
  )
+
+TEMPLATE_CONTEXT_PROCESSORS =( 
+'django.core.context_processors.request',
+'django.contrib.auth.context_processors.auth',
+)
