@@ -1,6 +1,6 @@
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from helios.main.models import UserService, RequestToken
+from helios.main.models import UserService, RequestToken, OAuthSetting, ServiceApp
 from helios.twitter.utils import user_login
 from helios.main.service_utils import get_model_instance
 
@@ -16,4 +16,16 @@ def verify_auth(request):
 @login_required(redirect_field_name='redirect_to')
 def auth(request):
     request.session['helios_twitter_oauth_return_url'] = request.GET.get('HTTP_REFERER', None)
-    return user_login(get_model_instance(request.user, __package__))
+    try: 
+        # try and get twitter stuff
+        # this will fail first time round as we have auth from the user
+        # so lets set it up
+        model = get_model_instance(request.user, __package__)
+    except:
+        oauth_setting = OAuthSetting.objects.get(name=__package__.split('.')[1])
+        app = ServiceApp(module_name=__package__, oauth=oauth_setting)
+        app.save()
+        service = UserService(user=request.user, app=app)
+        service.save()
+        model = get_model_instance(request.user, __package__)
+    return user_login(model)

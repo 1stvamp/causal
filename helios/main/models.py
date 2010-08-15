@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 class OAuthSetting(models.Model):
     """OAuth App Settings."""
 
+    name = models.CharField(max_length=255)
     consumer_key = models.CharField(max_length=255)
     consumer_secret = models.CharField(max_length=255)
     request_token_url = models.URLField(verify_exists=False)
