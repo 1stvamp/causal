@@ -47,7 +47,8 @@ def user_login(service, cust_callback_url=None):
 def generate_access_token(service, request_token):
     consumer = oauth.Consumer(service.app.oauth.consumer_key, service.app.oauth.consumer_secret)
 
-    token = oauth.Token(request_token.oauth_token, request_token.oauth_token_secret)
+    token = oauth.Token( request_token.oauth_token, request_token.oauth_token_secret)
+    token.set_verifier(request_token.oauth_verify)
     client = oauth.Client(consumer, token)
     resp, content = client.request(service.app.oauth.access_token_url, "POST")
 
