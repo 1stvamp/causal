@@ -17,7 +17,7 @@ WHERE filter_key IN (
 AND (actor_id = me() OR target_id =  me() OR source_id = me())"""
 
 def get_items(user, since, model_instance=None):
-    serv = model_instance or get_model_instance(user, __package__)
+    serv = model_instance or get_model_instance(user, __name__)
     items = []
 
     try:

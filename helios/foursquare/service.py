@@ -7,7 +7,7 @@ from helios.main.service_utils import get_model_instance, get_data
 display_name = 'Foursquare'
 
 def get_items(user, since, model_instance=None):
-    serv = model_instance or get_model_instance(user, __package__)
+    serv = model_instance or get_model_instance(user, __name__)
     items = []
 
     checkins = get_data(serv, 'http://api.foursquare.com/v1/history.json')
