@@ -1,11 +1,11 @@
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from helios.main.models import UserService, RequestToken
+from helios.main.models import UserService, RequestToken, OAuthSetting, ServiceApp
 from helios.main.service_utils import get_model_instance, user_login, generate_access_token
 
 @login_required(redirect_field_name='redirect_to')
 def verify_auth(request):
-    service = get_model_instance(request.user, __name__)
+    service = get_model_instance(request.user, __package__)
     request_token = RequestToken.objects.get(service=service)
     request_token.oauth_verify = request.GET.get('oauth_verifier')
     request_token.save()
@@ -16,4 +16,12 @@ def verify_auth(request):
 @login_required(redirect_field_name='redirect_to')
 def auth(request):
     request.session['helios_foursquare_oauth_return_url'] = request.GET.get('HTTP_REFERER', None)
-    return user_login(get_model_instance(request.user, __name__))
+    model = get_model_instance(request.user, __package__)
+    if not model:
+        oauth_setting = OAuthSetting.objects.get(name=__package__.split('.')[1])
+        app = ServiceApp(module_name=__package__, oauth=oauth_setting)
+        app.save()
+        service = UserService(user=request.user, app=app)
+        service.save()
+        model = get_model_instance(request.user, __package__)
+    return user_login(model)

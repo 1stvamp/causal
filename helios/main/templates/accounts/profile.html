@@ -2,20 +2,16 @@
 
 {% block content %}
 <div class="form-data">
+    <h1>These services are configured</h1>
     <ul>
-        {% for service in services %}
-        {% if service == 'twitter' %}
-            <li><a href="/twitter/auth">click to sign up to twitter!</a><li>
-        {%endif%}
-        {% if service == 'foursquare' %}
-            <li>click to sign up to foursquare!<li>
-        {%endif%}
+        {% for service in enabled_services %}
+            <li>{{ service }}</li>
         {% endfor %}
-        
     </ul>
+    <h1>Why not add the following?</h1>
     <ul>
-        {% for service in user.userservice_set.all %}
-            <li>{% include service.form_template_path %}</li>
+        {% for service in available_services %}
+            <li><a href="/{{service}}/auth">{{ service }}</a></li>
         {% endfor %}
     </ul>
 </div>

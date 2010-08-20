@@ -84,5 +84,8 @@ def get_data(service, url, disable_oauth=False):
     return simplejson.loads(content)
 
 def get_model_instance(user, module_name):
-    return UserService.objects.get(user=user, app__module_name=module_name)
-
+    try:
+        mod = UserService.objects.get(user=user, app__module_name=module_name)
+        return mod
+    except:
+        return False

@@ -118,18 +118,30 @@ def profile(request):
     available_services = []
 
     # need to diff between the services a user has signed up for 
+    services = request.user.userservice_set.all()
     
+    enabled_services = []
     for service in settings.INSTALLED_SERVICES:
-        available_services.append(service.replace('helios.', ''))
+        for enabled in services:
+            if enabled.app.module_name != service:
+                available_services.append(service.replace('helios.', ''))
+            else:
+                enabled_services.append(service.replace('helios.', ''))
+        
+    # fetch configured services
     
+        
     return render_to_response(
         'accounts/profile.html',
-        {'services' : available_services,
+        {'available_services' : available_services,
+         'enabled_services' : enabled_services,
         },
         context_instance=RequestContext(request)
     )
 
 def index(request):
+    if request.user.is_authenticated():
+        return redirect('/history/')
     return render_to_response(
         'homepage.html',
         {
