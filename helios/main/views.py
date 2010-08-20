@@ -115,25 +115,28 @@ def register(request):
 @login_required(redirect_field_name='redirect_to')
 def profile(request):
     """Edit access to various services"""
-    available_services = []
+    available_services_oauth = []
+    available_services_username = []
+    enabled_services = []
 
     # need to diff between the services a user has signed up for 
-    services = request.user.userservice_set.all()
+    enabled_services_raw = request.user.userservice_set.all()
     
-    enabled_services = []
+    for ser in enabled_services_raw:
+        enabled_services.append(ser.class_name.replace('helios-', ''))
+    
     for service in settings.INSTALLED_SERVICES:
-        for enabled in services:
-            if enabled.app.module_name != service:
-                available_services.append(service.replace('helios.', ''))
+        service = service.replace('helios.', '')
+        if service not in enabled_services:
+            if service in ('lastfm'):
+                available_services_username.append(service)
             else:
-                enabled_services.append(service.replace('helios.', ''))
-        
-    # fetch configured services
+                available_services_oauth.append(service)
     
-        
     return render_to_response(
         'accounts/profile.html',
-        {'available_services' : available_services,
+        {'available_services_oauth' : available_services_oauth,
+         'available_services_username' : available_services_username,
          'enabled_services' : enabled_services,
         },
         context_instance=RequestContext(request)

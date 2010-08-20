@@ -10,8 +10,11 @@
     </ul>
     <h1>Why not add the following?</h1>
     <ul>
-        {% for service in available_services %}
+        {% for service in available_services_oauth %}
             <li><a href="/{{service}}/auth">{{ service }}</a></li>
+        {% endfor %}
+        {% for service in available_services_username %}
+            <li><form>{{ service }}</form></li>
         {% endfor %}
     </ul>
 </div>
