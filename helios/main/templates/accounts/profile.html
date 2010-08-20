@@ -14,7 +14,14 @@
             <li><a href="/{{service}}/auth">{{ service }}</a></li>
         {% endfor %}
         {% for service in available_services_username %}
-            <li><form>{{ service }}</form></li>
+            {% if service == "lastfm" %}
+            <li><h2>{{ service }}</h2>
+                <form action="/lastfm/auth" method="post">
+                    <label for="id_username">Username:</label>
+                    <input type="text" name="username" id="id_username" /><input type="submit" value="Submit" />
+                </form>
+            </li>
+            {% endif %}
         {% endfor %}
     </ul>
 </div>
