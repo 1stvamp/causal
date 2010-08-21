@@ -17,6 +17,7 @@
             {% if service == "lastfm" %}
             <li><h2>{{ service }}</h2>
                 <form action="/lastfm/auth" method="post">
+                 {% csrf_token %}
                     <label for="id_username">Username:</label>
                     <input type="text" name="username" id="id_username" /><input type="submit" value="Submit" />
                 </form>
