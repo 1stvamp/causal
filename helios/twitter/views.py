@@ -6,7 +6,7 @@ from helios.main.service_utils import get_model_instance, generate_access_token
 
 @login_required(redirect_field_name='redirect_to')
 def verify_auth(request):
-    service = get_model_instance(request.user, __name__)
+    service = get_model_instance(request.user, __package__)
     request_token = RequestToken.objects.get(service=service)
     request_token.oauth_verify = request.GET.get('oauth_verifier')
     request_token.save()
