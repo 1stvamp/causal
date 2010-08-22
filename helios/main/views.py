@@ -128,7 +128,7 @@ def profile(request):
     for service in settings.INSTALLED_SERVICES:
         service = service.replace('helios.', '')
         if service not in enabled_services:
-            if service in ('lastfm'):
+            if service in ('lastfm', 'flickr', 'github'):
                 available_services_username.append(service)
             else:
                 available_services_oauth.append(service)

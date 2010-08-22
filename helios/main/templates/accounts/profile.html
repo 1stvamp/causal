@@ -16,13 +16,31 @@
         {% for service in available_services_username %}
             {% if service == "lastfm" %}
             <li><h2>{{ service }}</h2>
-                <form action="/lastfm/auth" method="post">
+                <form action="/{{service}}/auth" method="post">
                  {% csrf_token %}
                     <label for="id_username">Username:</label>
                     <input type="text" name="username" id="id_username" /><input type="submit" value="Submit" />
                 </form>
             </li>
             {% endif %}
+            {% if service == "flickr" %}
+            <li><h2>{{ service }}</h2>
+                <form action="/{{service}}/auth" method="post">
+                 {% csrf_token %}
+                    <label for="id_username">Username (your flickr id i.e 1234567@N00:</label>
+                    <input type="text" name="username" id="id_username" /><input type="submit" value="Submit" />
+                </form>
+            </li>
+            {% endif %}
+            {% if service == "github" %}
+            <li><h2>{{ service }}</h2>
+                <form action="/{{service}}/auth" method="post">
+                 {% csrf_token %}
+                    <label for="id_username">Username:</label>
+                    <input type="text" name="username" id="id_username" /><input type="submit" value="Submit" />
+                </form>
+            </li>
+            {% endif %}            
         {% endfor %}
     </ul>
 </div>
