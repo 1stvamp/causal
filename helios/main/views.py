@@ -2,6 +2,7 @@ from time import mktime
 from datetime import datetime, timedelta, date
 import pretty
 
+from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -10,7 +11,6 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.html import urlize
-import settings
 from helios.main.forms import RegistrationForm
 from helios.main.models import *
 

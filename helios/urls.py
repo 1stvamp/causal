@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.http import HttpResponseNotFound, HttpResponseServerError
 from django.views.decorators.cache import cache_page
 
-from main.views import *
+from helios.main.views import *
 
 from django.contrib import admin
 admin.autodiscover()
@@ -26,13 +26,13 @@ urlpatterns = patterns('',
     url(settings.ADMIN_URL, include(admin.site.urls), name='admin'),
 
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'accounts/login.html'}, name='login'),
-    url(r'^accounts/logout/$', 'main.views.logout_view', name='logout'),
+    url(r'^accounts/logout/$', logout_view, name='logout'),
     url(r'^password_reset/$', 'django.contrib.auth.views.password_reset', name='password-reset'),
     url(r'^password_reset/done/$','django.contrib.auth.views.password_reset_done', name='post-password-reset'),
 
     url(r'^register/$', register, name='register'),
     url(r'^accounts/profile/$', profile, name='profile'),
-    url(r'^$', 'main.views.index', name='home'),
+    url(r'^$', index, name='home'),
     url(r'^history/$', history, name='history'),
     url(r'^history/ajax/(?P<service_id>\d+)$', cache_page(history_callback, cache_time), name='history-callback'),
 )

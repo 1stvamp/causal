@@ -1,4 +1,5 @@
 *.wpr
 *.pyc
-./helios.wsgi
+helios.wsgi
 pip-log.txt
+egg-cache
