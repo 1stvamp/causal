@@ -8,27 +8,25 @@ from django.core.urlresolvers import reverse
 @login_required(redirect_field_name='redirect_to')
 def auth(request):
     """We dont need a full oauth setup just a username."""
-    model = get_model_instance(request.user, __package__)
-    if not model and request.method == 'POST':
+    service = get_model_instance(request.user, __name__)
+    if not service and request.method == 'POST':
         username = request.POST['username']
-        oauth_setting = OAuthSetting.objects.get(name=__package__.split('.')[1])
-        
-        app = ServiceApp(module_name=__package__, oauth=oauth_setting)
-        app.save()
-        
+
+        app = ServiceApp.objects.get(module_name=__name__)
+
         service = UserService(user=request.user, app=app)
         service.save()
-        
-        # now we have a userservice and app create a request token
+
+        # Now we have a userservice and app create a request token
         request_token = RequestToken(service=service)
         request_token.created = datetime.now()
         request_token.save()
-        
-        # #http://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=KEY&username=USERNAME
+
+        #http://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=KEY&username=USERNAME
         access_token = AccessToken(service=service)
         access_token.username = username
         access_token.created = datetime.now()
-        access_token.api_token = oauth_setting.consumer_key
+        access_token.api_token = app.oauth.consumer_key
         access_token.save()
-        
+
     return redirect(reverse('profile'))

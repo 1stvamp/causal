@@ -17,12 +17,9 @@ def verify_auth(request):
 @login_required(redirect_field_name='redirect_to')
 def auth(request):
     request.session['helios_twitter_oauth_return_url'] = request.GET.get('HTTP_REFERER', None)
-    model = get_model_instance(request.user, __package__)
-    if not model:
-        oauth_setting = OAuthSetting.objects.get(name=__package__.split('.')[1])
-        app = ServiceApp(module_name=__package__, oauth=oauth_setting)
-        app.save()
+    service = get_model_instance(request.user, __name__)
+    if not service:
+        app = ServiceApp.objects.get(module_name=__name__)
         service = UserService(user=request.user, app=app)
         service.save()
-        model = get_model_instance(request.user, __package__)
-    return user_login(model)
+    return user_login(service)
