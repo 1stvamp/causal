@@ -5,7 +5,7 @@ from datetime import datetime
 from helios.main.models import AccessToken, ServiceItem
 from helios.main.service_utils import get_model_instance
 
-display_name = 'Github'
+DISPLAY_NAME = 'Github'
 
 KEEP_TAGS = ('a', 'span', 'code',)
 

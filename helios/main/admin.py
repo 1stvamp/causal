@@ -1,5 +1,8 @@
-from helios.main.models import *
+from django import forms
+from django.conf import settings
 from django.contrib import admin
+from django.utils.importlib import import_module
+from helios.main.models import *
 
 class AccessTokenAdmin(admin.ModelAdmin):
     pass
@@ -13,10 +16,22 @@ class UserServiceAdmin(admin.ModelAdmin):
     pass
 admin.site.register(UserService, UserServiceAdmin)
 
-class ServiceAppAdmin(admin.ModelAdmin):
-    pass
-admin.site.register(ServiceApp, ServiceAppAdmin)
-
 class OAuthSettingAdmin(admin.ModelAdmin):
     pass
 admin.site.register(OAuthSetting, OAuthSettingAdmin)
+
+# Add a custom form to the ServiceApp admin so we can present
+# choices in the module_name field matching INSTALLED_SERVICES
+
+SERVICES_CHOICES = []
+for service_name in settings.INSTALLED_SERVICES:
+    service = import_module("%s.service" % (service_name,))
+    if service:
+        SERVICES_CHOICES.append((service_name, service.DISPLAY_NAME,))
+
+class ServiceAppAdminForm(forms.ModelForm):
+    module_name = forms.ChoiceField(choices=SERVICES_CHOICES, label='Application')
+
+class ServiceAppAdmin(admin.ModelAdmin):
+    form = ServiceAppAdminForm
+admin.site.register(ServiceApp, ServiceAppAdmin)

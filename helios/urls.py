@@ -7,14 +7,15 @@ from django.views.decorators.cache import cache_page
 
 from helios.main.views import *
 
-from django.contrib import admin
-admin.autodiscover()
-
 if settings.DEBUG:
     try:
         import helios.wingdbstub
     except ImportError:
         pass
+
+from django.contrib import admin
+admin.autodiscover()
+
 
 cache_time = getattr(settings, 'ITEM_CACHE_TIME', 60 * 30)
 
