@@ -6,6 +6,8 @@ from helios.main.models import AccessToken, ServiceItem
 from helios.main.service_utils import get_model_instance
 
 DISPLAY_NAME = 'Github'
+CUSTOM_FORM = False
+OAUTH_FORM = False
 
 KEEP_TAGS = ('a', 'span', 'code',)
 

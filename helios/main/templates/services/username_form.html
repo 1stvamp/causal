@@ -1,0 +1,10 @@
+{% if not service.requesttoken_set.all %}
+    Not authenticated to {{ service.app.module.DISPLAY_NAME }}. Authenticate:
+{% else %}
+    {{ service.app.module.DISPLAY_NAME }} authenticated. Re-authenticate:
+{% endif %}
+<form action="{{ service.get_auth_url }}" method="post">
+    {% csrf_token %}
+    <label for="id_{{ service.class_name }}_username">Username:</label>
+    <input type="text" name="username" id="id_{{ service.class_name }}_username" /><input type="submit" value="Submit" />
+</form>

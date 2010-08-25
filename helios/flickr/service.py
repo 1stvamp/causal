@@ -5,6 +5,8 @@ from helios.main.models import ServiceItem, AccessToken
 from helios.main.service_utils import get_model_instance
 
 DISPLAY_NAME = 'Flickr'
+CUSTOM_FORM = True
+OAUTH_FORM = False
 
 def get_items(user, since, model_instance):
     serv = model_instance or get_model_instance(user, __name__)

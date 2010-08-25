@@ -42,13 +42,22 @@ class UserService(models.Model):
 
     @property
     def form_template_path(self):
-        return "%s/form.html" % (self.app.module_name,)
+        if self.app.module.CUSTOM_FORM:
+            path = "%s/form.html" % (self.app.module_name,)
+        elif self.app.module.OAUTH_FORM:
+            path = "services/oauth_form.html"
+        else:
+            path = "services/username_form.html"
+        return path
 
     def __unicode__(self):
         return u'%s service for %s' % (self.app, self.user,)
 
     def get_absolute_url(self):
         return reverse('history-callback', kwargs={'service_id': self.pk})
+
+    def get_auth_url(self):
+        return reverse('%s-auth' % (self.app.module_name.replace('.', '-'),))
 
     @property
     def class_name(self):

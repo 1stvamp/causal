@@ -5,6 +5,8 @@ from helios.main.models import ServiceItem
 from helios.main.service_utils import get_model_instance, get_data
 
 DISPLAY_NAME = 'Foursquare'
+CUSTOM_FORM = False
+OAUTH_FORM = True
 
 def get_items(user, since, model_instance=None):
     serv = model_instance or get_model_instance(user, __name__)

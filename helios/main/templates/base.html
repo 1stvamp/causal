@@ -19,12 +19,11 @@
     <div id="wrapper" class="clearfix">
 
 	<div id="header" class="clearfix">
-	    
-		{%if request.user.is_authenticated%}
-	        <a href="/history/">home</a> | 
-	        <a href="/accounts/profile/">profile</a> |
-		<a href="/accounts/logout/">logout</a> 
-		{% else %}
+	    {% if request.user.is_authenticated %}
+		<a href="/history/">home</a> |
+		<a href="/accounts/profile/">profile</a> |
+		<a href="/accounts/logout/">logout</a>
+	    {% else %}
 		<form action="/accounts/login/" method="post">
 		    {% csrf_token %}
 		    <label for="id_username">username:</label>
@@ -34,9 +33,7 @@
 		    <input type="submit" value="login" />
 		    <a href="/register/">sign up</a>
 		</form>
-		{% endif %}
-	    
-
+	    {% endif %}
 	</div>
 	<div id="content">
     	    <div id="primary" class="clearfix">
