@@ -33,6 +33,7 @@ urlpatterns = patterns('',
 
     url(r'^register/$', register, name='register'),
     url(r'^accounts/profile/$', profile, name='profile'),
+    url(r'^accounts/profile/enable/(?P<app_id>\d+)$', enable_service, name='enable-service'),
     url(r'^$', index, name='home'),
     url(r'^history/$', history, name='history'),
     url(r'^history/(?P<user_id>\d+)$', history, name='user-history'),

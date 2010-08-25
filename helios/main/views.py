@@ -114,11 +114,25 @@ def register(request):
 @login_required(redirect_field_name='redirect_to')
 def profile(request):
     """Edit access to various services"""
+    available_services = ServiceApp.objects.all().exclude(userservice__user=request.user)
     return render_to_response(
         'accounts/profile.html',
-        {},
+        {
+            'available_services': available_services,
+        },
         context_instance=RequestContext(request)
     )
+
+@login_required(redirect_field_name='redirect_to')
+def enable_service(request, app_id):
+    """Edit access to various services"""
+    app = get_object_or_404(ServiceApp, pk=app_id)
+
+    if not request.user.userservice_set.all().filter(app=app):
+        service = UserService(user=request.user, app=app)
+        request.user.userservice_set.add(service)
+        request.user.save()
+    return redirect('profile')
 
 def index(request):
     users = User.objects.all().filter(is_active=True)
