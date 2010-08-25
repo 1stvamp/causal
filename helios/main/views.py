@@ -1,6 +1,5 @@
 from time import mktime
 from datetime import datetime, timedelta, date
-import pretty
 
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
@@ -71,7 +70,7 @@ def history_callback(request, service_id):
                     'title': item.title,
                     'body': urlize(item.body),
                     'created': mktime(item.created.timetuple()),
-                    'created_date': pretty.date(item.created),
+                    'created_date': item.created.strftime("%I:%M%p").lower(),
                     'location': item.location,
                     'class_name' : item.class_name,
                     'has_location': item.has_location(),
