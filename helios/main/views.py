@@ -24,7 +24,7 @@ def history(request, user_id=None):
         else:
             return redirect('login')
 
-    services = UserService.objects.filter(user=request.user)
+    services = UserService.objects.filter(user=user)
     template_values['services'] = services
 
     days = []
