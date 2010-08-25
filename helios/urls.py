@@ -35,6 +35,7 @@ urlpatterns = patterns('',
     url(r'^accounts/profile/$', profile, name='profile'),
     url(r'^$', index, name='home'),
     url(r'^history/$', history, name='history'),
+    url(r'^history/(?P<user_id>\d+)$', history, name='user-history'),
     url(r'^history/ajax/(?P<service_id>\d+)$', cache_page(history_callback, cache_time), name='history-callback'),
 )
 

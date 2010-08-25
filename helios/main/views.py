@@ -119,12 +119,12 @@ def profile(request):
     available_services_username = []
     enabled_services = []
 
-    # need to diff between the services a user has signed up for 
+    # need to diff between the services a user has signed up for
     enabled_services_raw = request.user.userservice_set.all()
-    
+
     for ser in enabled_services_raw:
         enabled_services.append(ser.class_name.replace('helios-', ''))
-    
+
     for service in settings.INSTALLED_SERVICES:
         service = service.replace('helios.', '')
         if service not in enabled_services:
@@ -132,7 +132,7 @@ def profile(request):
                 available_services_username.append(service)
             else:
                 available_services_oauth.append(service)
-    
+
     return render_to_response(
         'accounts/profile.html',
         {'available_services_oauth' : available_services_oauth,
@@ -143,11 +143,11 @@ def profile(request):
     )
 
 def index(request):
-    if request.user.is_authenticated():
-        return redirect('/history/')
+    users = User.objects.all().filter(is_active=True)
     return render_to_response(
         'homepage.html',
         {
+            'users': users,
         },
         context_instance=RequestContext(request)
     )
