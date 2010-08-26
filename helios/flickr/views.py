@@ -1,18 +1,21 @@
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from helios.main.models import UserService, RequestToken, OAuthSetting, ServiceApp, AccessToken
-from helios.main.service_utils import get_model_instance, user_login, generate_access_token
 from datetime import datetime
 from django.core.urlresolvers import reverse
+from helios.main.models import UserService, RequestToken, OAuthSetting, ServiceApp, AccessToken
+from helios.main.service_utils import get_model_instance, user_login, generate_access_token, get_module_name
+
+# Yay, let's recreate __package__ for Python <2.6
+MODULE_NAME = get_module_name(__name__)
 
 @login_required(redirect_field_name='redirect_to')
 def auth(request):
     """We dont need a full oauth setup just a username."""
-    service = get_model_instance(request.user, __name__)
+    service = get_model_instance(request.user, MODULE_NAME)
     if not service and request.method == 'POST':
         username = request.POST['username']
 
-        app = ServiceApp.objects.get(module_name=__name__)
+        app = ServiceApp.objects.get(module_name=MODULE_NAME)
 
         service = UserService(user=request.user, app=app)
         service.save()

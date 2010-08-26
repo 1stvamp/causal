@@ -24,8 +24,9 @@ def user_login(service, cust_callback_url=None):
         insert_attrs = {
             'service': service,
         }
-        rows = RequestToken.objects.filter(**insert_attrs).update(**update_attrs)
-        if not rows:
+        try:
+            rt = RequestToken.objects.filter(**insert_attrs)
+        except rt.DoesNotExist:
             insert_attrs.update(update_attrs)
             insert_attrs['created'] = datetime.now()
             RequestToken.objects.create(**insert_attrs)
