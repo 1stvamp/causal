@@ -1,4 +1,4 @@
-{% if not service.requesttoken_set.all %}
+{% if not service.setup %}
     Not authenticated to {{ service.app.module.DISPLAY_NAME }}. <a href="{{ service.get_auth_url }}">Authenticate</a>?
 {% else %}
     {{ service.app.module.DISPLAY_NAME }} authenticated. <a href="{{ service.get_auth_url }}">Re-authenticate</a>?

@@ -12,13 +12,8 @@ MODULE_NAME = get_module_name(__name__)
 def auth(request):
     """We dont need a full oauth setup just a username."""
     service = get_model_instance(request.user, MODULE_NAME)
-    if not service and request.method == 'POST':
+    if service and request.method == 'POST':
         username = request.POST['username']
-
-        app = ServiceApp.objects.get(module_name=MODULE_NAME)
-
-        service = UserService(user=request.user, app=app)
-        service.save()
 
         # Now we have a userservice and app create a request token
         request_token = RequestToken(service=service)
@@ -29,7 +24,10 @@ def auth(request):
         access_token = AccessToken(service=service)
         access_token.username = username
         access_token.created = datetime.now()
-        access_token.api_token = app.oauth.consumer_key
+        access_token.api_token = service.app.oauth.consumer_key
         access_token.save()
+
+        service.setup = True
+        service.save()
 
     return redirect(reverse('profile'))

@@ -1,4 +1,4 @@
-{% if not service.requesttoken_set.all %}
+{% if not service.setup%}
     Not authenticated to {{ service.app.module.DISPLAY_NAME }}. Authenticate:
 {% else %}
     {{ service.app.module.DISPLAY_NAME }} authenticated. Re-authenticate:
