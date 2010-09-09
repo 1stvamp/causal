@@ -1,5 +1,5 @@
 BeautifulSoup==3.0.8.1
-Django==1.2.1
+Django==1.2.2
 feedparser==4.1
 flickrapi==1.4.2
 github2==0.1.2
