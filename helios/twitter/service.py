@@ -8,7 +8,9 @@ from helios.main.models import ServiceItem
 from helios.twitter.utils import get_api, user_login
 from helios.main.service_utils import get_model_instance
 
-display_name = 'Twitter'
+DISPLAY_NAME = 'Twitter'
+CUSTOM_FORM = False
+OAUTH_FORM = True
 
 def get_items(user, since, model_instance=None):
     items = []

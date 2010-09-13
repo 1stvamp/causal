@@ -8,7 +8,6 @@ from django.core.urlresolvers import reverse
 class OAuthSetting(models.Model):
     """OAuth App Settings."""
 
-    name = models.CharField(max_length=255)
     consumer_key = models.CharField(max_length=255)
     consumer_secret = models.CharField(max_length=255)
     request_token_url = models.URLField(verify_exists=False)
@@ -33,23 +32,33 @@ class ServiceApp(models.Model):
         return self._module
 
     def __unicode__(self):
-        return u'%s service app' % (self.module.display_name,)
+        return u'%s service app' % (self.module.DISPLAY_NAME,)
 
 class UserService(models.Model):
     """User service handler. e.g. twitter, flickr etc."""
 
     user = models.ForeignKey(User)
     app = models.ForeignKey(ServiceApp)
+    setup = models.NullBooleanField(null=True, blank=True, default=False)
 
     @property
     def form_template_path(self):
-        return "%s/form.html" % (self.app.module_name,)
+        if self.app.module.CUSTOM_FORM:
+            path = "%s/form.html" % (self.app.module_name,)
+        elif self.app.module.OAUTH_FORM:
+            path = "services/oauth_form.html"
+        else:
+            path = "services/username_form.html"
+        return path
 
     def __unicode__(self):
         return u'%s service for %s' % (self.app, self.user,)
 
     def get_absolute_url(self):
         return reverse('history-callback', kwargs={'service_id': self.pk})
+
+    def get_auth_url(self):
+        return reverse('%s-auth' % (self.app.module_name.replace('.', '-'),))
 
     @property
     def class_name(self):
@@ -65,7 +74,7 @@ class RequestToken(models.Model):
     oauth_verify = models.CharField(max_length=255, blank=True, null=True)
 
     def __unicode__(self):
-        return u'%s request token for %s' % (self.service.app.module.display_name, self.service.user,)
+        return u'%s request token for %s' % (self.service.app.module.DISPLAY_NAME, self.service.user,)
 
 class AccessToken(RequestToken):
     """OAuth Access Token."""
@@ -75,7 +84,7 @@ class AccessToken(RequestToken):
     api_token = models.CharField(max_length=255, blank=True, null=True)
 
     def __unicode__(self):
-        return u'%s access token for %s' % (self.service.app.module.display_name, self.service.user,)
+        return u'%s access token for %s' % (self.service.app.module.DISPLAY_NAME, self.service.user,)
 
 # Not a django.db.models.Model, just a common container for service data
 

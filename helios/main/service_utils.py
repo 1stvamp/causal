@@ -7,9 +7,10 @@ from django.utils import simplejson
 
 from helios.main.models import RequestToken, AccessToken, UserService
 
+PARENT_PACKAGE_NAME = 'helios.'
+
 def user_login(service, cust_callback_url=None):
-    helios_package_name = 'helios.'
-    pos = service.app.module_name.find(helios_package_name) + len(helios_package_name)
+    pos = service.app.module_name.find(helios_package_name) + len(PARENT_PACKAGE_NAME)
     callback_app_name = service.app.module_name[pos:]
     callback = cust_callback_url or reverse('helios-%s-callback' % (callback_app_name,))
     callback = "%s%s" % (service.app.oauth.callback_url_base, callback,)
@@ -31,8 +32,9 @@ def user_login(service, cust_callback_url=None):
         insert_attrs = {
             'service': service,
         }
-        rows = RequestToken.objects.filter(**insert_attrs).update(**update_attrs)
-        if not rows:
+        try:
+            rt = RequestToken.objects.filter(**insert_attrs)
+        except rt.DoesNotExist:
             insert_attrs.update(update_attrs)
             insert_attrs['created'] = datetime.now()
             RequestToken.objects.create(**insert_attrs)
@@ -47,7 +49,7 @@ def user_login(service, cust_callback_url=None):
 def generate_access_token(service, request_token):
     consumer = oauth.Consumer(service.app.oauth.consumer_key, service.app.oauth.consumer_secret)
 
-    token = oauth.Token( request_token.oauth_token, request_token.oauth_token_secret)
+    token = oauth.Token(request_token.oauth_token, request_token.oauth_token_secret)
     token.set_verifier(request_token.oauth_verify)
     client = oauth.Client(consumer, token)
     resp, content = client.request(service.app.oauth.access_token_url, "POST")
@@ -61,8 +63,9 @@ def generate_access_token(service, request_token):
     insert_attrs = {
         'service': service,
     }
-    rows = AccessToken.objects.filter(**insert_attrs).update(**update_attrs)
-    if not rows:
+    try:
+        at = AccessToken.objects.filter(**insert_attrs)
+    except at.DoesNotExist:
         insert_attrs.update(update_attrs)
         insert_attrs['created'] = datetime.now()
         AccessToken.objects.create(**insert_attrs)
@@ -84,5 +87,10 @@ def get_data(service, url, disable_oauth=False):
     return simplejson.loads(content)
 
 def get_model_instance(user, module_name):
-    return UserService.objects.get(user=user, app__module_name=module_name)
+    try:
+        return UserService.objects.get(user=user, app__module_name=module_name)
+    except:
+        return False
 
+def get_module_name(name):
+    return name.rpartition('.')[0]

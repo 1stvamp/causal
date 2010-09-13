@@ -5,7 +5,9 @@ from helios.main.models import ServiceItem, AccessToken
 from helios.main.service_utils import get_model_instance
 from facegraph.fql import FQL
 
-display_name = 'Facebook'
+DISPLAY_NAME = 'Facebook'
+CUSTOM_FORM = False
+OAUTH_FORM = True
 
 SELECT_FQL = """SELECT post_id, actor_id, target_id, updated_time, message
 FROM stream

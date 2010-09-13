@@ -30,3 +30,7 @@ def get(value, arg):
         return value[int(arg)]
     else:
         return settings.TEMPLATE_STRING_IF_INVALID
+
+@register.filter
+def only_setup(qs):
+    return qs.filter(setup=True)

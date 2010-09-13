@@ -43,7 +43,7 @@
 {% block content %}
     <ul id="loading-services">
         {% for service in services %}
-            <li id="service_load_{{ service.class_name }}">{{ service.app.module.display_name }}</li>
+            <li id="service_load_{{ service.class_name }}">{{ service.app.module.DISPLAY_NAME }}</li>
         {% endfor %}
     </ul>
     {% for items in days %}

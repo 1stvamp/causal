@@ -1,11 +1,13 @@
 import time
 import feedparser
-from BeautifulSoup import Tag, BeautifulSoup as soup
 from datetime import datetime
+from BeautifulSoup import Tag, BeautifulSoup as soup
 from helios.main.models import AccessToken, ServiceItem
 from helios.main.service_utils import get_model_instance
 
-display_name = 'Github'
+DISPLAY_NAME = 'Github'
+CUSTOM_FORM = False
+OAUTH_FORM = False
 
 KEEP_TAGS = ('a', 'span', 'code',)
 
@@ -15,7 +17,7 @@ def get_items(user, since, model_instance=None):
     try:
         at = AccessToken.objects.get(service=serv)
 
-        url = 'https://github.com/%s.private.actor.atom?token=%s' % (at.username, at.api_token,)
+        url = 'https://github.com/%s.atom' % (at.username,)
 
         feed = feedparser.parse(url)
 

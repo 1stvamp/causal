@@ -1,7 +1,7 @@
 from time import mktime
 from datetime import datetime, timedelta, date
-import pretty
 
+from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -10,7 +10,6 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.html import urlize
-import settings
 from helios.main.forms import RegistrationForm
 from helios.main.models import *
 
@@ -25,7 +24,7 @@ def history(request, user_id=None):
         else:
             return redirect('login')
 
-    services = UserService.objects.filter(user=request.user)
+    services = UserService.objects.filter(user=user, setup=True)
     template_values['services'] = services
 
     days = []
@@ -71,7 +70,7 @@ def history_callback(request, service_id):
                     'title': item.title,
                     'body': urlize(item.body),
                     'created': mktime(item.created.timetuple()),
-                    'created_date': pretty.date(item.created),
+                    'created_date': item.created.strftime("%I:%M%p").lower(),
                     'location': item.location,
                     'class_name' : item.class_name,
                     'has_location': item.has_location(),
@@ -115,24 +114,32 @@ def register(request):
 @login_required(redirect_field_name='redirect_to')
 def profile(request):
     """Edit access to various services"""
-    available_services = []
-
-    # need to diff between the services a user has signed up for 
-    
-    for service in settings.INSTALLED_SERVICES:
-        available_services.append(service.replace('helios.', ''))
-    
+    available_services = ServiceApp.objects.all().exclude(userservice__user=request.user)
     return render_to_response(
         'accounts/profile.html',
-        {'services' : available_services,
+        {
+            'available_services': available_services,
         },
         context_instance=RequestContext(request)
     )
 
+@login_required(redirect_field_name='redirect_to')
+def enable_service(request, app_id):
+    """Edit access to various services"""
+    app = get_object_or_404(ServiceApp, pk=app_id)
+
+    if not request.user.userservice_set.all().filter(app=app):
+        service = UserService(user=request.user, app=app)
+        request.user.userservice_set.add(service)
+        request.user.save()
+    return redirect('profile')
+
 def index(request):
+    users = User.objects.all().filter(is_active=True)
     return render_to_response(
         'homepage.html',
         {
+            'users': users,
         },
         context_instance=RequestContext(request)
     )

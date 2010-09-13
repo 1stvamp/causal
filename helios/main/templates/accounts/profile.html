@@ -1,22 +1,23 @@
 {% extends "base.html" %}
+{% load extras %}
 
 {% block content %}
 <div class="form-data">
-    <ul>
-        {% for service in services %}
-        {% if service == 'twitter' %}
-            <li><a href="/twitter/auth">click to sign up to twitter!</a><li>
-        {%endif%}
-        {% if service == 'foursquare' %}
-            <li>click to sign up to foursquare!<li>
-        {%endif%}
-        {% endfor %}
-        
-    </ul>
+{% if user.userservice_set.all %}
+    <h3>Enabled services:</h3>
     <ul>
         {% for service in user.userservice_set.all %}
             <li>{% include service.form_template_path %}</li>
         {% endfor %}
     </ul>
+{% endif %}
+{% if available_services %}
+    <h3>You can enable these services:</h3>
+    <ul>
+        {% for service in available_services %}
+            <li><a href="{% url enable-service service.id %}">{{ service.module.DISPLAY_NAME }}</a></li>
+        {% endfor %}
+    </ul>
+{% endif %}
 </div>
 {% endblock %}

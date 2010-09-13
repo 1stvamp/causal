@@ -3,7 +3,9 @@ from datetime import datetime, timedelta
 from helios.main.models import ServiceItem, AccessToken
 from helios.main.service_utils import get_model_instance, get_data
 
-display_name = 'Last.fm'
+DISPLAY_NAME = 'Last.fm'
+CUSTOM_FORM = False
+OAUTH_FORM = False
 
 def get_items(user, since, model_instance=None):
     serv = model_instance or get_model_instance(user, __name__)
