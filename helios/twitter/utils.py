@@ -11,25 +11,28 @@ def _auth(oauth, cust_callback_url=None):
     return tweepy.OAuthHandler(oauth.consumer_key, oauth.consumer_secret, callback)
 
 def user_login(service, cust_callback_url=None):
+    """Create RequestToken to auth on user return and redirect
+    user to third party url for auth."""
     oauth = service.app.oauth
     try:
         auth = _auth(oauth, cust_callback_url)
 
         redirect_url = auth.get_authorization_url()
 
-        update_attrs = {
-            'oauth_token': auth.request_token.key,
-            'oauth_token_secret': auth.request_token.secret,
-        }
-        insert_attrs = {
-            'service': service,
-        }
-        try:
-            rt = RequestToken.objects.filter(**insert_attrs)
-        except rt.DoesNotExist:
-            insert_attrs.update(update_attrs)
-            insert_attrs['created'] = datetime.now()
-            RequestToken.objects.create(**insert_attrs)
+        
+        # check if we have an existing RequestToken
+        # if so delete it.
+        rt = RequestToken.objects.filter(**insert_attrs)
+        if rt:
+            rt.delete()
+            
+        # create a new requesttoken
+        new_rt = RequestToken()
+        new_rt.service = service
+        new_rt.oauth_token = auth.request_token.key
+        new_rt.oauth_token_secret = auth.request_token.secret
+        new_rt.created = datetime.now()
+        new_rt.save()
     except tweepy.TweepError:
         return False
 

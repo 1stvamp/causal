@@ -47,6 +47,8 @@ def user_login(service, cust_callback_url=None):
     return redirect(redirect_url)
 
 def generate_access_token(service, request_token):
+    """Takes a request_token and validates it to give a valid AccessToken
+    and the stores it. Should an existing token exist it will be deleted."""
     consumer = oauth.Consumer(service.app.oauth.consumer_key, service.app.oauth.consumer_secret)
 
     token = oauth.Token(request_token.oauth_token, request_token.oauth_token_secret)
@@ -55,21 +57,20 @@ def generate_access_token(service, request_token):
     resp, content = client.request(service.app.oauth.access_token_url, "POST")
 
     access_token_params = dict((token.split('=') for token in content.split('&')))
-
-    update_attrs = {
-        'oauth_token': access_token_params['oauth_token'],
-        'oauth_token_secret': access_token_params['oauth_token_secret'],
-    }
-    insert_attrs = {
-        'service': service,
-    }
-    try:
-        at = AccessToken.objects.filter(**insert_attrs)
-    except at.DoesNotExist:
-        insert_attrs.update(update_attrs)
-        insert_attrs['created'] = datetime.now()
-        AccessToken.objects.create(**insert_attrs)
-
+    
+    # check if we have existing AccessToken
+    # if so delete it.
+    at = AccessToken.objects.filter(**insert_attrs)
+    if at:
+        at.delete()
+    new_at = AccessToken()
+    new_at.service = service
+    new_at.oauth_token = access_token_params['oauth_token']
+    new_at.oauth_token_secret = access_token_params['oauth_token_secret']
+    new_at.created = datetime.now()
+    new_at.oauth_verify = request_token.oauth_verify
+    new_at.save()
+    
 def get_data(service, url, disable_oauth=False):
     if disable_oauth:
         h = httplib2.Http()
