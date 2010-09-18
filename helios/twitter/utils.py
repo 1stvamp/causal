@@ -22,7 +22,7 @@ def user_login(service, cust_callback_url=None):
         
         # check if we have an existing RequestToken
         # if so delete it.
-        rt = RequestToken.objects.filter(**insert_attrs)
+        rt = RequestToken.objects.filter(service=service)
         if rt:
             rt.delete()
             

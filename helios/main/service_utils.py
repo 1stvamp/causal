@@ -60,7 +60,7 @@ def generate_access_token(service, request_token):
     
     # check if we have existing AccessToken
     # if so delete it.
-    at = AccessToken.objects.filter(**insert_attrs)
+    at = AccessToken.objects.filter(service=service)
     if at:
         at.delete()
     new_at = AccessToken()
