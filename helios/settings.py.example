@@ -1,5 +1,7 @@
-import os,settings
-# Django settings for helios project.
+"""Django settings for helios project.
+"""
+
+import os
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -13,8 +15,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/var/db/helios.db',                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': '',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -49,7 +51,9 @@ USE_I18N = True
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale
 USE_L10N = True
+
 PATH_SITE_ROOT = os.path.normpath(os.path.dirname(__file__))
+
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
 MEDIA_ROOT = os.path.join(PATH_SITE_ROOT, 'static')
@@ -90,7 +94,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'helios.urls'
-PATH_SITE_ROOT = os.path.normpath(os.path.dirname(__file__))
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
@@ -121,9 +124,9 @@ INSTALLED_APPS += INSTALLED_SERVICES
 
 AUTHENTICATION_BACKENDS = (
     'helios.main.email-auth.EmailBackend',
- )
+)
 
-TEMPLATE_CONTEXT_PROCESSORS =( 
-'django.core.context_processors.request',
-'django.contrib.auth.context_processors.auth',
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
 )
