@@ -7,15 +7,6 @@ li {
     list-style: none;
 }
 
-.lastfm {
-    color: red;
-}
-.twitter{
-    color: blue;
-}
-.foursquare{
-    color: green;
-}
 H1 {
    color: #332B40;
    margin: 0;
@@ -214,4 +205,22 @@ UL#loading-services LI {
 }
 UL#loading-services LI.loaded {
     list-style-image: url(/static/images/tick.png);
+}
+LI.helios-twitter {
+    list-style-image: url(/static/images/twitter.jpg);
+}
+LI.helios-github {
+    list-style-image: url(/static/images/github.jpg);
+}
+LI.helios-facebook {
+    list-style-image: url(/static/images/facebook.png);
+}
+LI.helios-lastfm {
+    list-style-image: url(/static/images/lastfm.jpg);
+}
+LI.helios-foursquare {
+    list-style-image: url(/static/images/foursquare.jpg);
+}
+LI.helios-flickr {
+    list-style-image: url(/static/images/flickr.jpg);
 }
