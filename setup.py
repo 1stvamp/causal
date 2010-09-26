@@ -13,6 +13,9 @@ setup(
         author_email='bassdread@gmail.com',
         url='http://github.com/bassdread/helios',
         ackages=find_packages(exclude=['ez_setup']),
-        install_requires=open('virtualenv_build/base_requirements.txt', 'r').readlines(),
+        setup_requires=open('virtualenv_build/base_requirements.txt', 'r').readlines(),
+        extras_require={
+            'services': open('virtualenv_build/extras_requirements.txt', 'r').readlines(),
+        }
         #license='Apache License 2.0'
 )
