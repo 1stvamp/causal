@@ -5,6 +5,9 @@
     
 {% endblock %}
 
-{% block content %}meh!
-{{ retweets }}
+{% block content %}
+{{ total_tweets }} / {{ retweets }}
+
+<img src="http://chart.apis.google.com/chart?chs=300x225&cht=p3&chd=t:{{non_retweets}},{{retweets}}&chdl=tweets|retweets" width="300" height="225" alt="" />
+
 {% endblock %}

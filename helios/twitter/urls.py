@@ -6,4 +6,5 @@ shortcut = 'twitter-urls'
 urlpatterns = patterns('',
     url(r'^$', 'helios.twitter.views.verify_auth', name='helios-twitter-callback'),
     url(r'^auth$', 'helios.twitter.views.auth', name='helios-twitter-auth'),
+    url(r'^stats$', 'helios.twitter.views.stats', name='helios-twitter-stats'),
 )

@@ -96,6 +96,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(PATH_SITE_ROOT, 'main/templates'),
+    os.path.join(PATH_SITE_ROOT, 'twitter/templates'),
 )
 
 INSTALLED_APPS = (

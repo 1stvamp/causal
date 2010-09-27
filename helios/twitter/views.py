@@ -3,13 +3,18 @@ from django.contrib.auth.decorators import login_required
 from helios.main.models import UserService, RequestToken, OAuthSetting, ServiceApp
 from helios.twitter.utils import user_login
 from helios.main.service_utils import get_model_instance, generate_access_token, get_module_name
+from helios.twitter.service import get_items
+from datetime import date, timedelta
+import re
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
 
 @login_required(redirect_field_name='redirect_to')
 def verify_auth(request):
-    """Tkae incoming request and validate it to create a valid AccessToken."""
+    """Take incoming request and validate it to create a valid AccessToken."""
     service = get_model_instance(request.user, MODULE_NAME)
     request_token = RequestToken.objects.get(service=service)
     request_token.oauth_verify = request.GET.get('oauth_verifier')
@@ -32,3 +37,29 @@ def auth(request):
         service = UserService(user=request.user, app=app)
         service.save()
     return user_login(service)
+
+@login_required(redirect_field_name='redirect_to')
+def stats(request):
+    """Take incoming request and validate it to create a valid AccessToken."""
+    
+    service = get_model_instance(request.user, MODULE_NAME)
+    
+    # get tweets
+    tweets = get_items(request.user, date.today() - timedelta(days=7), service)
+    retweets = 0
+    template_values = {}
+    
+    if tweets:
+        for tweet in tweets:
+            if re.match('RT', tweet.body):
+                retweets = retweets + 1
+        template_values['retweets'] = retweets
+        template_values['non_retweets'] = len(tweets) - retweets
+        template_values['total_tweets'] = len(tweets)
+        
+    return render_to_response(
+      'twitter_stats.html',
+      template_values,
+      context_instance=RequestContext(request)
+    )
+
