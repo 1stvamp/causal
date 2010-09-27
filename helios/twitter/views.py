@@ -49,13 +49,24 @@ def stats(request):
     retweets = 0
     template_values = {}
     
+    # retweet ratio
+    # who you tweet the most
+    ats = {}
     if tweets:
         for tweet in tweets:
             if re.match('RT', tweet.body):
                 retweets = retweets + 1
+            atteds = re.findall('@[\w]*', tweet.body)
+            for i in atteds:
+                if ats.has_key(i):
+                    ats[i] = ats[i] + 1
+                else:
+                    ats[i] = 1
+            
         template_values['retweets'] = retweets
         template_values['non_retweets'] = len(tweets) - retweets
         template_values['total_tweets'] = len(tweets)
+        template_values['atters'] = ats
         
     return render_to_response(
       'twitter_stats.html',
