@@ -4,6 +4,7 @@ from tweepy import TweepError
 from twitter_text import TwitterText
 from datetime import timedelta
 from django.shortcuts import render_to_response, redirect
+from django.utils.html import urlize
 from helios.main.models import ServiceItem
 from helios.twitter.utils import get_api, user_login
 from helios.main.service_utils import get_model_instance
@@ -46,9 +47,10 @@ def get_items(user, since, model_instance=None):
     else:
         for status in timeline:
             item = ServiceItem()
-            tt = TwitterText(status.text)
-            tt.autolink.auto_link()
-            item.body = unicode(TwitterText(tt.text))
+            tt = TwitterText(urlize(status.text))
+            tt.autolink.auto_link_usernames_or_lists()
+            tt.autolink.auto_link_hashtags()
+            item.body = unicode(tt.text)
             item.created =status.created_at
             if status.geo:
                 item.location['lat'] = status.geo['coordinates'][0]
