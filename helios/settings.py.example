@@ -72,6 +72,9 @@ ADMIN_MEDIA_PREFIX = '/_ha-media/'
 # Should be set to something other than admin
 ADMIN_URL = r'^_ha-admin/'
 
+# Shiny admin panel or not?
+ENABLE_ADMIN = True
+
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = None
 
