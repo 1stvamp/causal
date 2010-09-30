@@ -10,8 +10,8 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.html import urlize
-from helios.main.forms import RegistrationForm
-from helios.main.models import *
+from causal.main.forms import RegistrationForm
+from causal.main.models import *
 
 def history(request, user_id=None):
     template_values = {}
