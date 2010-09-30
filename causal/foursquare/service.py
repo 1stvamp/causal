@@ -1,8 +1,8 @@
 import httplib2
 import oauth2 as oauth
 from datetime import datetime, timedelta
-from helios.main.models import ServiceItem
-from helios.main.service_utils import get_model_instance, get_data
+from causal.main.models import ServiceItem
+from causal.main.service_utils import get_model_instance, get_data
 
 DISPLAY_NAME = 'Foursquare'
 CUSTOM_FORM = False

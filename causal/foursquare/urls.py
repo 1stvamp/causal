@@ -4,6 +4,6 @@ base_path = r'^foursquare/'
 shortcut = 'foursquare-urls'
 
 urlpatterns = patterns('',
-    url(r'^$', 'helios.foursquare.views.verify_auth', name='helios-foursquare-callback'),
-    url(r'^auth$', 'helios.foursquare.views.auth', name='helios-foursquare-auth'),
+    url(r'^$', 'causal.foursquare.views.verify_auth', name='causal-foursquare-callback'),
+    url(r'^auth$', 'causal.foursquare.views.auth', name='causal-foursquare-auth'),
 )
