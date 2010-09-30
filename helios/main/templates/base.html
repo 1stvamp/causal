@@ -15,19 +15,19 @@
     <script type="text/javascript" src="/static/js/jquery.jqote2.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
     <script>
-  $(document).ready(function() {
-    $("#tabs").tabs();
-  });
-
-  $('#tabs').tabs({
-    load: function(event, ui) {
-        $('a', ui.panel).click(function() {
-            $(ui.panel).load(this.href);
-            return false;
+        //<![CDATA[
+        $(function() {
+            $('#tabs').tabs({
+                load: function(event, ui) {
+                    $('a', ui.panel).click(function() {
+                        $(ui.panel).load(this.href);
+                        return false;
+                    });
+                }
+            });
         });
-    }
-});
-  </script>
+        //]]>
+    </script>
     {% block head %}{% endblock head %}
 </head>
 
@@ -53,27 +53,23 @@
 	</div>
 	<div id="content">
     	    <div id="primary" class="clearfix">
-	    
-<div id="tabs">
-    <ul>
-        <li><a href="#fragment-1"><span>History</span></a></li>
-        <li><a href="/twitter/stats"><span>Twitter</span></a></li>
-        <li><a href="#fragment-3"><span>Three</span></a></li>
-    </ul>
-    <div id="fragment-1">
-        {% block content %}{% endblock content %}
-    </div>
-    <div id="fragment-2">
-    </div>
-    <div id="fragment-3">
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-    </div>
-</div>	    
-	    
-	    
-		
+                <div id="tabs">
+                    <ul>
+                        <li><a href="#fragment-1"><span>History</span></a></li>
+                        <li><a href="/twitter/stats"><span>Twitter</span></a></li>
+                        <li><a href="#fragment-3"><span>Three</span></a></li>
+                    </ul>
+                    <div id="fragment-1">
+                        {% block content %}{% endblock content %}
+                    </div>
+                    <div id="fragment-2">
+                    </div>
+                    <div id="fragment-3">
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                    </div>
+                </div>	    
 	    </div>
 	    <div id="secondary">
 	    </div>
