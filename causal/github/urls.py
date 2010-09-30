@@ -4,5 +4,5 @@ base_path = r'^github/'
 shortcut = 'github-urls'
 
 urlpatterns = patterns('',
-        url(r'^auth$', 'helios.github.views.auth', name='helios-github-auth'),
+        url(r'^auth$', 'causal.github.views.auth', name='causal-github-auth'),
 )

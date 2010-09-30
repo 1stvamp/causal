@@ -1,7 +1,7 @@
 import oauth2 as oauth
 from datetime import datetime, timedelta
-from helios.main.models import ServiceItem, AccessToken
-from helios.main.service_utils import get_model_instance, get_data
+from causal.main.models import ServiceItem, AccessToken
+from causal.main.service_utils import get_model_instance, get_data
 
 DISPLAY_NAME = 'Last.fm'
 CUSTOM_FORM = False

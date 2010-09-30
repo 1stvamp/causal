@@ -2,8 +2,8 @@ import time
 import feedparser
 from datetime import datetime
 from BeautifulSoup import Tag, BeautifulSoup as soup
-from helios.main.models import AccessToken, ServiceItem
-from helios.main.service_utils import get_model_instance
+from causal.main.models import AccessToken, ServiceItem
+from causal.main.service_utils import get_model_instance
 
 DISPLAY_NAME = 'Github'
 CUSTOM_FORM = False
