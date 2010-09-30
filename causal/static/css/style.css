@@ -206,21 +206,21 @@ UL#loading-services LI {
 UL#loading-services LI.loaded {
     list-style-image: url(/static/images/tick.png);
 }
-LI.helios-twitter {
+LI.causal-twitter {
     list-style-image: url(/static/images/twitter.jpg);
 }
-LI.helios-github {
+LI.causal-github {
     list-style-image: url(/static/images/github.jpg);
 }
-LI.helios-facebook {
+LI.causal-facebook {
     list-style-image: url(/static/images/facebook.png);
 }
-LI.helios-lastfm {
+LI.causal-lastfm {
     list-style-image: url(/static/images/lastfm.jpg);
 }
-LI.helios-foursquare {
+LI.causal-foursquare {
     list-style-image: url(/static/images/foursquare.jpg);
 }
-LI.helios-flickr {
+LI.causal-flickr {
     list-style-image: url(/static/images/flickr.jpg);
 }
