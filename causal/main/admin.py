@@ -2,7 +2,7 @@ from django import forms
 from django.conf import settings
 from django.contrib import admin
 from django.utils.importlib import import_module
-from helios.main.models import *
+from causal.main.models import *
 
 class AccessTokenAdmin(admin.ModelAdmin):
     pass

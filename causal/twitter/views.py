@@ -1,9 +1,9 @@
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from helios.main.models import UserService, RequestToken, OAuthSetting, ServiceApp
-from helios.twitter.utils import user_login
-from helios.main.service_utils import get_model_instance, generate_access_token, get_module_name
-from helios.twitter.service import get_items
+from causal.main.models import UserService, RequestToken, OAuthSetting, ServiceApp
+from causal.twitter.utils import user_login
+from causal.main.service_utils import get_model_instance, generate_access_token, get_module_name
+from causal.twitter.service import get_items
 from datetime import date, timedelta
 from django.utils.datastructures import SortedDict
 import re
@@ -21,7 +21,7 @@ def verify_auth(request):
     request_token.oauth_verify = request.GET.get('oauth_verifier')
     request_token.save()
     generate_access_token(service, request_token)
-    return_url = request.session.get('helios_twitter_oauth_return_url', None) or 'history'
+    return_url = request.session.get('causal_twitter_oauth_return_url', None) or 'history'
     # Mark as setup completed
     service.setup = True
     service.save()
@@ -31,7 +31,7 @@ def verify_auth(request):
 def auth(request):
     """Prepare a oauth request by saving a record locally ready for the
     redirect from twitter."""
-    request.session['helios_twitter_oauth_return_url'] = request.GET.get('HTTP_REFERER', None)
+    request.session['causal_twitter_oauth_return_url'] = request.GET.get('HTTP_REFERER', None)
     service = get_model_instance(request.user, MODULE_NAME)
     if not service:
         app = ServiceApp.objects.get(module_name=MODULE_NAME)

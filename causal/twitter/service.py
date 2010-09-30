@@ -4,9 +4,9 @@ from tweepy import TweepError
 from twitter_text import TwitterText
 from datetime import timedelta
 from django.shortcuts import render_to_response, redirect
-from helios.main.models import ServiceItem
-from helios.twitter.utils import get_api, user_login
-from helios.main.service_utils import get_model_instance
+from causal.main.models import ServiceItem
+from causal.twitter.utils import get_api, user_login
+from causal.main.service_utils import get_model_instance
 
 DISPLAY_NAME = 'Twitter'
 CUSTOM_FORM = False

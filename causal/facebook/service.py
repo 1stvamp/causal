@@ -1,8 +1,8 @@
 import httplib2
 import oauth2 as oauth
 from datetime import datetime
-from helios.main.models import ServiceItem, AccessToken
-from helios.main.service_utils import get_model_instance
+from causal.main.models import ServiceItem, AccessToken
+from causal.main.service_utils import get_model_instance
 from facegraph.fql import FQL
 
 DISPLAY_NAME = 'Facebook'

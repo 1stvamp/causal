@@ -1,8 +1,8 @@
 import flickrapi
 from datetime import datetime
 from django.utils import simplejson
-from helios.main.models import ServiceItem, AccessToken
-from helios.main.service_utils import get_model_instance
+from causal.main.models import ServiceItem, AccessToken
+from causal.main.service_utils import get_model_instance
 
 DISPLAY_NAME = 'Flickr'
 CUSTOM_FORM = True

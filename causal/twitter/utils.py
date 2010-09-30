@@ -3,10 +3,10 @@ from datetime import datetime
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 
-from helios.main.models import RequestToken, AccessToken, UserService
+from causal.main.models import RequestToken, AccessToken, UserService
 
 def _auth(oauth, cust_callback_url=None):
-    callback = cust_callback_url or reverse('helios-twitter-callback')
+    callback = cust_callback_url or reverse('causal-twitter-callback')
     callback = "%s%s" % (oauth.callback_url_base, callback,)
     return tweepy.OAuthHandler(oauth.consumer_key, oauth.consumer_secret, callback)
 
