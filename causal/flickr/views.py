@@ -2,8 +2,8 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.core.urlresolvers import reverse
-from helios.main.models import UserService, RequestToken, OAuthSetting, ServiceApp, AccessToken
-from helios.main.service_utils import get_model_instance, user_login, generate_access_token, get_module_name
+from causal.main.models import UserService, RequestToken, OAuthSetting, ServiceApp, AccessToken
+from causal.main.service_utils import get_model_instance, user_login, generate_access_token, get_module_name
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)

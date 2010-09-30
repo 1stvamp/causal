@@ -4,5 +4,5 @@ base_path = r'^flickr/'
 shortcut = 'flickr-urls'
 
 urlpatterns = patterns('',
-    url(r'^auth$', 'helios.flickr.views.auth', name='helios-flickr-auth'),
+    url(r'^auth$', 'causal.flickr.views.auth', name='causal-flickr-auth'),
 )
