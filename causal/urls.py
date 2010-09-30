@@ -5,11 +5,11 @@ from django.template.loader import render_to_string
 from django.http import HttpResponseNotFound, HttpResponseServerError
 from django.views.decorators.cache import cache_page
 
-from helios.main.views import *
+from causal.main.views import *
 
 if settings.DEBUG:
     try:
-        import helios.wingdbstub
+        import causal.wingdbstub
     except ImportError:
         pass
 

@@ -4,7 +4,7 @@ base_path = r'^twitter/'
 shortcut = 'twitter-urls'
 
 urlpatterns = patterns('',
-    url(r'^$', 'helios.twitter.views.verify_auth', name='helios-twitter-callback'),
-    url(r'^auth$', 'helios.twitter.views.auth', name='helios-twitter-auth'),
-    url(r'^stats$', 'helios.twitter.views.stats', name='helios-twitter-stats'),
+    url(r'^$', 'causal.twitter.views.verify_auth', name='causal-twitter-callback'),
+    url(r'^auth$', 'causal.twitter.views.auth', name='causal-twitter-auth'),
+    url(r'^stats$', 'causal.twitter.views.stats', name='causal-twitter-stats'),
 )
