@@ -38,19 +38,51 @@
     });
     // ]]>
     </script>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <script>
+        //<![CDATA[
+        $(function() {
+            $('#tabs').tabs({
+                load: function(event, ui) {
+                    $('a', ui.panel).click(function() {
+                        $(ui.panel).load(this.href);
+                        return false;
+                    });
+                }
+            });
+        });
+        //]]>
+    </script>
 {% endblock %}
 
-{% block content %}
-    <ul id="loading-services">
-        {% for service in services %}
-            <li id="service_load_{{ service.class_name }}">{{ service.app.module.DISPLAY_NAME }}</li>
-        {% endfor %}
-    </ul>
-    {% for items in days %}
-        <ul id="day_{{ forloop.counter0 }}">
-            <lh>{{ day_names|get:forloop.counter0 }}</lh>
+{% block primary %}
+    <div id="tabs">
+        <ul>
+            <li><a href="#all-services"><span>History</span></a></li>
+            {% for service in services %}
+                {% if service|stats_url %}
+                <li><a href="{{ service|stats_url }}">{{ service.app.module.DISPLAY_NAME }}</a></li>
+                {% endif %}
+            {% endfor %}
         </ul>
-    {% endfor %}
+        <div id="all-services">
+            <ul id="loading-services">
+                {% for service in services %}
+                    <li id="service_load_{{ service.class_name }}">{{ service.app.module.DISPLAY_NAME }}</li>
+                {% endfor %}
+            </ul>
+            {% for items in days %}
+                <ul id="day_{{ forloop.counter0 }}">
+                    <lh>{{ day_names|get:forloop.counter0 }}</lh>
+                </ul>
+            {% endfor %}
+        </div>
+        {% for service in services %}
+                <div id="{{ service.class_name }}-stats"></div>
+            {% endfor %}
+        </ul>
+    </div>
     <script type="text/x-jqote-template" id="item_template">
         <![CDATA[
         <li class="<*= this.class_name *>">
@@ -61,4 +93,4 @@
         </li>
         ]]>
     </script>
-{% endblock %}
+{% endblock primary %}

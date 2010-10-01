@@ -1,7 +1,7 @@
+import re
 from django import template
 from django.conf import settings
-from django import template
-import re
+from django.core.urlresolvers import reverse, NoReverseMatch
 
 NUMERIC_TEST = re.compile(r'^\d+$')
 
@@ -33,4 +33,15 @@ def get(value, arg):
 
 @register.filter
 def only_setup(qs):
+    """Filter a given UserService queryset for only fully setup services
+    """
     return qs.filter(setup=True)
+
+@register.filter
+def stats_url(service):
+    """Return the URL for a service's stats ''if it has one''
+    """
+    try:
+        return reverse('%s-stats' % (service.class_name,))
+    except NoReverseMatch:
+        return False

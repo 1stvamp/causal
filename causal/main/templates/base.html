@@ -9,25 +9,8 @@
       body { height: 100%; margin: 0px; padding: 0px }
       #map_canvas { height: 100% }
     </style>
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/jquery.jqote2.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-    <script>
-        //<![CDATA[
-        $(function() {
-            $('#tabs').tabs({
-                load: function(event, ui) {
-                    $('a', ui.panel).click(function() {
-                        $(ui.panel).load(this.href);
-                        return false;
-                    });
-                }
-            });
-        });
-        //]]>
-    </script>
     {% block head %}{% endblock head %}
 </head>
 
@@ -53,28 +36,12 @@
 	</div>
 	<div id="content">
     	    <div id="primary" class="clearfix">
-                <div id="tabs">
-                    <ul>
-                        <li><a href="#fragment-1"><span>History</span></a></li>
-                        <li><a href="/twitter/stats"><span>Twitter</span></a></li>
-                        <li><a href="#fragment-3"><span>Three</span></a></li>
-                    </ul>
-                    <div id="fragment-1">
-                        {% block content %}{% endblock content %}
-                    </div>
-                    <div id="fragment-2">
-                    </div>
-                    <div id="fragment-3">
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-                    </div>
-                </div>	    
+		{% block primary %}{% endblock primary %}
 	    </div>
 	    <div id="secondary">
+		{% block secondary %}{% endblock secondary %}
 	    </div>
 	</div>
-
 	<div id="footer">
 	</div>
     </div> <!-- /wrapper -->

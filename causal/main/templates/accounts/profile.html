@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load extras %}
 
-{% block content %}
+{% block primary %}
 <div class="form-data">
 {% if user.userservice_set.all %}
     <h3>Enabled services:</h3>
@@ -20,4 +20,4 @@
     </ul>
 {% endif %}
 </div>
-{% endblock %}
+{% endblock primary %}

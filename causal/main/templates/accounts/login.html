@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block primary %}
 Welcome.
 <div class="form-data">
     <form action="." method="POST" >{% csrf_token %}
@@ -9,6 +9,6 @@ Welcome.
  <span class="help">'Have you <a href="/password_reset/">forgotten your password</a>?' </span>
 
 <input type="submit" value="go" class="button-submit" />
-    </form>    
+    </form>
 </div>
-{% endblock %}
+{% endblock primary %}
