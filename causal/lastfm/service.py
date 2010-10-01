@@ -26,6 +26,7 @@ def get_items(user, since, model_instance=None):
             item.body = 'by %s' % (track['artist']['#text'],)
             item.created = datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M') \
                 + timedelta(hours=datetime.now().utcoffset() or 0),
+            item.service = serv
             items.append(item)
 
             if type(item.created) == tuple and len(item.created):

@@ -36,5 +36,6 @@ def get_items(user, since, model_instance):
         item.title = p['photo']['title']['_content']
         item.body = p['photo']['urls']['url'][0]['_content']
         item.created = datetime.fromtimestamp(float(epoch))
+        item.service = serv
         items.append(item)
     return items
