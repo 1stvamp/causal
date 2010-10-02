@@ -10,7 +10,7 @@ from causal.main.models import RequestToken, AccessToken, UserService
 PARENT_PACKAGE_NAME = 'causal.'
 
 def user_login(service, cust_callback_url=None):
-    pos = service.app.module_name.find(causal_package_name) + len(PARENT_PACKAGE_NAME)
+    pos = service.app.module_name.find(PARENT_PACKAGE_NAME) + len(PARENT_PACKAGE_NAME)
     callback_app_name = service.app.module_name[pos:]
     callback = cust_callback_url or reverse('causal-%s-callback' % (callback_app_name,))
     callback = "%s%s" % (service.app.oauth.callback_url_base, callback,)
@@ -24,20 +24,18 @@ def user_login(service, cust_callback_url=None):
             return False
 
         request_token_params = dict((token.split('=') for token in content.split('&')))
-
-        update_attrs = {
-            'oauth_token': request_token_params['oauth_token'],
-            'oauth_token_secret': request_token_params['oauth_token_secret'],
-        }
-        insert_attrs = {
-            'service': service,
-        }
-        try:
-            rt = RequestToken.objects.filter(**insert_attrs)
-        except rt.DoesNotExist:
-            insert_attrs.update(update_attrs)
-            insert_attrs['created'] = datetime.now()
-            RequestToken.objects.create(**insert_attrs)
+        
+        # fetch old token if there is one and remove it
+        # so we can start from a fresh token
+        rt = RequestToken.objects.filter(service=service)
+        if rt:
+            rt.delete()
+        new_token = RequestToken()
+        new_token.service = service
+        new_token.oauth_token = request_token_params['oauth_token']
+        new_token.oauth_token_secret = request_token_params['oauth_token_secret']
+        new_token.created = datetime.now()
+        new_token.save()
 
         redirect_url = "%s?oauth_token=%s" % (service.app.oauth.user_auth_url, request_token_params['oauth_token'],)
     except:

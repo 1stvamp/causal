@@ -14,6 +14,8 @@ def verify_auth(request):
     request_token.save()
     return_url = request.session.get('causal_foursquare_oauth_return_url', None) or 'history'
     generate_access_token(service, request_token)
+    service.setup = True
+    service.save()
     return redirect(return_url)
 
 @login_required(redirect_field_name='redirect_to')
