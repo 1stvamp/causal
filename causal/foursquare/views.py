@@ -27,3 +27,11 @@ def auth(request):
         service = UserService(user=request.user, app=app)
         service.save()
     return user_login(service)
+
+@login_required(redirect_field_name='redirect_to')
+def stats(request):
+    """Display stats based on checkins."""
+    service = get_model_instance(request.user, MODULE_NAME)
+    
+    # get checkins
+    checkins = get_items(request.user, date.today() - timedelta(days=7), service)
