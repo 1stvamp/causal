@@ -13,6 +13,7 @@ from django.utils.html import urlize
 from causal.main.forms import RegistrationForm
 from causal.main.models import *
 
+@login_required(redirect_field_name='redirect_to')
 def history(request, user_id=None):
     template_values = {}
 
@@ -135,12 +136,9 @@ def enable_service(request, app_id):
     return redirect('profile')
 
 def index(request):
-    users = User.objects.all().filter(is_active=True)
     return render_to_response(
         'homepage.html',
-        {
-            'users': users,
-        },
+        {},
         context_instance=RequestContext(request)
     )
 
