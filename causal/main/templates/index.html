@@ -39,11 +39,14 @@
     // ]]>
     </script>
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <link href="/static/css/tabs.css" rel="stylesheet" type="text/css"/>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
     <script>
         //<![CDATA[
         $(function() {
-            $('#tabs').tabs({
+            $("#service-tabs").tabs().addClass('ui-tabs-vertical ui-helper-clearfix');
+            $("#service-tabs li").removeClass('ui-corner-top').addClass('ui-corner-left');            
+            $('#service-tabs').tabs({
                 load: function(event, ui) {
                     $('a', ui.panel).click(function() {
                         $(ui.panel).load(this.href);
@@ -57,16 +60,24 @@
 {% endblock %}
 
 {% block primary %}
-    <div id="tabs">
+    <div id="service-tabs">
         <ul>
-            <li><a href="#all-services"><span>History</span></a></li>
+            <li>
+                <a href="#all-services" class="causal-timeline" title="7 day timeline">
+                    <span>7 day timeline</span>
+                </a>
+            </li>
             {% for service in services %}
                 {% if service|stats_url %}
-                <li><a href="{{ service|stats_url }}">{{ service.app.module.DISPLAY_NAME }}</a></li>
+                    <li>
+                        <a href="{{ service|stats_url }}" class="{{ service.class_name }}" title="{{ service.app.module.DISPLAY_NAME }}">
+                            <span>{{ service.app.module.DISPLAY_NAME }}</span>
+                        </a>
+                    </li>
                 {% endif %}
             {% endfor %}
         </ul>
-        <div id="all-services">
+        <div id="all-services" clss="ui-tabs-panel">
             <ul id="loading-services">
                 {% for service in services %}
                     <li id="service_load_{{ service.class_name }}">{{ service.app.module.DISPLAY_NAME }}</li>
@@ -79,7 +90,7 @@
             {% endfor %}
         </div>
         {% for service in services %}
-                <div id="{{ service.class_name }}-stats"></div>
+                <div id="{{ service.class_name }}-stats" clss="ui-tabs-panel"></div>
             {% endfor %}
         </ul>
     </div>

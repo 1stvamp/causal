@@ -1,0 +1,44 @@
+/* Tabs */
+.ui-tabs-vertical.ui-tabs {
+        margin-left: 3em;
+}
+.ui-tabs-vertical .ui-tabs-nav {
+        padding: .2em .1em .2em .2em;
+        float: left;
+        width: 2em;
+        margin-left: -2.3em !important;
+        border-bottom: none !important;
+}
+.ui-tabs-vertical .ui-tabs-nav LI {
+        clear: none;
+        width: 2em !important;
+        border-bottom-width: 1px !important;
+        border-right-width: 0 !important;
+        margin: 0 -1px .2em 0;
+        height: 2em !important;
+        overflow: hidden;
+}
+.ui-tabs-vertical .ui-tabs-nav LI A {
+        display: inline;
+        height: 100%;
+        width: 100%;
+        padding: 0 !important;
+        margin: 0 !important;
+}
+.ui-tabs-vertical .ui-tabs-nav LI A SPAN {
+        display: none;
+}
+.ui-tabs-vertical .ui-tabs-nav LI.ui-tabs-selected {
+        padding-bottom: 0;
+        padding-right: .1em;
+        border-bottom-width: 0px !important;
+        border-bottom: 1px solid silver !important;
+        margin-bottom: 2px;
+}
+.ui-tabs-vertical .ui-tabs-panel {
+        padding: 1em;
+        float: left;
+}
+DIV#service-tabs  {
+        padding-left: 0;
+}

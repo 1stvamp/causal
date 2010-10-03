@@ -224,3 +224,24 @@ LI.causal-foursquare {
 LI.causal-flickr {
     list-style-image: url(/static/images/flickr.jpg);
 }
+A.causal-twitter {
+    background: transparent url(/static/images/twitter.jpg) no-repeat 50% 50%;
+}
+A.causal-github {
+    background: transparent url(/static/images/github.jpg) no-repeat 50% 50%;
+}
+A.causal-facebook {
+    background: transparent url(/static/images/facebook.png) no-repeat 50% 50%;
+}
+A.causal-lastfm {
+    background: transparent url(/static/images/lastfm.jpg) no-repeat 50% 50%;
+}
+A.causal-foursquare {
+    background: transparent url(/static/images/foursquare.jpg) no-repeat 50% 50%;
+}
+A.causal-flickr {
+    background: transparent url(/static/images/flickr.jpg) no-repeat 50% 50%;
+}
+A.causal-timeline {
+    background: transparent url(/static/images/time.png) no-repeat 50% 50%;
+}
