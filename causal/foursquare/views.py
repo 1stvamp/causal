@@ -4,7 +4,7 @@ from causal.main.models import UserService, RequestToken, OAuthSetting, ServiceA
 from causal.main.service_utils import get_model_instance, user_login, generate_access_token, get_module_name
 from causal.foursquare.service import get_items
 from datetime import date, timedelta
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
 # Yay, let's recreate __package__ for Python <2.6
@@ -32,10 +32,9 @@ def auth(request):
         service.save()
     return user_login(service)
 
-@login_required(redirect_field_name='redirect_to')
-def stats(request):
+def stats(request, service_id):
     """Display stats based on checkins."""
-    service = get_model_instance(request.user, MODULE_NAME)
+    service = get_object_or_404(UserService, pk=service_id)
     template_values = {}
     # get checkins
     checkins = get_items(request.user, date.today() - timedelta(days=7), service)

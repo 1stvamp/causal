@@ -42,6 +42,6 @@ def stats_url(service):
     """Return the URL for a service's stats ''if it has one''
     """
     try:
-        return reverse('%s-stats' % (service.class_name,))
+        return reverse('%s-stats' % (service.class_name,), kwargs={'service_id': service.pk})
     except NoReverseMatch:
         return False
