@@ -16,7 +16,7 @@ def get_items(user, since, model_instance=None):
     if checkins and checkins.has_key('checkins'):
         for checkin in checkins['checkins']:
             item = ServiceItem()
-            item.title = "Checked in: %s" % (checkin['venue']['name'],)
+            item.title = checkin['venue']['name']
             if checkin.has_key('shout') and checkin['shout']:
                 item.body = checkin['shout']
             if checkin['venue'].has_key('geolat') and checkin['venue']['geolat']:
