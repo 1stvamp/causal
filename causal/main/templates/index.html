@@ -77,7 +77,7 @@
                 {% endif %}
             {% endfor %}
         </ul>
-        <div id="all-services" clss="ui-tabs-panel">
+        <div id="all-services" class="ui-tabs-panel">
             <ul id="loading-services">
                 {% for service in services %}
                     <li id="service_load_{{ service.class_name }}">{{ service.app.module.DISPLAY_NAME }}</li>
