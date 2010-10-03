@@ -26,6 +26,7 @@ def get_items(user, since, model_instance=None):
                 checkin['created'].replace(' +0000', ''),
                 '%a, %d %b %y %H:%M:%S') + timedelta(hours=datetime.now().utcoffset() or 0)
             item.service = serv
+            item.icon = checkin['venue']['primarycategory']['iconurl']
             items.append(item)
 
     return items
