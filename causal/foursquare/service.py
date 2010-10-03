@@ -16,6 +16,7 @@ def get_items(user, since, model_instance=None):
     if checkins and checkins.has_key('checkins'):
         for checkin in checkins['checkins']:
             item = ServiceItem()
+            item.location = {}
             item.title = checkin['venue']['name']
             if checkin.has_key('shout') and checkin['shout']:
                 item.body = checkin['shout']
@@ -26,7 +27,8 @@ def get_items(user, since, model_instance=None):
                 checkin['created'].replace(' +0000', ''),
                 '%a, %d %b %y %H:%M:%S') + timedelta(hours=datetime.now().utcoffset() or 0)
             item.service = serv
-            item.icon = checkin['venue']['primarycategory']['iconurl']
+            if checkin['venue'].has_key('primarycategory'):
+                item.icon = checkin['venue']['primarycategory']['iconurl']
             items.append(item)
-
+            del(item)
     return items

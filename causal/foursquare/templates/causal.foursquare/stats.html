@@ -32,7 +32,8 @@ function add_marker(map, lat, longg, contentString){
     var map = new google.maps.Map(document.getElementById("map_canvas"),
         myOptions);
     {% for checkin in checkins %}{% if checkin.location %}
-        add_marker(map, {{checkin.location.lat}}, {{checkin.location.long}}, '{{checkin.created}} : {{checkin.title}}'); 
+        add_marker(map, {{checkin.location.lat}}, {{checkin.location.long}}, 
+        '{% if checkin.icon %}<img src="{{ checkin.icon }}" />{% endif %} {{checkin.created}} : {{checkin.title}}'); 
     {% endif %}{% endfor %}       
   }
   
@@ -48,7 +49,7 @@ Places checked into:
 <ul>
 {% for checkin in checkins %}
 
-<li>{{checkin.title}}</li>
-
+<li>{{checkin.title}} - {{checkin.location}}</li>
+ 
 {% endfor %}
 </ul>
