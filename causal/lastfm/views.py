@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from causal.main.models import UserService, RequestToken, OAuthSetting, ServiceApp, AccessToken
 from causal.main.service_utils import get_model_instance, user_login, generate_access_token, get_module_name
 from datetime import date, timedelta
+from causal.lastfm.service import get_items
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 

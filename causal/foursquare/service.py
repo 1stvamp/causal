@@ -20,6 +20,8 @@ def get_items(user, since, model_instance=None):
             item.title = checkin['venue']['name']
             if checkin.has_key('shout') and checkin['shout']:
                 item.body = checkin['shout']
+            else:
+                item.body = checkin['venue']['city']
             if checkin['venue'].has_key('geolat') and checkin['venue']['geolat']:
                 item.location['lat'] = checkin['venue']['geolat']
                 item.location['long'] = checkin['venue']['geolong']
