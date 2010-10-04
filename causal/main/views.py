@@ -12,6 +12,7 @@ from django.utils.html import urlize
 from django.db.models import Count
 from causal.main.forms import RegistrationForm
 from causal.main.models import *
+from causal.main.decorators import can_view_service
 
 def history(request, user_id=None):
     template_values = {}
@@ -24,7 +25,10 @@ def history(request, user_id=None):
         else:
             return redirect('login')
 
-    services = UserService.objects.filter(user=user, setup=True)
+    if request.user.is_authenticated()  and request.user.pk == user.pk:
+        services = UserService.objects.filter(user=user, setup=True)
+    else:
+        services = UserService.objects.filter(user=user, setup=True, share=True)
     template_values['services'] = services
 
     days = []
@@ -48,6 +52,7 @@ def history(request, user_id=None):
         context_instance=RequestContext(request)
     )
 
+@can_view_service
 def history_callback(request, service_id):
     template_values = {}
     service = get_object_or_404(UserService, pk=service_id)

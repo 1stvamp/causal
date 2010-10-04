@@ -6,6 +6,7 @@ from causal.foursquare.service import get_items
 from datetime import date, timedelta
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
+from causal.main.decorators import can_view_service
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
@@ -32,6 +33,7 @@ def auth(request):
         service.save()
     return user_login(service)
 
+@can_view_service
 def stats(request, service_id):
     """Display stats based on checkins."""
     service = get_object_or_404(UserService, pk=service_id)
