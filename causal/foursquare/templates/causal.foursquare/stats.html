@@ -1,26 +1,20 @@
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-
-<script type="text/javascript"
-    src="http://maps.google.com/maps/api/js?sensor=false">
-</script>
-
 <script type="text/javascript">
-
+    //<![CDATA[
 function add_marker(map, lat, longg, contentString){
     var myLatlng = new google.maps.LatLng(lat, longg);
     var marker = new google.maps.Marker({
-      position: myLatlng, 
+      position: myLatlng,
       map: map,
     });
 
     var infowindow = new google.maps.InfoWindow({
     content: contentString
-    }); 
-      
+    });
+
     google.maps.event.addListener(marker, 'click', function() {
       infowindow.open(map,marker);
     });
-}  
+}
 
   function initialize() {
     var latlng = new google.maps.LatLng(53.853418499999997, -0.44196809999999997);
@@ -32,15 +26,15 @@ function add_marker(map, lat, longg, contentString){
     var map = new google.maps.Map(document.getElementById("map_canvas"),
         myOptions);
     {% for checkin in checkins %}{% if checkin.location %}
-        add_marker(map, {{checkin.location.lat}}, {{checkin.location.long}}, 
-        '{% if checkin.icon %}<img src="{{ checkin.icon }}" />{% endif %} {{checkin.created}} : {{checkin.title}}'); 
-    {% endif %}{% endfor %}       
+        add_marker(map, {{checkin.location.lat}}, {{checkin.location.long}},
+        '{% if checkin.icon %}<img src="{{ checkin.icon }}" />{% endif %} {{checkin.created}} : {{checkin.title}}');
+    {% endif %}{% endfor %}
   }
-  
+
 $(document).ready(function() {
     initialize();
-});  
-  
+});
+    //]]>
 </script>
 
 <div id="map_canvas" style="width:600px; height:600px"></div>
@@ -50,6 +44,6 @@ Places checked into:
 {% for checkin in checkins %}
 
 <li>{{checkin.title}} - {{checkin.location}}</li>
- 
+
 {% endfor %}
 </ul>

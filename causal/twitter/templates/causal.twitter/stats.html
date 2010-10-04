@@ -1,11 +1,9 @@
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript">
     //<![CDATA[
     function add_marker(map, lat, longg, contentString){
         var myLatlng = new google.maps.LatLng(lat, longg);
         var marker = new google.maps.Marker({
-            position: myLatlng, 
+            position: myLatlng,
             map: map
         });
 
@@ -21,16 +19,16 @@
     $(function() {
         var latlng = new google.maps.LatLng(53.853418499999997, -0.44196809999999997);
         var myOptions = {
-        zoom: 10,
-        center: latlng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+            zoom: 10,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
         {% for tweet in tweets %}
             {% if tweet.location %}
-                add_marker(map, {{ tweet.location.lat }}, {{ tweet.location.long }}, '{{ tweet.body }}'); 
+                add_marker(map, {{ tweet.location.lat }}, {{ tweet.location.long }}, '{{ tweet.body }}');
             {% endif %}
-        {% endfor %}       
+        {% endfor %}
     });
     //]]>
 </script>
