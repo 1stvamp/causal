@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.html import urlize
+from django.db.models import Count
 from causal.main.forms import RegistrationForm
 from causal.main.models import *
 
@@ -135,7 +136,8 @@ def enable_service(request, app_id):
     return redirect('profile')
 
 def index(request):
-    users = User.objects.all().filter(is_active=True)
+    users = User.objects.all().filter(is_active=True, userservice__share=True) \
+        .annotate(service_count=Count('userservice')).filter(service_count__gt=0)
     return render_to_response(
         'homepage.html',
         {
