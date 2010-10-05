@@ -7,17 +7,19 @@
     <h3>Enabled services:</h3>
     <ul>
         {% for service in user.userservice_set.all %}
-            <li>{% include service.form_template_path %}</li>
+            <li>{% include service.form_template_path %}  
+                {% if service.share %} Shared {% endif %}</li>
         {% endfor %}
     </ul>
 {% endif %}
 {% if available_services %}
     <h3>You can enable these services:</h3>
     <ul>
-        {% for service in available_services %}
-            <li><a href="{% url enable-service service.id %}">{{ service.module.DISPLAY_NAME }}</a></li>
-        {% endfor %}
+    {% for service in available_services %}
+        <li><a href="{% url enable-service service.id %}">{{ service.module.DISPLAY_NAME }}</a></li>
+    {% endfor %}
     </ul>
 {% endif %}
+
 </div>
 {% endblock primary %}

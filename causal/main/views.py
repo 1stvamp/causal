@@ -119,6 +119,7 @@ def register(request):
 @login_required(redirect_field_name='redirect_to')
 def profile(request):
     """Edit access to various services"""
+    #FIXME get the usernames into the template
     available_services = ServiceApp.objects.all().exclude(userservice__user=request.user)
     return render_to_response(
         'accounts/profile.html',
