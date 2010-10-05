@@ -1,5 +1,5 @@
 from django.test import TestCase
-from causal.main.models import OAuthSetting
+from causal.main.models import User, OAuthSetting
 from causal.main.views import history
 from django.test.client import Client
 from django.core.urlresolvers import reverse
@@ -11,24 +11,38 @@ except ImportError:
 
 class TestMain(TestCase):
     """Test the module with fixtures."""
-    
+
     fixtures = ['oauth_settings.json']
-    
+    user_details = {
+        'username': 'test_user',
+        'email': 'test_user@example.com',
+        'password': 'password',
+    }
+
     def setUp(self):
-        pass
-    
+        """Make sure we have a user and any other bits and bots for tests"""
+        self.user = User.objects.create_user(**self.user_details)
+        self.user.save()
+
+    def tearDown(self):
+        self.user.delete()
+
     def test_history_view(self):
         """Test raw history view from main."""
-        
+
         post_params = {}
-	       
+
         response = self.client.post(reverse('history'), post_params)
-        # test we get redirected to login screen
+        # Test we get redirected to login screen
         self.assertEquals(response.status_code, 302)
-        
+
     def _login(self):
         """Log a user in."""
-        user = User.objects.create_user('admin', 'admin@isotoma.com', 'password')
-	user.save()
-	self.client = Client()
-	self.client.post('/login/', {'username': 'admin', 'password': 'password'})
+        self.client = Client()
+        self.client.post(
+                '/login/',
+                {
+                    'username': self.user_details['username'],
+                    'password': self.user_detauls['password'],
+                }
+        )
