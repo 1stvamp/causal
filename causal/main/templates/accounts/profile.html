@@ -25,7 +25,7 @@
                 {% for service in user.userservice_set.all %}
                     <li>
                         {% include service.form_template_path %}
-                        <div><input type="checkbox" name="share" class="share_control" /></div>
+                        <div><input type="checkbox" name="share" class="share_control" {% if service.share %}checked="checked"{% endif %}/></div>
                     </li>
                 {% endfor %}
             </ul>
