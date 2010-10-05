@@ -1,23 +1,34 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
-
-Replace these with more appropriate tests for your application.
-"""
-
 from django.test import TestCase
+from causal.main.models import OAuthSetting
+from causal.main.views import history
+from django.test.client import Client
+from django.core.urlresolvers import reverse
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
+try:
+    import wingdbstub
+except ImportError:
+    pass
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
-
->>> 1 + 1 == 2
-True
-"""}
-
+class TestMain(TestCase):
+    """Test the module with fixtures."""
+    
+    fixtures = ['oauth_settings.json']
+    
+    def setUp(self):
+        pass
+    
+    def test_history_view(self):
+        """Test raw history view from main."""
+        
+        post_params = {}
+	       
+        response = self.client.post(reverse('history'), post_params)
+        # test we get redirected to login screen
+        self.assertEquals(response.status_code, 302)
+        
+    def _login(self):
+        """Log a user in."""
+        user = User.objects.create_user('admin', 'admin@isotoma.com', 'password')
+	user.save()
+	self.client = Client()
+	self.client.post('/login/', {'username': 'admin', 'password': 'password'})

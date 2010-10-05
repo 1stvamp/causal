@@ -33,4 +33,7 @@ def get_items(user, since, model_instance=None):
                 item.icon = checkin['venue']['primarycategory']['iconurl']
             items.append(item)
             del(item)
+    else:
+        # deal with errors
+        pass
     return items
