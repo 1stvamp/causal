@@ -245,3 +245,16 @@ A.causal-flickr {
 A.causal-timeline {
     background: transparent url(/static/images/time.png) no-repeat 50% 50%;
 }
+
+/* Profile */
+INPUT.share_control {
+    float: right;
+    clear: right;
+}
+
+DIV.share_wrapper {
+    float: right;
+    clear: right;
+    margin-top: 1ex;
+    margin-right: 25%;
+}

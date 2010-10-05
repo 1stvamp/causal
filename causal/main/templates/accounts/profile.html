@@ -1,23 +1,42 @@
 {% extends "base.html" %}
 {% load extras %}
 
+{% block head %}
+    <script src="/static/js/iphone-style-checkboxes.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="/static/css/iphone-style-checkboxes.css" type="text/css" media="screen" />
+    <script>
+        //<![CDATA[
+        $(function() {
+            $('.share_control').iphoneStyle({
+                checkedLabel: 'Shared',
+                uncheckedLabel: 'Private'
+            });
+            $('.share_control').parent('div').addClass('share_wrapper');
+        });
+        //]>
+    </script>
+{% endblock head %}
+
 {% block primary %}
-<div class="form-data">
-{% if user.userservice_set.all %}
-    <h3>Enabled services:</h3>
-    <ul>
-        {% for service in user.userservice_set.all %}
-            <li>{% include service.form_template_path %}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-{% if available_services %}
-    <h3>You can enable these services:</h3>
-    <ul>
-        {% for service in available_services %}
-            <li><a href="{% url enable-service service.id %}">{{ service.module.DISPLAY_NAME }}</a></li>
-        {% endfor %}
-    </ul>
-{% endif %}
-</div>
+    <div class="form-data">
+        {% if user.userservice_set.all %}
+            <h3>Enabled services:</h3>
+            <ul>
+                {% for service in user.userservice_set.all %}
+                    <li>
+                        {% include service.form_template_path %}
+                        <div><input type="checkbox" name="share" class="share_control" /></div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if available_services %}
+            <h3>You can enable these services:</h3>
+            <ul>
+                {% for service in available_services %}
+                    <li><a href="{% url enable-service service.id %}">{{ service.module.DISPLAY_NAME }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
 {% endblock primary %}
