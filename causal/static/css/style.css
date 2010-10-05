@@ -247,14 +247,13 @@ A.causal-timeline {
 }
 
 /* Profile */
-INPUT.share_control {
-    float: right;
-    clear: right;
-}
 
 DIV.share_wrapper {
     float: right;
     clear: right;
-    margin-top: 1ex;
     margin-right: 25%;
+    margin-bottom: 1ex;
+}
+hr {
+    width: 90%;
 }
