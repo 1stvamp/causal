@@ -2,7 +2,7 @@ from time import mktime
 from datetime import datetime, timedelta, date
 
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404, redirect
@@ -119,7 +119,6 @@ def register(request):
 @login_required(redirect_field_name='redirect_to')
 def profile(request):
     """Edit access to various services"""
-    #FIXME get the usernames into the template
     available_services = ServiceApp.objects.all().exclude(userservice__user=request.user)
     return render_to_response(
         'accounts/profile.html',
@@ -153,4 +152,22 @@ def index(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect('/')
+    return redirect('home')
+
+@login_required(redirect_field_name='redirect_to')
+def sharing_prefs(request):
+    """Enable/disable sharing preferences for services"""
+    if request.method == 'POST':
+        options = {}
+        for k,v in request.POST.iteritems():
+            if k.startswith('service_'):
+                options[k] = bool(v)
+            if ids:
+                services = UserService.objects.filter(pk__in=options.keys(), user=request.user)
+                for service in services:
+                    service.share = options[service.pk]
+                    service.save()
+    if request.is_ajax():
+        return HttpResponse(simplejson.dumps({'message': 'Saved'}))
+    else:
+        return redirect('profile')
