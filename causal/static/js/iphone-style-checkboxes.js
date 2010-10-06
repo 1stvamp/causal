@@ -65,7 +65,7 @@ $.extend($[iphoneStyle].prototype, {
         
     if (mode == 'container') {
       var newWidth = (onLabelWidth > offLabelWidth) ? onLabelWidth : offLabelWidth;
-      newWidth += this.handle.width() + 15; 
+      newWidth += this.handle.width() + 18; 
     } else { 
       var newWidth = (onLabelWidth < offLabelWidth) ? onLabelWidth : offLabelWidth;
     }
