@@ -161,7 +161,7 @@ def sharing_prefs(request):
         options = {}
         for k,v in request.POST.iteritems():
             if k.startswith('service_'):
-                options[k] = bool(v)
+                options[k.replace('service_', '')] = bool(v)
             if ids:
                 services = UserService.objects.filter(pk__in=options.keys(), user=request.user)
                 for service in services:
