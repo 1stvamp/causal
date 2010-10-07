@@ -55,6 +55,8 @@ def stats(request, service_id):
     ats = {}
     if tweets:
         for tweet in tweets:
+            if tweet.has_location():
+                template_values['tweet_centre'] = tweet
             if re.match('RT', tweet.body):
                 retweets = retweets + 1
             else:
@@ -69,6 +71,7 @@ def stats(request, service_id):
         template_values['non_retweets'] = len(tweets) - retweets
         template_values['total_tweets'] = len(tweets)
         template_values['tweets'] = tweets
+        
         # order by value and reverse to put most popular at the top
         template_values['atters'] = SortedDict(sorted(ats.items(), reverse=True, key=lambda x: x[1]))
     return render_to_response(

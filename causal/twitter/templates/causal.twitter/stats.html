@@ -1,3 +1,4 @@
+{% if tweet_centre %}
 <script type="text/javascript">
     //<![CDATA[
     function add_marker(map, lat, longg, contentString){
@@ -17,9 +18,9 @@
     }
 
     $(function() {
-        var latlng = new google.maps.LatLng(53.853418499999997, -0.44196809999999997);
+        var latlng = new google.maps.LatLng({{tweet_centre.location.lat }}, {{ tweet_centre.location.long }});
         var myOptions = {
-            zoom: 10,
+            zoom: 14,
             center: latlng,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
@@ -35,10 +36,11 @@
 </script>
 
 <div id="map_canvas" style="width:600px; height:600px"></div>
+{% endif %}
 <img src="http://chart.apis.google.com/chart?chs=300x225&cht=p3&chd=t:{{non_retweets}},{{retweets}}&chdl=tweets|retweets" width="300" height="225" alt="" />
 <ul>
     People you @'ed
     {% for a, t in atters.iteritems %}
-        <li>{{ a }} : {{ t }} times</li>
+        <li>{{ a }} : {{ t }} time{%if t > 1 %}s {%endif%}</li>
     {% endfor %}
 </ul>
