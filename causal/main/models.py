@@ -104,4 +104,4 @@ class ServiceItem(object):
         return self.service and self.service.app.module_name.replace('.', '-') or ''
 
     def has_location(self):
-        return self.location['long'] is not None and self.location['lat'] is not None
+        return self.location.has_key('long') is not False and self.location.has_key('lat') is not False
