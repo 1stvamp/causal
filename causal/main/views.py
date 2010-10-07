@@ -79,6 +79,7 @@ def history_callback(request, service_id):
                     'location': item.location,
                     'class_name' : item.class_name,
                     'has_location': item.has_location(),
+                    'link_back' : item.link_back,
                 }
                 days[days_to_i[item.created.strftime('%A')]].append(item_dict)
 

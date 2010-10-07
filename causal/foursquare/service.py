@@ -17,6 +17,7 @@ def get_items(user, since, model_instance=None):
         for checkin in checkins['checkins']:
             item = ServiceItem()
             item.location = {}
+            item.link_back = 'http://foursquare.com/venue/%s' % checkin['venue']['id']
             item.title = checkin['venue']['name']
             if checkin.has_key('shout') and checkin['shout']:
                 item.body = checkin['shout']

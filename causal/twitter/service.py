@@ -52,7 +52,7 @@ def get_items(user, since, model_instance=None):
             tt.autolink.auto_link_hashtags()
             item.body = unicode(tt.text)
             item.created =status.created_at
-            item.linkback = 'http://twitter.com/%s/status/%s' % (api.me().screen_name, str(status.id))
+            item.link_back = 'http://twitter.com/%s/status/%s' % (api.me().screen_name, str(status.id))
             if status.geo:
                 item.location['lat'] = status.geo['coordinates'][0]
                 item.location['long'] = status.geo['coordinates'][1]

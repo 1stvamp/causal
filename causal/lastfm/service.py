@@ -24,6 +24,7 @@ def get_items(user, since, model_instance=None):
             item = ServiceItem()
             item.title = track['name']
             item.body = 'by %s' % (track['artist']['#text'],)
+            item.link_back = track['url']
             item.created = datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M') \
                 + timedelta(hours=datetime.now().utcoffset() or 0),
             item.service = serv
