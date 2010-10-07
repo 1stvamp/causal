@@ -41,6 +41,7 @@ def stats(request, service_id):
     # get checkins
     checkins = get_items(request.user, date.today() - timedelta(days=7), service)
     template_values['checkins'] = checkins
+    template_values['checkin_centre'] = checkins[-1]
     return render_to_response(
       service.app.module_name + '/stats.html',
       template_values,

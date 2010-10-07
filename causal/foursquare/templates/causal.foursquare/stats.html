@@ -17,9 +17,9 @@ function add_marker(map, lat, longg, contentString){
 }
 
   function initialize() {
-    var latlng = new google.maps.LatLng(53.853418499999997, -0.44196809999999997);
+    var latlng = new google.maps.LatLng({{checkin_centre.location.lat}}, {{checkin_centre.location.long}});
     var myOptions = {
-      zoom: 10,
+      zoom: 16,
       center: latlng,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
