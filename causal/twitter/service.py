@@ -46,6 +46,7 @@ def get_items(user, since, model_instance=None):
     else:
         for status in timeline:
             item = ServiceItem()
+            item.location = {}
             tt = TwitterText(status.text)
             tt.autolink.auto_link_usernames_or_lists()
             tt.autolink.auto_link_hashtags()

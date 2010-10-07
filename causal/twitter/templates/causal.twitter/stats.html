@@ -26,7 +26,8 @@
         var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
         {% for tweet in tweets %}
             {% if tweet.location %}
-                add_marker(map, {{ tweet.location.lat }}, {{ tweet.location.long }}, '{{ tweet.body }}');
+            var content = '{{ tweet.body|safe|escapejs }}';
+                add_marker(map, {{ tweet.location.lat }}, {{ tweet.location.long }}, content);
             {% endif %}
         {% endfor %}
     });
