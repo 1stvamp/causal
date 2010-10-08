@@ -25,10 +25,14 @@ def history(request, user_id=None):
         else:
             return redirect('login')
 
-    if request.user.is_authenticated()  and request.user.pk == user.pk:
-        services = UserService.objects.filter(user=user, setup=True)
-    else:
-        services = UserService.objects.filter(user=user, setup=True, share=True)
+    filters = {
+        'user': user,
+        'setup': True,
+    }
+    if not request.user.is_authenticated() or not request.user.pk == user.pk:
+        filters['share'] = True
+
+    services = UserService.objects.filter(**filters).order_by('app__module_name')
     template_values['services'] = services
 
     days = []
