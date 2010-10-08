@@ -44,6 +44,7 @@ def get_items(user, since, model_instance=None):
     except TweepError, e:
         print e
     else:
+        screen_name = api.me().screen_name
         for status in timeline:
             item = ServiceItem()
             item.location = {}
@@ -52,7 +53,7 @@ def get_items(user, since, model_instance=None):
             tt.autolink.auto_link_hashtags()
             item.body = unicode(tt.text)
             item.created =status.created_at
-            item.link_back = 'http://twitter.com/%s/status/%s' % (api.me().screen_name, str(status.id))
+            item.link_back = 'http://twitter.com/%s/status/%s' % (screen_name, str(status.id))
             if status.geo:
                 item.location['lat'] = status.geo['coordinates'][0]
                 item.location['long'] = status.geo['coordinates'][1]
