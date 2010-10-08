@@ -4,6 +4,7 @@ from datetime import datetime
 from django.core.urlresolvers import reverse
 from causal.main.models import UserService, RequestToken, OAuthSetting, ServiceApp, AccessToken
 from causal.main.service_utils import get_model_instance, user_login, generate_access_token, get_module_name
+from causal.main.decorators import can_view_service
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
@@ -31,3 +32,15 @@ def auth(request):
         service.save()
 
     return redirect(reverse('profile'))
+
+@can_view_service
+def stats(request, service_id):
+    """Create up some stats."""
+    
+    template_values = {}
+    
+    return render_to_response(
+      service.app.module_name + '/stats.html',
+      template_values,
+      context_instance=RequestContext(request)
+    )

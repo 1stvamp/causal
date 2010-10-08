@@ -6,5 +6,8 @@
 <form action="{{ service.get_auth_url }}" method="post">
     {% csrf_token %}
     <label for="id_{{ service.class_name }}_username">Username (your flickr id i.e 1234567@N0):</label>
-    <input type="text" name="username" id="id_{{ service.class_name }}_username" /><input type="submit" value="Submit" />
+        {% with service.requesttoken_set.all.0.accesstoken.username as username %}
+            <input type="text" name="username" id="id_{{ service.class_name }}_username" value="{{ username }}" />
+        {% endwith %}
+        <input type="submit" value="Submit" />
 </form>
