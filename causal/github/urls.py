@@ -5,4 +5,5 @@ shortcut = 'github-urls'
 
 urlpatterns = patterns('',
         url(r'^auth$', 'causal.github.views.auth', name='causal-github-auth'),
+        url(r'^stats$', 'causal.github.views.stats', name='causal-github-stats'),
 )
