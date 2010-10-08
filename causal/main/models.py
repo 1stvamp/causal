@@ -98,6 +98,7 @@ class ServiceItem(object):
         'lat': None, #str
     } #dict
     service = None #Service
+    link_back = None #str/unicode
 
     @property
     def class_name(self):
