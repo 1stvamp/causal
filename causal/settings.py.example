@@ -28,6 +28,7 @@ DATABASES = {
 # certain views and actions
 #CACHE_BACKEND = '' # e.g. 'memcached://127.0.0.1:11211'
 #ITEM_CACHE_TIME = 60 * 30 # 30 mins, defaults to 30 mins if not set
+ENABLE_CACHING = False
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

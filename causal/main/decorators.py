@@ -3,6 +3,8 @@
 
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
+from django.conf import settings
 from causal.main.models import UserService
 
 def permission(permission_tester):
@@ -26,8 +28,21 @@ def permission(permission_tester):
 
 @permission
 def can_view_service(request, *args, **kwargs):
+    """Wrapper for login_required decorator to only allow viewing service
+    if service is shared or user is logged in as service owner.
+    """
     service = get_object_or_404(UserService, pk=kwargs.get('service_id'))
     if service.share or (request.user.is_authenticated()  and request.user.pk == service.user.pk):
         return True
     else:
         return False
+
+def smart_cache_page(f, *args, **kwargs):
+    """Version of the cache_page decorator that only returns a cache
+    if ENABLE_CACHING is set to True in the settings module. Means
+    the decorator can be used regardless of cache availability.
+    """
+    if getattr(settings, 'ENABLE_CACHING', False):
+        return cache_page(f, *args, **kwargs)
+    else:
+        return f

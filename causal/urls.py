@@ -3,7 +3,7 @@ from django.conf import settings
 from django.utils.importlib import import_module
 from django.template.loader import render_to_string
 from django.http import HttpResponseNotFound, HttpResponseServerError
-from django.views.decorators.cache import cache_page
+from causal.main.decorators import smart_cache_page
 
 from causal.main.views import *
 
@@ -32,7 +32,7 @@ urlpatterns = patterns('',
     url(r'^$', index, name='home'),
     url(r'^history/$', history, name='history'),
     url(r'^history/(?P<user_id>\d+)$', history, name='user-history'),
-    url(r'^history/ajax/(?P<service_id>\d+)$', cache_page(history_callback, cache_time), name='history-callback'),
+    url(r'^history/ajax/(?P<service_id>\d+)$', smart_cache_page(history_callback, cache_time), name='history-callback'),
     )
 
 if getattr(settings, 'ENABLE_ADMIN', False):
