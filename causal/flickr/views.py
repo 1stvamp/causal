@@ -20,12 +20,9 @@ def auth(request):
     if service and request.method == 'POST':
         username = request.POST['username']
 
-        # Now we have a userservice and app create a request token
-        request_token = RequestToken(service=service)
-        request_token.created = datetime.now()
-        request_token.save()
+        # Delete existing token
+        existing_access_token = AccessToken.objects.filter(service=service).delete()
 
-        #http://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=KEY&username=USERNAME
         access_token = AccessToken(service=service)
         access_token.username = username
         access_token.created = datetime.now()

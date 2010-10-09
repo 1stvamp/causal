@@ -22,9 +22,7 @@ def auth(request):
         username = request.POST['username']
 
         # Delete existing token
-        existing_access_token = AccessToken.objects.filter(service=service)
-        if existing_access_token:
-            existing_access_token.delete()
+        existing_access_token = AccessToken.objects.filter(service=service).delete()
 
         access_token = AccessToken(service=service)
         access_token.username = username
