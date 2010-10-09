@@ -1,1 +1,45 @@
-hi
+{% if pic_centre %}
+<script type="text/javascript">
+    //<![CDATA[
+    function add_marker(map, lat, longg, contentString){
+        var myLatlng = new google.maps.LatLng(lat, longg);
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map
+        });
+
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+            infowindow.open(map,marker);
+        });
+    }
+
+    $(function() {
+        var latlng = new google.maps.LatLng({{pic_centre.location.lat }}, {{ pic_centre.location.long }});
+        var myOptions = {
+            zoom: 10,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        {% for pic in pictures %}
+            {% if pic.location %}
+            var content = '<a href="{{ pic.body }}"><img src="{{ pic.url  }}"/> </br>{{ pic.title }}</a>';
+                add_marker(map, {{ pic.location.lat }}, {{ pic.location.long }}, content);
+            {% endif %}
+        {% endfor %}
+    });
+    //]]>
+</script>
+
+<div id="map_canvas" style="width:600px; height:600px"></div>
+{% endif %}
+
+<ul>
+<li>Total uploads this week: {{number_of_pictures_uploaded}}</li>
+<li>Most commented picture: <a href="{{most_commented_picture.body}}">{{most_commented_picture.body}} </a> </li>
+<li>Number of pictures made favourites: {{number_of_pictures_favorites}}</li>
+</ul>
