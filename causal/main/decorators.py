@@ -37,12 +37,12 @@ def can_view_service(request, *args, **kwargs):
     else:
         return False
 
-def smart_cache_cache(f):
+def smart_cache_page(f, *args, **kwargs):
     """Version of the cache_page decorator that only returns a cache
     if ENABLE_CACHING is set to True in the settings module. Means
     the decorator can be used regardless of cache availability.
     """
     if getattr(settings, 'ENABLE_CACHING', False):
-        return cache_page(f)
+        return cache_page(f, *args, **kwargs)
     else:
         return f
