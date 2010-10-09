@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from causal.main.decorators import can_view_service
 from causal.github.service import get_items
 from datetime import date, timedelta
+from BeautifulSoup import BeautifulSoup, SoupStrainer
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)

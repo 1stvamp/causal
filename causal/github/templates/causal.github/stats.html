@@ -1,5 +1,12 @@
 <ul>
 {% for commit in commits %}
-<li> {{ commit }} </li>
+<li> {{commit.created }} - {{ commit.title }} <a href="{{commit.link_back}}">details</a></li>
+{%if commit.links %}
+<ul>
+{% for link in commit.links %}
+<li><a href="{{link}}">{{link}}</a></li>
+{% endfor %}
+</ul>
+{%endif%}
 {% endfor %}
 </ul>
