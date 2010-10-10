@@ -1,3 +1,4 @@
 Django==1.2.3
 oauth2==1.2.0
 south==0.7.1
+django-registration==0.7
