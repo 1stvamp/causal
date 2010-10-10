@@ -137,3 +137,4 @@ LOGIN_REDIRECT_URL = '/history'
 
 # Account registration
 ACCOUNT_ACTIVATION_DAYS = 3 # Three day activation window; you may, of course, use a different value.
+ENABLE_REGISTRATIION = True
