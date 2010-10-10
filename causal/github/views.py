@@ -40,10 +40,8 @@ def stats(request, service_id):
     """Create up some stats."""
     service = get_object_or_404(UserService, pk=service_id)
     commits = get_items(request.user, date.today() - timedelta(days=7), service)
-    template_values = {'commits': commits}
-    
     return render_to_response(
       service.app.module_name + '/stats.html',
-      template_values,
+      {'commits': commits},
       context_instance=RequestContext(request)
     )
