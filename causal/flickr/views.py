@@ -4,7 +4,11 @@ from datetime import datetime
 from django.core.urlresolvers import reverse
 from causal.main.models import UserService, RequestToken, OAuthSetting, ServiceApp, AccessToken
 from causal.main.service_utils import get_model_instance, user_login, generate_access_token, get_module_name
+from django.shortcuts import render_to_response, get_object_or_404
 from causal.main.decorators import can_view_service
+from causal.flickr.service import get_items
+from datetime import date, timedelta
+from django.template import RequestContext
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
@@ -16,12 +20,9 @@ def auth(request):
     if service and request.method == 'POST':
         username = request.POST['username']
 
-        # Now we have a userservice and app create a request token
-        request_token = RequestToken(service=service)
-        request_token.created = datetime.now()
-        request_token.save()
+        # Delete existing token
+        existing_access_token = AccessToken.objects.filter(service=service).delete()
 
-        #http://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=KEY&username=USERNAME
         access_token = AccessToken(service=service)
         access_token.username = username
         access_token.created = datetime.now()
@@ -36,8 +37,27 @@ def auth(request):
 @can_view_service
 def stats(request, service_id):
     """Create up some stats."""
-    
+    service = get_object_or_404(UserService, pk=service_id)
+    pictures = get_items(request.user, date.today() - timedelta(days=7), service)
     template_values = {}
+    # most commented
+    comments = 0
+    template_values['most_commented_picture'] = None
+    template_values['number_of_pictures_favorites'] = 0
+    for pic in pictures:
+
+        if pic.has_location():
+            template_values['pic_centre'] = pic
+        
+        if pic.favorite:
+            template_values['number_of_pictures_favorites'] = number_of_pictures_favorites + 1
+        if int(pic.number_of_comments) > 0:
+            if pic.number_of_comments > comments:
+                comments = pic.number_of_comments
+                template_values['most_commented_picture'] = pic
+        
+        template_values['pictures'] = pictures
+        template_values['number_of_pictures_uploaded'] = len(pictures)
     
     return render_to_response(
       service.app.module_name + '/stats.html',

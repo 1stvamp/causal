@@ -27,7 +27,7 @@ function add_marker(map, lat, longg, contentString){
         myOptions);
     {% for checkin in checkins %}{% if checkin.location %}
         add_marker(map, {{checkin.location.lat}}, {{checkin.location.long}},
-        '{% if checkin.icon %}<img src="{{ checkin.icon }}" />{% endif %} {{checkin.created}} : {{checkin.title}}');
+        '{% if checkin.icon %}<img src="{{ checkin.icon }}" />{% endif %} {{checkin.created}} : <a href="{{checkin.link_back}}">{{checkin.title}}</a>');
     {% endif %}{% endfor %}
   }
 
@@ -43,7 +43,7 @@ Places checked into:
 <ul>
 {% for checkin in checkins %}
 
-<li>{{checkin.title}} - {{checkin.location}}</li>
+<li>{{checkin.created}} - <a href="{{checkin.link_back}}">{{checkin.title}}</a></li>
 
 {% endfor %}
 </ul>

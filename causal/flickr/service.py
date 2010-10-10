@@ -33,9 +33,19 @@ def get_items(user, since, model_instance):
         epoch = p['photo']['dateuploaded']
 
         item = ServiceItem()
+        item.location = {}        
         item.title = p['photo']['title']['_content']
         item.body = p['photo']['urls']['url'][0]['_content']
         item.created = datetime.fromtimestamp(float(epoch))
         item.service = serv
+        item.link_back = p['photo']['urls']['url'][0]['_content']
+        item.tags = p['photo']['tags']['tag']
+        item.favorite = p['photo']['isfavorite']
+        item.number_of_comments = p['photo']['comments']['_content']
+        item.url = "http://farm%s.static.flickr.com/%s/%s_%s_m_d.jpg" %(p['photo']['farm'], p['photo']['server'], p['photo']['id'], p['photo']['secret'])
+        # add location
+        if p['photo'].has_key('location'):
+            item.location['lat'] = p['photo']['location']['latitude']
+            item.location['long'] = p['photo']['location']['longitude']
         items.append(item)
     return items
