@@ -38,11 +38,11 @@ def can_view_service(request, *args, **kwargs):
         return False
 
 def cache_page(f, *args, **kwargs):
-    """Version of the cache_page decorator that only returns a cache
-    if ENABLE_CACHING is set to True in the settings module. Means
+    """Version of the cache_page decorator that does not return a cache
+    if ENABLE_CACHING is set to False in the settings module. Means
     the decorator can be used regardless of cache availability.
     """
-    if getattr(settings, 'ENABLE_CACHING', False):
+    if getattr(settings, 'ENABLE_CACHING', True):
         return _cache_page(f, *args, **kwargs)
     else:
         return f
