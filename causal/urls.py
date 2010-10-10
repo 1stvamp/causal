@@ -20,8 +20,6 @@ admin.autodiscover()
 cache_time = getattr(settings, 'ITEM_CACHE_TIME', 60 * 30)
 
 urlpatterns = patterns('',
-    url(r'^accounts/', include('registration.urls')),
-
     url(r'^accounts/settings/$', user_settings, name='user-settings'),
     url(r'^accounts/settings/enable-service/(?P<app_id>\d+)$', enable_service, name='enable-service'),
     url(r'^accounts/settings/sharing/$', sharing_prefs, name='share-prefs'),
@@ -31,6 +29,11 @@ urlpatterns = patterns('',
     url(r'^history/(?P<user_id>\d+)$', history, name='user-history'),
     url(r'^history/ajax/(?P<service_id>\d+)$', cache_page(history_callback, cache_time), name='history-callback'),
 )
+
+if getattr(settings, 'ENABLE_REGISTRATION', False):
+    urlpatterns += patterns('',
+        url(r'^accounts/', include('registration.urls')),
+    )
 
 if getattr(settings, 'ENABLE_ADMIN', False):
     urlpatterns += patterns('',
