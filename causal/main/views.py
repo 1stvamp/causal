@@ -122,11 +122,11 @@ def register(request):
     )
 
 @login_required(redirect_field_name='redirect_to')
-def profile(request):
+def user_settings(request):
     """Edit access to various services"""
     available_services = ServiceApp.objects.all().exclude(userservice__user=request.user)
     return render_to_response(
-        'accounts/profile.html',
+        'accounts/settings.html',
         {
             'available_services': available_services,
         },
@@ -142,7 +142,7 @@ def enable_service(request, app_id):
         service = UserService(user=request.user, app=app)
         request.user.userservice_set.add(service)
         request.user.save()
-    return redirect('profile')
+    return redirect('user-settings')
 
 def index(request):
     users = User.objects.all().filter(is_active=True, userservice__share=True) \
@@ -180,4 +180,4 @@ def sharing_prefs(request):
     if request.is_ajax():
         return HttpResponse(simplejson.dumps({'message': 'Saved'}))
     else:
-        return redirect('profile')
+        return redirect('user-settings')

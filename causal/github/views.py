@@ -33,7 +33,7 @@ def auth(request):
         service.setup = True
         service.save()
 
-    return redirect(reverse('profile'))
+    return redirect(reverse('user-settings'))
 
 @can_view_service
 def stats(request, service_id):

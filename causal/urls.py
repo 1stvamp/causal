@@ -20,20 +20,17 @@ admin.autodiscover()
 cache_time = getattr(settings, 'ITEM_CACHE_TIME', 60 * 30)
 
 urlpatterns = patterns('',
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'accounts/login.html'}, name='login'),
-    url(r'^accounts/logout/$', logout_view, name='logout'),
-    url(r'^password_reset/$', 'django.contrib.auth.views.password_reset', name='password-reset'),
-    url(r'^password_reset/done/$','django.contrib.auth.views.password_reset_done', name='post-password-reset'),
+    url(r'^accounts/', include('registration.urls')),
 
-    url(r'^register/$', register, name='register'),
-    url(r'^accounts/profile/$', profile, name='profile'),
-    url(r'^accounts/profile/enable/(?P<app_id>\d+)$', enable_service, name='enable-service'),
-    url(r'^accounts/profile/sharing/$', sharing_prefs, name='share-prefs'),
+    url(r'^accounts/settings/$', user_settings, name='user-settings'),
+    url(r'^accounts/settings/enable-service/(?P<app_id>\d+)$', enable_service, name='enable-service'),
+    url(r'^accounts/settings/sharing/$', sharing_prefs, name='share-prefs'),
+
     url(r'^$', index, name='home'),
     url(r'^history/$', history, name='history'),
     url(r'^history/(?P<user_id>\d+)$', history, name='user-history'),
     url(r'^history/ajax/(?P<service_id>\d+)$', cache_page(history_callback, cache_time), name='history-callback'),
-    )
+)
 
 if getattr(settings, 'ENABLE_ADMIN', False):
     urlpatterns += patterns('',

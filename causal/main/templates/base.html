@@ -19,27 +19,20 @@
 
 	<div id="header" class="clearfix">
 	    {% if request.user.is_authenticated %}
-		<a href="/history/">home</a> |
-		<a href="/accounts/profile/">profile</a> |
-		<a href="/accounts/logout/">logout</a>
+            <a href="{% url home %}">Home</a> |
+            <a href="{% url user-settings %}">Settings</a> |
+            <a href="{% url auth_logout %}">Logout</a>
 	    {% else %}
-		<form action="/accounts/login/" method="post">
-		    {% csrf_token %}
-		    <label for="id_username">username:</label>
-		    <input id="id_username" type="text" name="username" maxlength="100" />
-		    <label for="id_password">password:</label>
-		    <input id="id_password" type="password" name="password" maxlength="100" />
-		    <input type="submit" value="login" />
-		    <a href="/register/">sign up</a>
-		</form>
+            <a href="{% url home %}">Home</a> |
+            <a href="{% url auth_login %}">Login</a>
 	    {% endif %}
 	</div>
 	<div id="content">
-    	    <div id="primary" class="clearfix">
-		{% block primary %}{% endblock primary %}
+        <div id="primary" class="clearfix">
+            {% block primary %}{% endblock primary %}
 	    </div>
 	    <div id="secondary">
-		{% block secondary %}{% endblock secondary %}
+            {% block secondary %}{% endblock secondary %}
 	    </div>
 	</div>
 	<div id="footer">
