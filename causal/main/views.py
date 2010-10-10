@@ -173,11 +173,10 @@ def sharing_prefs(request):
                 else:
                     v = bool(v)
                 options[int(k.replace('service_', ''))] = v
-        if options:
-            services = UserService.objects.filter(user=request.user)
-            for service in services:
-                service.share = options.get(service.pk, False)
-                service.save()
+        services = UserService.objects.filter(user=request.user)
+        for service in services:
+            service.share = options.get(service.pk, False)
+            service.save()
     if request.is_ajax():
         return HttpResponse(simplejson.dumps({'message': 'Saved'}))
     else:
