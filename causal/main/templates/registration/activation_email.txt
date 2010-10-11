@@ -1,0 +1,15 @@
+Hello there,
+
+Your, or someone claiming to be you, has registered an account on {{ site.url }}
+using this email address.
+
+If this was you, you have {{ expiration_days }} day{{ expiration_days|pluralize }} to go to this following
+address to activate the account:
+
+{% url registration_activate activation_key %}
+
+If this wasn't you, then please ignore.
+
+
+Yours sincerely,
+{{ site.name }}
