@@ -1,14 +1,13 @@
 {% extends "base.html" %}
 
 {% block primary %}
-Welcome.
-<div class="form-data">
-    <form action="." method="POST" >{% csrf_token %}
-{{ form }}
-
- <span class="help">'Have you <a href="/password_reset/">forgotten your password</a>?' </span>
-
-<input type="submit" value="go" class="button-submit" />
-    </form>
-</div>
+    <h3>Welcome</h3>
+    <div class="form-data">
+        <form action="." method="POST" >
+            {% csrf_token %}
+            {{ form.as_p }}
+            <span class="help">'Have you <a href="/password_reset/">forgotten your password</a>?'</span>
+            <input type="submit" value="Login" />
+        </form>
+    </div>
 {% endblock primary %}
