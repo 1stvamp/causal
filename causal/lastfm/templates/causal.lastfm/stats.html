@@ -6,9 +6,54 @@
 </ul>
 
 <h1>Upcoming Gigs</h1>
+
+{% if gig_centre %}
+<script type="text/javascript">
+    //<![CDATA[
+    function add_marker(map, lat, longg, contentString){
+        var myLatlng = new google.maps.LatLng(lat, longg);
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map
+        });
+
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+            infowindow.open(map,marker);
+        });
+    }
+
+    $(function() {
+        var latlng = new google.maps.LatLng({{gig_centre.location.lat }}, {{ gig_centre.location.long }});
+        var myOptions = {
+            zoom: 10,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        {% for artist in favourite_artists %}
+            {% for gig in artist.gigs %}
+                {% if gig.location %}
+            var content = '{{artist.name}} - {{gig.date}} at <a href="{{gig.event_url}}">{{gig.venue_name}}</a> </br> <img src={{artist.image}}/>';
+                {% if gig.location.lat and gig.location.long %}
+                add_marker(map, {{ gig.location.lat }}, {{ gig.location.long }}, content);
+                {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    });
+    //]]>
+</script>
+
+<div id="map_canvas" style="width:600px; height:600px"></div>
+{% endif %}
+
 <ul>
 {% for artist in favourite_artists %}
-<li><h2>{{artist.name}}</h2>
+<li><h2>{{ forloop.counter }}. {{artist.name}}</h2>
 {% for gig in artist.gigs %}
 <ul>
     <li>{{gig.date}} at <a href="{{gig.event_url}}">{{gig.venue_name}}</a></li>
@@ -17,3 +62,4 @@
 </li>
 {% endfor %}
 </ul>
+
