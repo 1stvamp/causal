@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block primary %}
-    <h3>Welcome</h3>
     <div class="form-data">
+        <h3>Welcome</h3>
         <form action="." method="POST" >
             {% csrf_token %}
             {{ form.as_p }}
-            <span class="help">'Have you <a href="/password_reset/">forgotten your password</a>?'</span>
+            <span class="help">'Have you <a href="{% url auth_password_reset %}">forgotten your password</a>?'</span>
             <input type="submit" value="Login" />
         </form>
     </div>
