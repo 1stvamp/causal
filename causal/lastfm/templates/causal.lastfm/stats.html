@@ -1,7 +1,7 @@
 <h1> Most played artists for the last 7 days</h1>
 <ul>
 {% for artist in favourite_artists %}
-<li>{{artist.name }}</li>
+<li>{{ forloop.counter }}. {{artist.name }}</li>
 {% endfor %}
 </ul>
 
