@@ -131,10 +131,11 @@ INSTALLED_APPS += INSTALLED_SERVICES
 TEMPLATE_CONTEXT_PROCESSORS =( 
     'django.core.context_processors.request',
     'django.contrib.auth.context_processors.auth',
+    'causal.main.context_processors.registration.config',
 )
-
-LOGIN_REDIRECT_URL = '/history'
 
 # Account registration
 ACCOUNT_ACTIVATION_DAYS = 3
 ENABLE_REGISTRATION = False
+LOGIN_REDIRECT_URL = '/history'
+LOGOUT_REDIRECT_URL = '/'
