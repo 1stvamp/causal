@@ -93,34 +93,6 @@ def history_callback(request, service_id):
     }
     return HttpResponse(simplejson.dumps(response))
 
-def register(request):
-    form = RegistrationForm()
-
-    if request.user.is_authenticated():
-        return redirect('/')
-
-    if request.method == 'POST':
-
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            User.objects.create_user(form.cleaned_data['email'],
-                form.cleaned_data['email'],
-                form.cleaned_data['password1'])
-
-            user = authenticate(username=form.cleaned_data['email'],
-                                password=form.cleaned_data['password1'])
-            login(request, user)
-
-            return redirect('history')
-
-    return render_to_response(
-        'accounts/register.html',
-        {
-            'form' : form,
-        },
-        context_instance=RequestContext(request)
-    )
-
 @login_required(redirect_field_name='redirect_to')
 def user_settings(request):
     """Edit access to various services"""
@@ -154,10 +126,6 @@ def index(request):
         },
         context_instance=RequestContext(request)
     )
-
-def logout_view(request):
-    logout(request)
-    return redirect('home')
 
 @login_required(redirect_field_name='redirect_to')
 def sharing_prefs(request):
