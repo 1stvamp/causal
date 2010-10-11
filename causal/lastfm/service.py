@@ -33,28 +33,60 @@ def get_items(user, since, model_instance=None):
             if type(item.created) == tuple and len(item.created):
                 item.created = item.created[0]
 
-    #fav_artists = get_data(
-        #serv,
-        #'http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=%s&api_key=%s&period=7day&format=json' \
-            #% (at.username, at.api_token,),
-        #disable_oauth=True
-    #)
-    #for artist in fav_artists['topartists']['artist']:
-        #artist_save = {
-            #'name' : artist['name'],
-            #'rank' : artist['@attr']['rank'],
-            #'plays' : artist['playcount'],
-            #'image' : artist['image'][2]['#text'],
-        #}
-        ## fetch up coming gigs
-        #url = 'http://ws.audioscrobbler.com/2.0/?method=artist.getevents&artist=%s&api_key=09f1c061fc65a7bc08fb3ad95222d16e&format=json' % artist['name'].replace(' ', '+')
-        #h = httplib2.Http()
-        #resp, content = h.request(url, "GET")
-        #events = simplejson.loads(content)
-        #if events['events'].has_key('event'):
-            #artist_save['venue_name'] = events['events']['event'][0]['venue']['name']
-            #artist_save['date'] = events['events']['event'][0]['startDate']
+    return items
 
-        #template_values['lastfm_artists'].append(artist_save)
+def get_artists(user, since, model_instance=None):
+    """Get a users top artists."""
+    serv = model_instance or get_model_instance(user, __name__)
+    items = []
 
+    at = AccessToken.objects.get(service=serv)
+
+    fav_artists = get_data(
+        serv,
+        'http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=%s&api_key=%s&period=7day&format=json' \
+            % (at.username, at.api_token,),
+        disable_oauth=True
+    )
+    
+    if fav_artists:
+    
+        for artist in fav_artists['topartists']['artist']:
+            item = ServiceItem()
+            item.name = artist['name']
+            item.rank = artist['@attr']['rank']
+            item.plays = artist['playcount']
+            item.image = artist['image'][2]['#text']
+            items.append(item)
+
+    return items
+
+def get_upcoming_gigs(user, since, model_instance=None, artist=None):
+    """Return a list of up coming gigs for the user."""
+    serv = model_instance or get_model_instance(user, __name__)
+    items = []
+
+    at = AccessToken.objects.get(service=serv)
+
+    gigs = get_data(
+        serv,
+        'http://ws.audioscrobbler.com/2.0/?method=artist.getevents&artist=%s&api_key=%s&format=json' 
+            % (artist.replace(' ', '+'), at.api_token,),
+        disable_oauth=True
+    )
+
+    items = []
+    if gigs and gigs.has_key('events') and gigs['events'].has_key('event') :
+        for gig in gigs['events']['event']:
+            item = ServiceItem()
+            try:
+                if gig.has_key('venue') and gig['venue'].has_key('name') and gig.has_key('startDate'):
+                    item.venue_name = gig['venue']['name']
+                    item.date = gig['startDate']
+                    if gig['venue'].has_key('location') and gig['venue']['location'].has_key('geo:point'):
+                        item.location['long'] = gig['venue']['location']['geo:point']['geo:long']
+                        item.location['lat'] = gig['venue']['location']['geo:point']['geo:lat']
+                    items.append(item)
+            except: 
+                pass
     return items
