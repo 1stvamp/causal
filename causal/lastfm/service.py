@@ -15,7 +15,7 @@ def get_items(user, since, model_instance=None):
 
     tracks_listing = get_data(
         serv,
-        'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=%s&format=json' \
+        'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=%s&format=json&limit=200' \
             % (at.username, at.api_token,),
         disable_oauth=True
     )
