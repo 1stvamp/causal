@@ -10,7 +10,6 @@ from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.html import urlize
 from django.db.models import Count
-from causal.main.forms import RegistrationForm
 from causal.main.models import *
 from causal.main.decorators import can_view_service
 
