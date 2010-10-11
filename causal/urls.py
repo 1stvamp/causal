@@ -31,7 +31,13 @@ urlpatterns = patterns('',
 )
 
 if getattr(settings, 'ENABLE_REGISTRATION', False):
+    next_page = getattr(settings, 'LOGOUT_REDIRECT_URL', '/')
     urlpatterns += patterns('',
+        url(
+            r'^accounts/logout/$',
+            'django.contrib.auth.views.logout',
+            {'next_page': next_page,'template_name': 'registration/logout.html'}
+        ),
         url(r'^accounts/', include('registration.urls')),
     )
 
