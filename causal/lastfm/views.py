@@ -43,8 +43,11 @@ def stats(request, service_id):
 
     template_values['favourite_artists'] = get_artists(request.user, date.today() - timedelta(days=7), service)
     template_values['recent_tracks'] = get_items(request.user, date.today() - timedelta(days=7), service)
+    
     for artist in template_values['favourite_artists']:
         artist.gigs = get_upcoming_gigs(request.user, date.today() - timedelta(days=7), service, artist.name)
+        if artist.gigs:
+            template_values['gig_centre'] = artist.gigs[0]
         
     return render_to_response(
       service.app.module_name + '/stats.html',

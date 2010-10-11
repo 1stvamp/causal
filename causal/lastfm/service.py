@@ -57,6 +57,7 @@ def get_artists(user, since, model_instance=None):
             item.rank = artist['@attr']['rank']
             item.plays = artist['playcount']
             item.image = artist['image'][2]['#text']
+            item.artist_url = artist['url']
             items.append(item)
 
     return items
@@ -79,6 +80,7 @@ def get_upcoming_gigs(user, since, model_instance=None, artist=None):
     if gigs and gigs.has_key('events') and gigs['events'].has_key('event') :
         for gig in gigs['events']['event']:
             item = ServiceItem()
+            item.location = {}
             try:
                 if gig.has_key('venue') and gig['venue'].has_key('name') and gig.has_key('startDate'):
                     item.venue_name = gig['venue']['name']
