@@ -82,6 +82,7 @@ def get_upcoming_gigs(user, since, model_instance=None, artist=None):
             try:
                 if gig.has_key('venue') and gig['venue'].has_key('name') and gig.has_key('startDate'):
                     item.venue_name = gig['venue']['name']
+                    item.event_url = gig['url']
                     item.date = gig['startDate']
                     if gig['venue'].has_key('location') and gig['venue']['location'].has_key('geo:point'):
                         item.location['long'] = gig['venue']['location']['geo:point']['geo:long']
