@@ -1,7 +1,19 @@
+<h1> Most played artists for the last 7 days</h1>
 <ul>
-{% for played in recent_tracks %}
+{% for artist in favourite_artists %}
+<li>{{artist.name }}</li>
+{% endfor %}
+</ul>
 
-<li>{{played.title }} {{ played.body }}</li>
- 
+<h1>Upcoming Gigs</h1>
+<ul>
+{% for artist in favourite_artists %}
+<li><h2>{{artist.name}}</h2>
+{% for gig in artist.gigs %}
+<ul>
+    <li>{{gig.date}} at <a href="{{gig.event_url}}">{{gig.venue_name}}</a></li>
+</ul>
+{% endfor %}
+</li>
 {% endfor %}
 </ul>

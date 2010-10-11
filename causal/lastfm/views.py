@@ -5,10 +5,11 @@ from django.contrib.auth.decorators import login_required
 from causal.main.models import UserService, RequestToken, OAuthSetting, ServiceApp, AccessToken
 from causal.main.service_utils import get_model_instance, user_login, generate_access_token, get_module_name
 from datetime import date, timedelta
-from causal.lastfm.service import get_items
+from causal.lastfm.service import get_items, get_artists, get_upcoming_gigs
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from causal.main.decorators import can_view_service
+from causal.main.service_utils import get_model_instance, get_data
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
@@ -40,9 +41,11 @@ def stats(request, service_id):
     service = get_object_or_404(UserService, pk=service_id)
     template_values = {}
 
-    # get users recently played tracks
+    template_values['favourite_artists'] = get_artists(request.user, date.today() - timedelta(days=7), service)
     template_values['recent_tracks'] = get_items(request.user, date.today() - timedelta(days=7), service)
-
+    for artist in template_values['favourite_artists']:
+        artist.gigs = get_upcoming_gigs(request.user, date.today() - timedelta(days=7), service, artist.name)
+        
     return render_to_response(
       service.app.module_name + '/stats.html',
       template_values,
