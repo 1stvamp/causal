@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 
 {% block primary %}
-<div class="form-data">
-<form action="." method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Register"/>
-</div>
+    <div class="form-data">
+        <form action="." method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <p>
+                <input type="submit" value="Register"/>
+            </p>
+        </form>
+    </div>
 {% endblock primary %}
