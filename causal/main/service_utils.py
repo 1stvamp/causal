@@ -18,6 +18,8 @@ def user_login(service, cust_callback_url=None):
         consumer = oauth.Consumer(service.app.oauth.consumer_key, service.app.oauth.consumer_secret)
 
         client = oauth.Client(consumer)
+        # facebook fix:
+        #service.app.oauth.request_token_url = service.app.oauth.request_token_url + '&redirect_uri=http://localhost:8080/'
         resp, content = client.request(service.app.oauth.request_token_url, "GET")
 
         if resp['status'] != '200':
