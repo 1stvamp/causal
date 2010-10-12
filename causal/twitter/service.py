@@ -1,5 +1,6 @@
 __version__ = '0.1.1'
 
+from jogging import logging
 from tweepy import TweepError
 from twitter_text import TwitterText
 from datetime import timedelta
@@ -42,7 +43,7 @@ def get_items(user, since, model_instance=None):
     try:
         timeline = api.user_timeline(count=200, since_id=since_id, include_rts='true')
     except TweepError, e:
-        print e
+        logging.error(e)
     else:
         screen_name = api.me().screen_name
         for status in timeline:
