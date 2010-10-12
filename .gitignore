@@ -3,3 +3,4 @@
 helios.wsgi
 pip-log.txt
 egg-cache
+*.log
