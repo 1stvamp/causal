@@ -8,6 +8,7 @@ from django.shortcuts import render_to_response, redirect
 from causal.main.models import ServiceItem
 from causal.twitter.utils import get_api, user_login
 from causal.main.service_utils import get_model_instance
+from causal.main.exceptions import ServiceError
 
 DISPLAY_NAME = 'Twitter'
 CUSTOM_FORM = False
@@ -44,6 +45,7 @@ def get_items(user, since, model_instance=None):
         timeline = api.user_timeline(count=200, since_id=since_id, include_rts='true')
     except TweepError, e:
         logging.error(e)
+        raise ServiceError(original_exception=e)
     else:
         screen_name = api.me().screen_name
         for status in timeline:
