@@ -143,6 +143,7 @@ LOGIN_REDIRECT_URL = '/history'
 LOGOUT_REDIRECT_URL = '/'
 
 # Logging
+import logging
 from logging.handlers import RotatingFileHandler
 LOG_FILENAME = 'causal.log'
 LOG_SIZE = 2097152 # 2 MB
