@@ -148,3 +148,14 @@ def sharing_prefs(request):
         return HttpResponse(simplejson.dumps({'message': 'Saved'}))
     else:
         return redirect('user-settings')
+
+def userfeed(request, username):
+    """Need to think about todo security."""
+    if request.user:
+        services_enabled = UserService.objects.filter(user=request.user)
+        
+        data = []
+        for service in services_enabled:
+            data = data + service.app.module.get_items_as_json(request.user, date.today() - timedelta(days=7), service)
+        
+        return HttpResponse(simplejson.dumps({'results': data}))
