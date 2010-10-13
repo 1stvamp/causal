@@ -4,8 +4,8 @@ from datetime import datetime
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from causal.main.models import AccessToken
-from causal.main.service_utils import get_model_instance, get_module_name
+from causal.main.models import AccessToken, ServiceApp, UserService
+from causal.main.service_utils import get_model_instance, user_login, generate_access_token, get_module_name
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
@@ -43,10 +43,17 @@ def verify_auth(request):
 def auth(request):
     request.session['causal_facebook_oauth_return_url'] = request.GET.get('HTTP_REFERER', None)
     service = get_model_instance(request.user, MODULE_NAME)
-    callback = "%s%s" % (service.app.oauth.callback_url_base, reverse('causal-facebook-callback'),)
-    return redirect("%s&redirect_uri=%s&scope=%s" % (
-            service.app.oauth.request_token_url,
-            callback,
-            'read_stream',
-        )
-    )
+
+    if not service:
+        app = ServiceApp.objects.get(module_name=MODULE_NAME)
+        service = UserService(user=request.user, app=app)
+        service.save()
+    return user_login(service)
+    
+##    callback = "%s%s" % (service.app.oauth.callback_url_base, reverse('causal-facebook-callback'),)
+##    return redirect("%s&redirect_uri=%s&scope=%s" % (
+##            service.app.oauth.request_token_url,
+##            callback,
+##            'read_stream',
+##        )
+##    )

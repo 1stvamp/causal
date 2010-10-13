@@ -93,3 +93,35 @@ def get_upcoming_gigs(user, since, model_instance=None, artist=None):
             except: 
                 pass
     return items
+
+def get_items_as_json(user, since, model_instance=None):
+    """Return a list of up coming gigs for the user."""
+    serv = model_instance or get_model_instance(user, __name__)
+    items = []
+
+    at = AccessToken.objects.get(service=serv)
+
+    gigs = get_data(
+        serv,
+        'http://ws.audioscrobbler.com/2.0/?method=artist.getevents&artist=%s&api_key=%s&format=json' 
+            % (artist.replace(' ', '+'), at.api_token,),
+        disable_oauth=True
+    )
+
+    items = []
+    if gigs and gigs.has_key('events') and gigs['events'].has_key('event') :
+        for gig in gigs['events']['event']:
+            item = ServiceItem()
+            item.location = {}
+            try:
+                if gig.has_key('venue') and gig['venue'].has_key('name') and gig.has_key('startDate'):
+                    item.venue_name = gig['venue']['name']
+                    item.event_url = gig['url']
+                    item.date = gig['startDate']
+                    if gig['venue'].has_key('location') and gig['venue']['location'].has_key('geo:point'):
+                        item.location['long'] = gig['venue']['location']['geo:point']['geo:long']
+                        item.location['lat'] = gig['venue']['location']['geo:point']['geo:lat']
+                    items.append(item)
+            except: 
+                pass
+    return items
