@@ -13,16 +13,10 @@ from django.db.models import Count
 from causal.main.models import *
 from causal.main.decorators import can_view_service
 
-def history(request, user_id=None):
+def history(request, username):
     template_values = {}
 
-    if user_id:
-        user = get_object_or_404(User, pk=user_id)
-    else:
-        if request.user.is_authenticated() and request.user.is_active:
-            user = request.user
-        else:
-            return redirect('login')
+    user = get_object_or_404(User, username=username)
 
     filters = {
         'user': user,
