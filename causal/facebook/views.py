@@ -4,7 +4,7 @@ from datetime import datetime
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from causal.main.models import AccessToken, ServiceApp, UserService
+from causal.main.models import AccessToken, ServiceApp, UserService, RequestToken
 from causal.main.service_utils import get_model_instance, user_login, generate_access_token, get_module_name
 
 # Yay, let's recreate __package__ for Python <2.6
@@ -23,18 +23,20 @@ def verify_auth(request):
     )
     response = cgi.parse_qs(urllib.urlopen(url).read())
     access_token = response["access_token"][-1]
-
-    update_attrs = {
-        'oauth_token': access_token,
-    }
-    insert_attrs = {
-        'service': service,
-    }
-    rows = AccessToken.objects.filter(**insert_attrs).update(**update_attrs)
-    if not rows:
-        insert_attrs.update(update_attrs)
-        insert_attrs['created'] = datetime.now()
-        AccessToken.objects.create(**insert_attrs)
+    
+    at = AccessToken.objects.filter(service=service)
+    if at:
+        at.delete()
+    new_at = AccessToken()
+    new_at.service = service
+    new_at.oauth_token = access_token
+    new_at.oauth_token_secret = ''
+    new_at.created = datetime.now()
+    new_at.oauth_verify = ''
+    new_at.save()
+    
+    service.setup = True
+    service.save()
 
     return_url = request.session.get('causal_facebook_oauth_return_url', None) or 'history'
     return redirect(return_url)
@@ -43,17 +45,12 @@ def verify_auth(request):
 def auth(request):
     request.session['causal_facebook_oauth_return_url'] = request.GET.get('HTTP_REFERER', None)
     service = get_model_instance(request.user, MODULE_NAME)
-
-    if not service:
-        app = ServiceApp.objects.get(module_name=MODULE_NAME)
-        service = UserService(user=request.user, app=app)
-        service.save()
-    return user_login(service)
     
-##    callback = "%s%s" % (service.app.oauth.callback_url_base, reverse('causal-facebook-callback'),)
-##    return redirect("%s&redirect_uri=%s&scope=%s" % (
-##            service.app.oauth.request_token_url,
-##            callback,
-##            'read_stream',
-##        )
-##    )
+    callback = "%s%s" % (service.app.oauth.callback_url_base, reverse('causal-facebook-callback'),)
+    return redirect("%s&redirect_uri=%s&scope=%s&client_id=%s" % (
+            service.app.oauth.request_token_url,
+            callback,
+            'read_stream',
+            service.app.oauth.consumer_key
+        )
+    )
