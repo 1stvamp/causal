@@ -1,7 +1,6 @@
+<h3>{{ service.app.module.DISPLAY_NAME }}</h3>
 {% if not service.setup %}
-    Not authenticated to {{ service.app.module.DISPLAY_NAME }}. Authenticate:
-{% else %}
-    {{ service.app.module.DISPLAY_NAME }} authenticated. Re-authenticate:
+    Not authenticated to {{ service.app.module.DISPLAY_NAME }}.
 {% endif %}
 <form action="{{ service.get_auth_url }}" method="post">
     {% csrf_token %}

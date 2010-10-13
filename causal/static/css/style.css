@@ -250,10 +250,17 @@ A.causal-timeline {
 
 DIV.share_wrapper {
     float: right;
-    clear: right;
+    clear: none;
     margin-right: 25%;
     margin-bottom: 1ex;
 }
-hr {
+HR {
     width: 90%;
+    margin-left: 0;
+    margin-right: 25%;
+}
+DIV.share_buttons {
+    float: right;
+    clear: both;
+    margin-right: 25%;
 }
