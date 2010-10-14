@@ -30,6 +30,12 @@ def get_items(user, since, model_instance=None):
         results = q(SELECT_FQL)
     except Exception, e:
         raise LoggedServiceError(original_exception=e)
+    
+    if getattr(results, 'error_code', False):
+        raise LoggedServiceError(
+        'Facebook service failed to fetch items for causal-user %s, error: %s' % \
+            (user.username, results['error_msg'])
+    )
 
     for result in results:
         item = ServiceItem()

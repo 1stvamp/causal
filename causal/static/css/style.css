@@ -206,6 +206,14 @@ UL#loading-services LI {
 UL#loading-services LI.loaded {
     list-style-image: url(/static/images/tick.png);
 }
+UL#loading-services LI.service-error {
+    list-style-image: url(/static/images/cross.png);
+}
+UL#loading-services LI.service-error span {
+    color: #FF0000;
+    font-family: monospace;
+    margin-left: 1em;
+}
 LI.causal-twitter {
     list-style-image: url(/static/images/twitter.jpg);
 }

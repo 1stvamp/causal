@@ -13,19 +13,24 @@
         return a['created'] - b['created'];
     }
     var success = function(data) {
-        $('li#service_load_' + data['class']).addClass('loaded');
-        data = data['items'];
-        for (i in data) {
-            days[i] = days[i].concat(data[i]);
-            day = days[i];
-            day_ul = $('ul#day_' + i);
-            day_ul.children('li').remove();
-            days[i].sort(item_sort_callback);
-            days[i].reverse();
-            for (j in day) {
-                item = day[j];
-                day_ul.append($('#item_template').jqote(item, '*'));
+        if (!data['error']) {
+            $('li#service_load_' + data['class']).addClass('loaded');
+            data = data['items'];
+            for (i in data) {
+                days[i] = days[i].concat(data[i]);
+                day = days[i];
+                day_ul = $('ul#day_' + i);
+                day_ul.children('li').remove();
+                days[i].sort(item_sort_callback);
+                days[i].reverse();
+                for (j in day) {
+                    item = day[j];
+                    day_ul.append($('#item_template').jqote(item, '*'));
+                }
             }
+        } else {
+            $('li#service_load_' + data['class']).addClass('service-error');
+            $('li#service_load_' + data['class']).append('<span>Sorry! Unable to fetch items from service. :(</span>');
         }
     }
     var load_services = function() {
