@@ -2,6 +2,7 @@ import oauth2 as oauth
 from datetime import datetime, timedelta
 from causal.main.models import ServiceItem, AccessToken
 from causal.main.service_utils import get_model_instance, get_data
+from causal.main.exceptions import LoggedServiceError
 
 DISPLAY_NAME = 'Last.fm'
 CUSTOM_FORM = False
@@ -13,12 +14,16 @@ def get_items(user, since, model_instance=None):
 
     at = AccessToken.objects.get(service=serv)
 
-    tracks_listing = get_data(
-        serv,
-        'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=%s&format=json&limit=200' \
-            % (at.username, at.api_token,),
-        disable_oauth=True
-    )
+    try:
+        tracks_listing = get_data(
+            serv,
+            'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=%s&format=json&limit=200' \
+                % (at.username, at.api_token,),
+            disable_oauth=True
+        )
+    except Exception, e:
+        raise LoggedServiceError(original_exception=e)
+
     for track in tracks_listing['recenttracks']['track']:
         if track.has_key('date'):
             item = ServiceItem()

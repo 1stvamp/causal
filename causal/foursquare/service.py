@@ -3,6 +3,7 @@ import oauth2 as oauth
 from datetime import datetime, timedelta
 from causal.main.models import ServiceItem
 from causal.main.service_utils import get_model_instance, get_data
+from causal.main.exceptions import LoggedServiceError
 
 DISPLAY_NAME = 'Foursquare'
 CUSTOM_FORM = False
@@ -12,7 +13,11 @@ def get_items(user, since, model_instance=None):
     serv = model_instance or get_model_instance(user, __name__)
     items = []
 
-    checkins = get_data(serv, 'http://api.foursquare.com/v1/history.json')
+    try:
+        checkins = get_data(serv, 'http://api.foursquare.com/v1/history.json')
+    except Exception, e:
+        raise LoggedServiceError(original_exception=e)
+
     if checkins and checkins.has_key('checkins'):
         for checkin in checkins['checkins']:
             item = ServiceItem()
@@ -34,9 +39,6 @@ def get_items(user, since, model_instance=None):
                 item.icon = checkin['venue']['primarycategory']['iconurl']
             items.append(item)
             del(item)
-    else:
-        # deal with errors
-        pass
     return items
 
 def get_items_as_json(user, since, model_instance=None):

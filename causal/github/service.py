@@ -5,6 +5,7 @@ from BeautifulSoup import Tag, BeautifulSoup as soup
 from BeautifulSoup import SoupStrainer
 from causal.main.models import AccessToken, ServiceItem
 from causal.main.service_utils import get_model_instance
+from causal.main.exceptions import LoggedServiceError
 
 DISPLAY_NAME = 'Github'
 CUSTOM_FORM = False
@@ -15,11 +16,11 @@ KEEP_TAGS = ('a', 'span', 'code',)
 def get_items(user, since, model_instance=None):
     serv = model_instance or get_model_instance(user, __name__)
     items = []
+    at = AccessToken.objects.get(service=serv)
+
+    url = 'https://github.com/%s.atom' % (at.username,)
+
     try:
-        at = AccessToken.objects.get(service=serv)
-
-        url = 'https://github.com/%s.atom' % (at.username,)
-
         feed = feedparser.parse(url)
         links = SoupStrainer('a')
         for entry in feed.entries:
@@ -45,8 +46,8 @@ def get_items(user, since, model_instance=None):
             item.created = datetime.fromtimestamp(time.mktime(entry.updated_parsed))
             item.service = serv
             items.append(item)
-    except:
-        return False
+    except Exception, e:
+        raise LoggedServiceError(original_exception=e)
 
     return items
 

@@ -3,6 +3,7 @@ from datetime import datetime
 from django.utils import simplejson
 from causal.main.models import ServiceItem, AccessToken
 from causal.main.service_utils import get_model_instance
+from causal.main.exceptions import LoggedServiceError
 
 DISPLAY_NAME = 'Flickr'
 CUSTOM_FORM = True
@@ -15,11 +16,15 @@ def get_items(user, since, model_instance):
     at = AccessToken.objects.get(service=serv)
     flickr = flickrapi.FlickrAPI(at.api_token)
 
-    photos_json = flickr.photos_search(
-        user_id=at.username,
-        per_page='10',
-        format='json'
-    )
+    try:
+        photos_json = flickr.photos_search(
+            user_id=at.username,
+            per_page='10',
+            format='json'
+        )
+    except Exception, e:
+        raise LoggedServiceError(original_exception=e)
+    
     photos_json = photos_json.replace('jsonFlickrApi(', '')
     photos_json = photos_json.rstrip(')')
     photos = simplejson.loads(photos_json)

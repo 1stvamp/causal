@@ -4,6 +4,7 @@ from datetime import datetime
 from causal.main.models import ServiceItem, AccessToken
 from causal.main.service_utils import get_model_instance
 from facegraph.fql import FQL
+from causal.main.exceptions import LoggedServiceError
 
 DISPLAY_NAME = 'Facebook'
 CUSTOM_FORM = False
@@ -22,20 +23,20 @@ def get_items(user, since, model_instance=None):
     serv = model_instance or get_model_instance(user, __name__)
     items = []
 
-    try:
-        at = AccessToken.objects.get(service=serv)
+    at = AccessToken.objects.get(service=serv)
 
+    try:
         q = FQL(at.oauth_token)
         results = q(SELECT_FQL)
+    except Exception, e:
+        raise LoggedServiceError(original_exception=e)
 
-        for result in results:
-            item = ServiceItem()
-            item.created = datetime.fromtimestamp(result.updated_time)
-            item.body = result.message
-            item.service = serv
-            items.append(item)
-    except:
-        pass
+    for result in results:
+        item = ServiceItem()
+        item.created = datetime.fromtimestamp(result.updated_time)
+        item.body = result.message
+        item.service = serv
+        items.append(item)
 
     return items
 
