@@ -1,5 +1,6 @@
 __version__ = '0.1.1'
 
+from jogging import logging
 from tweepy import TweepError
 from twitter_text import TwitterText
 from datetime import timedelta
