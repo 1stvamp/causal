@@ -75,7 +75,7 @@ urlpatterns += patterns('',
     url(r'^accounts/', include('registration.urls')),
 
     url(r'^$', index, name='home'),
-    url(r'^history/ajax/(?P<service_id>\d+)$', cache_page(history_callback, cache_time), name='history-callback'),
-    url(r'^(?P<username>\w+\.json)$', userfeed, name='userfeed'),
+    url(r'^(?P<username>\w+)\.json$', userfeed, name='userfeed'),
+    url(r'^(?P<username>\w+)/service/(?P<service_id>\d+)\.json$', cache_page(history_callback, cache_time), name='history-callback'),
     url(r'^(?P<username>\w+)[/]?$', history, name='user-history'),
 )
