@@ -13,16 +13,11 @@ from django.db.models import Count
 from causal.main.models import *
 from causal.main.decorators import can_view_service
 
-def history(request, user_id=None):
+def history(request, username):
     template_values = {}
 
-    if user_id:
-        user = get_object_or_404(User, pk=user_id)
-    else:
-        if request.user.is_authenticated() and request.user.is_active:
-            user = request.user
-        else:
-            return redirect('login')
+    user = get_object_or_404(User, username=username)
+    template_values['viewing_user'] = user
 
     filters = {
         'user': user,
@@ -56,9 +51,9 @@ def history(request, user_id=None):
     )
 
 @can_view_service
-def history_callback(request, service_id):
+def history_callback(request, username, service_id):
     template_values = {}
-    service = get_object_or_404(UserService, pk=service_id)
+    service = get_object_or_404(UserService, pk=service_id, user__username=username)
 
     days = []
     days_to_i = {}
@@ -150,12 +145,19 @@ def sharing_prefs(request):
         return redirect('user-settings')
 
 def userfeed(request, username):
-    """Need to think about todo security."""
-    if request.user:
-        services_enabled = UserService.objects.filter(user=request.user)
-        
-        data = []
-        for service in services_enabled:
-            data = data + service.app.module.get_items_as_json(request.user, date.today() - timedelta(days=7), service)
-        
-        return HttpResponse(simplejson.dumps({'results': data}))
+    user = get_object_or_404(User, username=username)
+
+    filters = {
+        'user': user,
+        'setup': True,
+    }
+    if not request.user.is_authenticated() or not request.user.pk == user.pk:
+        filters['share'] = True
+
+    services = UserService.objects.filter(**filters).order_by('app__module_name')
+    
+    data = []
+    for service in services:
+        data = data + service.app.module.get_items_as_json(request.user, date.today() - timedelta(days=7), service)
+    
+    return HttpResponse(simplejson.dumps({'results': data}))

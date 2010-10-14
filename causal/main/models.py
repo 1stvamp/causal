@@ -55,9 +55,6 @@ class UserService(models.Model):
     def __unicode__(self):
         return u'%s service for %s' % (self.app, self.user,)
 
-    def get_absolute_url(self):
-        return reverse('history-callback', kwargs={'service_id': self.pk})
-
     def get_auth_url(self):
         return reverse('%s-auth' % (self.app.module_name.replace('.', '-'),))
 
