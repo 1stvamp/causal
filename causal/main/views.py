@@ -17,6 +17,7 @@ def history(request, username):
     template_values = {}
 
     user = get_object_or_404(User, username=username)
+    template_values['viewing_user'] = user
 
     filters = {
         'user': user,

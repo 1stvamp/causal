@@ -30,7 +30,7 @@
     }
     var load_services = function() {
         {% for service in services %}
-            $.get("{{ service.get_absolute_url }}", {}, success, 'json');
+            $.get("{% url history-callback viewing_user.username service.pk %}", {}, success, 'json');
         {% endfor %}
     }
     $(function() {
