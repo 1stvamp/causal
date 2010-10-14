@@ -21,6 +21,7 @@ def verify_auth(request):
     generate_access_token(service, request_token)
     service.setup = True
     service.save()
+    request_token.delete()
     return redirect(return_url)
 
 @login_required(redirect_field_name='redirect_to')
