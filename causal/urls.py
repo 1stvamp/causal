@@ -38,6 +38,30 @@ if not getattr(settings, 'ENABLE_REGISTRATION', False):
         url(r'^accounts/register/$', return_404, name='registration_register')
     )
 
+if getattr(settings, 'ENABLE_ADMIN', False):
+    urlpatterns += patterns('',
+        url(settings.ADMIN_URL, include(admin.site.urls), name='admin'),
+    )
+
+if getattr(settings, 'ENABLE_ADMIN_DOCS', False):
+    urlpatterns += patterns('',
+        url(r'%sdoc/' % (settings.ADMIN_URL,), include('django.contrib.admindocs.urls')),
+    )
+
+for service_name in settings.INSTALLED_SERVICES:
+    service_urls = import_module("%s.urls" % (service_name,))
+    if service_urls:
+        urlpatterns += patterns('',
+            url(service_urls.base_path, include(service_urls), name=service_urls.shortcut),
+        )
+
+if getattr(settings, 'SERVE_STATIC', False):
+    urlpatterns += patterns('',
+        (r'^static/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.MEDIA_ROOT }
+         ),
+    )
+
 urlpatterns += patterns('',
     url(r'^accounts/settings/$', user_settings, name='user-settings'),
     url(r'^accounts/settings/enable-service/(?P<app_id>\d+)$', enable_service, name='enable-service'),
@@ -51,32 +75,7 @@ urlpatterns += patterns('',
     url(r'^accounts/', include('registration.urls')),
 
     url(r'^$', index, name='home'),
-    url(r'^history/$', history, name='history'),
-    url(r'^history/(?P<user_id>\d+)$', history, name='user-history'),
-    url(r'^history/ajax/(?P<service_id>\d+)$', cache_page(history_callback, cache_time), name='history-callback'),
-    url(r'^(?P<username>\w+\.json)$', userfeed, name='userfeed'),
+    url(r'^(?P<username>\w+)\.json$', userfeed, name='userfeed'),
+    url(r'^(?P<username>\w+)/service/(?P<service_id>\d+)\.json$', cache_page(history_callback, cache_time), name='history-callback'),
+    url(r'^(?P<username>\w+)[/]?$', history, name='user-history'),
 )
-
-if getattr(settings, 'ENABLE_ADMIN', False):
-    urlpatterns += patterns('',
-        url(settings.ADMIN_URL, include(admin.site.urls), name='admin'),
-    )
-if getattr(settings, 'ENABLE_ADMIN_DOCS', False):
-    urlpatterns += patterns('',
-        url(r'%sdoc/' % (settings.ADMIN_URL,), include('django.contrib.admindocs.urls')),
-    )
-
-for service_name in settings.INSTALLED_SERVICES:
-    service_urls = import_module("%s.urls" % (service_name,))
-    if service_urls:
-        urlpatterns += patterns('',
-            url(service_urls.base_path, include(service_urls), name=service_urls.shortcut),
-        )
-
-if settings.SERVE_STATIC:
-    urlpatterns += patterns('',
-        (r'^static/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.MEDIA_ROOT }
-         ),
-    )
-
