@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.importlib import import_module
 from django.core.urlresolvers import reverse
+from timezones.fields import TimeZoneField, MAX_TIMEZONE_LENGTH
 
 
 class OAuthSetting(models.Model):
@@ -89,6 +90,7 @@ class UserProfile(models.Model):
     accessed via the User.get_profile() method.
     """
     user = models.ForeignKey(User)
+    timezone = TimeZoneField()
 
 def user_save_handler(sender, **kwargs):
     # Make sure we create a matching UserProfile instance whenever
@@ -98,6 +100,19 @@ def user_save_handler(sender, **kwargs):
         up.user = kwargs['instance']
         up.save()
 
+# Allow South to handle TimeZoneField smoothly
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules(
+        rules=[(
+            (TimeZoneField,), 
+            [],
+            { "max_length": ["max_length", { "default": MAX_TIMEZONE_LENGTH }],}
+        )],
+        patterns=['timezones\.fields\.']
+    )
+except ImportError:
+    pass
 
 # Not a django.db.models.Model, just a common container for service data
 
