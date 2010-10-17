@@ -127,7 +127,7 @@ def index(request):
         if not services:
             return redirect(reverse('user-settings'))
     
-    users = User.objects.all().filter(is_active=True, userservice__share=True) \
+    users = User.objects.all().filter(is_active=True, userservice__share=True, userservice__setup=True) \
         .annotate(service_count=Count('userservice')).filter(service_count__gt=0)
         
     return render_to_response(
