@@ -96,10 +96,12 @@ def history_callback(request, username, service_id):
 @login_required(redirect_field_name='redirect_to')
 def user_settings(request):
     """Edit access to various services"""
-    available_services = ServiceApp.objects.all().exclude(userservice__user=request.user)
+    available_services = ServiceApp.objects.all().exclude(userservice__user=request.user, userservice__setup=True)
+    enabled_services = ServiceApp.objects.all().filter(userservice__user=request.user, userservice__setup=True)
     return render_to_response(
         'accounts/settings.html',
         {
+            'enabled_services' : enabled_services,
             'available_services': available_services,
         },
         context_instance=RequestContext(request)
