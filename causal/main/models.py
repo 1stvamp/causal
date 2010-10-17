@@ -84,6 +84,21 @@ class AccessToken(RequestToken):
     def __unicode__(self):
         return u'%s access token for %s' % (self.service.app.module.DISPLAY_NAME, self.service.user,)
 
+class UserProfile(models.Model):
+    """Model for providing extra information for a user, can be
+    accessed via the User.get_profile() method.
+    """
+    user = models.ForeignKey(User)
+
+def user_save_handler(sender, **kwargs):
+    # Make sure we create a matching UserProfile instance whenever
+    # a new User is created.
+    if kwargs['created']:
+        up = UserProfile()
+        up.user = kwargs['instance']
+        up.save()
+
+
 # Not a django.db.models.Model, just a common container for service data
 
 class ServiceItem(object):
