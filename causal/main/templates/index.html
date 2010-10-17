@@ -89,11 +89,16 @@
                     <li id="service_load_{{ service.class_name }}">{{ service.app.module.DISPLAY_NAME }}</li>
                 {% endfor %}
             </ul>
+            {% if services %}
             {% for items in days %}
                 <ul id="day_{{ forloop.counter0 }}">
                     <lh>{{ day_names|get:forloop.counter0 }}</lh>
                 </ul>
             {% endfor %}
+            {% else %}
+            <h2> No configured services yet!</h2>
+            <p>Why not head over to <a href="/accounts/settings/">your settings page</a> to set some up?</p>
+            {% endif %}
         </div>
         {% for service in services %}
             <div id="{{ service.class_name }}-stats" class="ui-tabs-panel"></div>
