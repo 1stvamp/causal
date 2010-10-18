@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.utils.importlib import import_module
 from django.core.urlresolvers import reverse
 from timezones.fields import TimeZoneField, MAX_TIMEZONE_LENGTH
-from timezones.utils import localtime_for_timezone
+from timezones.utils import adjust_datetime_to_timezone
 from django.conf import settings
 
 TIME_ZONE = getattr(settings, 'TIME_ZONE', 'Europe/London')
@@ -142,6 +142,6 @@ class ServiceItem(object):
     @property
     def created_local(self):
         if hasattr(self.user, 'get_profile'):
-            return localtime_for_timezone(self.created, self.user.get_profile().timezone)
+            return adjust_datetime_to_timezone(self.created, 'UTC', unicode(self.user.get_profile().timezone))
         else:
-            return localtime_for_timezone(self.created, TIME_ZONE)
+            return adjust_datetime_to_timezone(self.created, 'UTC', TIME_ZONE)
