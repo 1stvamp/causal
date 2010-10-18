@@ -22,8 +22,7 @@ def verify_auth(request):
         callback,
     )
     response = cgi.parse_qs(urllib.urlopen(url).read())
-    print response
-    access_token = response["access_token"][-1]
+    access_token = ''.join(response["access_token"])
 
     # Delete existing token
     AccessToken.objects.filter(service=service).delete()
