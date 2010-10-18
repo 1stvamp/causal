@@ -2,7 +2,7 @@ from time import mktime
 from datetime import datetime, timedelta, date
 
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404, redirect
@@ -13,6 +13,7 @@ from django.db.models import Count
 from causal.main.models import *
 from causal.main.decorators import can_view_service
 from causal.main.exceptions import ServiceError
+from causal.main.forms import UserProfileForm
 
 def history(request, username):
     template_values = {}
@@ -97,10 +98,21 @@ def history_callback(request, username, service_id):
 def user_settings(request):
     """Edit access to various services"""
     available_services = ServiceApp.objects.all().exclude(userservice__user=request.user)
+    if request.method == 'POST':
+        if request.POST.get('user', None) != str(request.user.id):
+            return HttpResponseNotAllowed('Not your user!')
+        form = UserProfileForm(request.POST)
+        
+        if form.is_valid():
+            form.save()
+            return redirect('user-settings')
+    else:
+        form = UserProfileForm(instance=request.user.get_profile())
     return render_to_response(
         'accounts/settings.html',
         {
             'available_services': available_services,
+            'form': form,
         },
         context_instance=RequestContext(request)
     )

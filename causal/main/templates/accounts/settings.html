@@ -29,6 +29,15 @@
 
 {% block primary %}
     <div class="form-data">
+        <div>
+            <form id="user-profile-form" method="post" action=".">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <p>
+                    <input type="submit" value="Save" />
+                </p>
+            </form>
+        </div>
         {% if user.userservice_set.all %}
             <form id="share-prefs-form" method="post" action="{% url share-prefs %}">
                 <h3>Enabled services:</h3>

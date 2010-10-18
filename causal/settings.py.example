@@ -169,4 +169,4 @@ GLOBAL_LOG_HANDLERS = [
 GLOBAL_LOG_LEVEL = logging.ERROR
 
 # User profile model to provide extra data for Tiqual users
-AUTH_PROFILE_MODULE = 'causal.main.UserProfile'
+AUTH_PROFILE_MODULE = 'main.userprofile'

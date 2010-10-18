@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.utils.importlib import import_module
 from django.core.urlresolvers import reverse
 from timezones.fields import TimeZoneField, MAX_TIMEZONE_LENGTH
+from django.conf import settings
 
 
 class OAuthSetting(models.Model):
@@ -98,6 +99,7 @@ def user_save_handler(sender, **kwargs):
     if kwargs['created']:
         up = UserProfile()
         up.user = kwargs['instance']
+        up.timezone = getattr(settings, 'TIME_ZONE', 'Europe/London')
         up.save()
 
 # Allow South to handle TimeZoneField smoothly
