@@ -22,8 +22,9 @@ def verify_auth(request):
         callback,
     )
     response = cgi.parse_qs(urllib.urlopen(url).read())
+    print response
     access_token = response["access_token"][-1]
-    
+
     # Delete existing token
     AccessToken.objects.filter(service=service).delete()
     # Before creating a new one
@@ -34,7 +35,7 @@ def verify_auth(request):
         created=datetime.now(),
         oauth_verify=''
     )
-    
+
     service.setup = True
     service.save()
 
@@ -45,7 +46,7 @@ def verify_auth(request):
 def auth(request):
     request.session['causal_facebook_oauth_return_url'] = request.GET.get('HTTP_REFERER', None)
     service = get_model_instance(request.user, MODULE_NAME)
-    
+
     callback = "%s%s" % (service.app.oauth.callback_url_base, reverse('causal-facebook-callback'),)
     return redirect("%s&redirect_uri=%s&scope=%s&client_id=%s" % (
             service.app.oauth.request_token_url,
