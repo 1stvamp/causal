@@ -9,7 +9,7 @@ class ServiceError(Exception):
 
     def __init__(self, *args, **kwargs):
         original = kwargs.get('original_exception', None)
-        original_exception = original
+        self.original_exception = original
 
         if kwargs.has_key('original_exception'):
             del kwargs['original_exception']
@@ -19,7 +19,7 @@ class ServiceError(Exception):
 class LoggedServiceError(ServiceError):
     """Wrapper around ServiceError that calls logging.error on init"""
     def __init__(self, *args, **kwargs):
-        super(ServiceError, self).__init__(*args, **kwargs)
+        super(LoggedServiceError, self).__init__(*args, **kwargs)
         if self.original_exception:
             logging.error(self.original_exception)
         else:
