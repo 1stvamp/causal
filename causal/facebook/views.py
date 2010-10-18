@@ -38,7 +38,7 @@ def verify_auth(request):
     service.setup = True
     service.save()
 
-    return_url = request.session.get('causal_facebook_oauth_return_url', None) or 'history'
+    return_url = request.session.get('causal_facebook_oauth_return_url', None) or 'user-settings'
     return redirect(return_url)
 
 @login_required(redirect_field_name='redirect_to')

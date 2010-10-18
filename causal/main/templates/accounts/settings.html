@@ -43,8 +43,7 @@
                 <h3>Enabled services:</h3>
                 <ul>
                     {% for service in enabled_services %}
-                        <li>{{service}}
-                            {% if service.setup %}
+                        <li>{% if service.setup %}
                                 {% include service.form_template_path %}
                                 <input type="checkbox" name="service_{{ service.pk }}" class="share_control" {% if service.share %}checked="checked"{% endif %}/>
                                 {% if not forloop.last %}
