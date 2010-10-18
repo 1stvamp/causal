@@ -4,7 +4,6 @@
 import os
 
 DEBUG = False
-TEMPLATE_DEBUG = DEBUG
 SERVE_STATIC = False
 
 ADMINS = (
@@ -67,20 +66,18 @@ MEDIA_URL = ''
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/_ha-media/'
+ADMIN_MEDIA_PREFIX = '/_ca-media/'
 
 # URLConf regex that defines the base dir for the admin URL.
 # Should be set to something other than admin
-ADMIN_URL = r'^_ha-admin/'
+ADMIN_URL = r'^_ca-admin/'
 
 # Shiny admin panel or not?
-ENABLE_ADMIN = True
+ENABLE_ADMIN = False
+ENABLE_ADMIN_DOCS = False
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = None
-
-if SECRET_KEY is None:
-	raise Exception('SECRET_KEY needs to be changed to a unique, sekrit, random string')
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -104,7 +101,6 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(PATH_SITE_ROOT, 'main/templates'),
-    os.path.join(PATH_SITE_ROOT, 'twitter/templates'),
 )
 
 INSTALLED_APPS = (
@@ -119,14 +115,6 @@ INSTALLED_APPS = (
     'timezones',
     'causal.main',
 )
-if ENABLE_ADMIN:
-    INSTALLED_APPS += (
-        'django.contrib.admin',
-    )
-if ENABLE_ADMIN_DOCS:
-    INSTALLED_APPS += (
-        'django.contrib.admindocs',
-    )
 
 INSTALLED_SERVICES = (
     #'causal.twitter',
@@ -139,15 +127,15 @@ INSTALLED_SERVICES = (
 )
 INSTALLED_APPS += INSTALLED_SERVICES
 
-TEMPLATE_CONTEXT_PROCESSORS =( 
+TEMPLATE_CONTEXT_PROCESSORS =(
     'django.core.context_processors.request',
     'django.contrib.auth.context_processors.auth',
     'causal.main.context_processors.registration.config',
 )
 
 # Account registration
+ENABLE_REGISTRATION = False
 ACCOUNT_ACTIVATION_DAYS = 3
-ENABLE_REGISTRATION = True
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
@@ -159,14 +147,36 @@ LOG_SIZE = 2097152 # 2 MB
 LOG_BACKUP_COUNT = 5 # Keep the main .log file, plus .log.[1-5]
 
 handler = RotatingFileHandler(LOG_FILENAME, maxBytes=LOG_SIZE, backupCount=LOG_BACKUP_COUNT)
+GLOBAL_LOG_LEVEL = logging.ERROR
 GLOBAL_LOG_HANDLERS = [
     {
         'handler': handler,
-        'level': logging.ERROR,
+        'level': GLOBAL_LOG_LEVEL,
         'format': "%(asctime)s %(source)s: %(message)s"
     },
 ]
-GLOBAL_LOG_LEVEL = logging.ERROR
 
 # User profile model to provide extra data for Tiqual users
 AUTH_PROFILE_MODULE = 'main.userprofile'
+
+try:
+    # Import local setting overrides, see local_settings.py.example
+    from local_settings import *
+except ImportError:
+    pass
+
+if ENABLE_ADMIN:
+    INSTALLED_APPS += (
+        'django.contrib.admin',
+    )
+if ENABLE_ADMIN_DOCS:
+    INSTALLED_APPS += (
+        'django.contrib.admindocs',
+    )
+
+if SECRET_KEY is None:
+	raise Exception('SECRET_KEY needs to be changed to a unique, sekrit, random string')
+
+TEMPLATE_DEBUG = DEBUG
+
+INSTALLED_APPS += INSTALLED_SERVICES
