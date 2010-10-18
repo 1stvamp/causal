@@ -1,5 +1,6 @@
 import time
 import feedparser
+from dateutil import parser
 from datetime import datetime
 from BeautifulSoup import Tag, BeautifulSoup as soup
 from BeautifulSoup import SoupStrainer
@@ -43,7 +44,9 @@ def get_items(user, since, model_instance=None):
                 item.links = []
                 for link in parsed_links:
                     item.links.append(str(link).split('"')[1])
-            item.created = datetime.fromtimestamp(time.mktime(entry.updated_parsed))
+            updated = parser.parse(entry.updated)
+            updated = (updated - updated.utcoffset()).replace(tzinfo=None)
+            item.created = updated
             item.service = serv
             item.user = user
             items.append(item)
