@@ -102,6 +102,9 @@ def user_save_handler(sender, **kwargs):
     if kwargs['created']:
         up = UserProfile()
         up.user = kwargs['instance']
+        # *sigh*, because certain ppl haven't pushed a new release for Django 1.2,
+        # we'll have to monkey patch this for now
+        up._meta.fields[-1].to_python = lambda x: unicode(x)
         up.timezone = TIME_ZONE
         up.save()
 post_save.connect(user_save_handler, User)

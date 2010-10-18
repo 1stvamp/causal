@@ -6,14 +6,14 @@ class UserProfileForm(forms.ModelForm):
     timezone_flat = forms.ChoiceField(label='Timezone', choices=PRETTY_TIMEZONE_CHOICES)
     user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     id = forms.IntegerField(widget=forms.HiddenInput())
-    
+
     class Meta:
         model = UserProfile
         fields = ('id', 'user', 'timezone_flat',)
-        
+
     def __init__(self, *args, **kwargs):
         super(UserProfileForm, self).__init__(*args, **kwargs)
-        
+
         # Set default for timezone, as we've overriden drop-down with self.timezone_flat
         instance = kwargs.get('instance', None)
         if instance:
