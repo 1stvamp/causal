@@ -10,6 +10,14 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('id', 'user', 'timezone_flat',)
+        
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+        
+        # Set default for timezone, as we've overriden drop-down with self.timezone_flat
+        instance = kwargs.get('instance', None)
+        if instance:
+            self.fields['timezone_flat'].initial = instance.timezone
 
     def save(self, force_insert=False, force_update=False, commit=True):
         tz = self.cleaned_data['timezone_flat']
