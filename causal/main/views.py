@@ -117,8 +117,19 @@ def enable_service(request, app_id):
     return redirect('user-settings')
 
 def index(request):
-    users = User.objects.all().filter(is_active=True, userservice__share=True) \
+    """Displays user listing of sharing users or redirects to setting page
+    if user has no configured services."""
+
+    # check if user has available services and they are logged in
+    # if so send them to the profile page to get setup
+    if request.user.is_authenticated():
+        services = UserService.objects.all().filter(user=request.user)
+        if not services:
+            return redirect(reverse('user-settings'))
+    
+    users = User.objects.all().filter(is_active=True, userservice__share=True, userservice__setup=True) \
         .annotate(service_count=Count('userservice')).filter(service_count__gt=0)
+        
     return render_to_response(
         'homepage.html',
         {
