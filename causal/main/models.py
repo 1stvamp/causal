@@ -4,8 +4,10 @@ from django.contrib.auth.models import User
 from django.utils.importlib import import_module
 from django.core.urlresolvers import reverse
 from timezones.fields import TimeZoneField, MAX_TIMEZONE_LENGTH
+from timezones.utils import localtime_for_timezone
 from django.conf import settings
 
+TIME_ZONE = getattr(settings, 'TIME_ZONE', 'Europe/London')
 
 class OAuthSetting(models.Model):
     """OAuth App Settings."""
@@ -99,7 +101,7 @@ def user_save_handler(sender, **kwargs):
     if kwargs['created']:
         up = UserProfile()
         up.user = kwargs['instance']
-        up.timezone = getattr(settings, 'TIME_ZONE', 'Europe/London')
+        up.timezone = TIME_ZONE
         up.save()
 
 # Allow South to handle TimeZoneField smoothly
@@ -128,6 +130,7 @@ class ServiceItem(object):
     } #dict
     service = None #Service
     link_back = None #str/unicode
+    user = None #auth.user instance
 
     @property
     def class_name(self):
@@ -135,3 +138,10 @@ class ServiceItem(object):
 
     def has_location(self):
         return self.location.has_key('long') is not False and self.location.has_key('lat') is not False
+
+    @property
+    def created_local(self):
+        if hasattr(self.user, 'get_profile'):
+            return localtime_for_timezone(self.created, self.user.get_profile().timezone)
+        else:
+            return localtime_for_timezone(self.created, TIME_ZONE)

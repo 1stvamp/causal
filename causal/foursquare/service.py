@@ -37,6 +37,7 @@ def get_items(user, since, model_instance=None):
             item.service = serv
             if checkin['venue'].has_key('primarycategory'):
                 item.icon = checkin['venue']['primarycategory']['iconurl']
+            item.user = user
             items.append(item)
             del(item)
     return items

@@ -76,18 +76,18 @@ def history_callback(request, username, service_id):
         items = service.app.module.get_items(request.user, day_one, service)
         if items:
             for item in items:
-                if item.created.date() > day_one:
+                if item.created_local.date() > day_one:
                     item_dict = {
                         'title': item.title,
                         'body': urlize(item.body),
-                        'created': mktime(item.created.timetuple()),
-                        'created_date': item.created.strftime("%I:%M%p").lower(),
+                        'created': mktime(item.created_local.timetuple()),
+                        'created_date': item.created_local.strftime("%I:%M%p").lower(),
                         'location': item.location,
                         'class_name' : item.class_name,
                         'has_location': item.has_location(),
                         'link_back' : item.link_back,
                     }
-                    days[days_to_i[item.created.strftime('%A')]].append(item_dict)
+                    days[days_to_i[item.created_local.strftime('%A')]].append(item_dict)
             response['items'] = days
     except ServiceError:
         response['error'] = True

@@ -45,6 +45,7 @@ def get_items(user, since, model_instance=None):
                     item.links.append(str(link).split('"')[1])
             item.created = datetime.fromtimestamp(time.mktime(entry.updated_parsed))
             item.service = serv
+            item.user = user
             items.append(item)
     except Exception, e:
         raise LoggedServiceError(original_exception=e)

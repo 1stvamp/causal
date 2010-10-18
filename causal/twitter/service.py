@@ -60,6 +60,7 @@ def get_items(user, since, model_instance=None):
                 item.location['lat'] = status.geo['coordinates'][0]
                 item.location['long'] = status.geo['coordinates'][1]
             item.service = serv
+            item.user = user
             items.append(item)
     return items
 
