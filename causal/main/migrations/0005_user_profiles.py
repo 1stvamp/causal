@@ -10,10 +10,10 @@ class Migration(DataMigration):
         """Make sure every user has a user profile"""
         
         for user in orm['auth.user'].objects.all():
-            profile = orm.UserProfile.objects.create()
-            profile.user = user
-            profile.timezone = 'Europe/London'
-            profile.save()
+            profile = orm.UserProfile.objects.create(
+                user=user,
+                timezone='Europe/London'
+            )
 
 
     def backwards(self, orm):
