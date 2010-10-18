@@ -24,9 +24,7 @@ def verify_auth(request):
     response = cgi.parse_qs(urllib.urlopen(url).read())
     access_token = response["access_token"][-1]
     
-    at = AccessToken.objects.filter(service=service)
-    if at:
-        at.delete()
+    at = AccessToken.objects.filter(service=service).delete()
     new_at = AccessToken()
     new_at.service = service
     new_at.oauth_token = access_token
