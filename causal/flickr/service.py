@@ -52,6 +52,7 @@ def get_items(user, since, model_instance):
         if p['photo'].has_key('location'):
             item.location['lat'] = p['photo']['location']['latitude']
             item.location['long'] = p['photo']['location']['longitude']
+        item.user = user
         items.append(item)
     return items
 

@@ -2,7 +2,7 @@ from time import mktime
 from datetime import datetime, timedelta, date
 
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404, redirect
@@ -13,6 +13,7 @@ from django.db.models import Count
 from causal.main.models import *
 from causal.main.decorators import can_view_service
 from causal.main.exceptions import ServiceError
+from causal.main.forms import UserProfileForm
 
 def history(request, username):
     template_values = {}
@@ -75,18 +76,18 @@ def history_callback(request, username, service_id):
         items = service.app.module.get_items(request.user, day_one, service)
         if items:
             for item in items:
-                if item.created.date() > day_one:
+                if item.created_local.date() > day_one:
                     item_dict = {
                         'title': item.title,
                         'body': urlize(item.body),
-                        'created': mktime(item.created.timetuple()),
-                        'created_date': item.created.strftime("%I:%M%p").lower(),
+                        'created': mktime(item.created_local.timetuple()),
+                        'created_date': item.created_local.strftime("%I:%M%p").lower(),
                         'location': item.location,
                         'class_name' : item.class_name,
                         'has_location': item.has_location(),
                         'link_back' : item.link_back,
                     }
-                    days[days_to_i[item.created.strftime('%A')]].append(item_dict)
+                    days[days_to_i[item.created_local.strftime('%A')]].append(item_dict)
             response['items'] = days
     except ServiceError:
         response['error'] = True
@@ -98,11 +99,22 @@ def user_settings(request):
     """Edit access to various services"""
     available_services = ServiceApp.objects.all().exclude(userservice__user=request.user, userservice__setup=True)
     enabled_services = ServiceApp.objects.all().filter(userservice__user=request.user, userservice__setup=True)
+    if request.method == 'POST':
+        if request.POST.get('user', None) != str(request.user.id):
+            return HttpResponseNotAllowed('Not your user!')
+        form = UserProfileForm(request.POST)
+        
+        if form.is_valid():
+            form.save()
+            return redirect('user-settings')
+    else:
+        form = UserProfileForm(instance=request.user.get_profile())
     return render_to_response(
         'accounts/settings.html',
         {
             'enabled_services' : enabled_services,
             'available_services': available_services,
+            'form': form,
         },
         context_instance=RequestContext(request)
     )

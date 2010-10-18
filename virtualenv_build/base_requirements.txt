@@ -3,3 +3,5 @@ oauth2==1.2.0
 south==0.7.1
 django-registration==0.7
 jogging==0.2.2
+django-timezones==0.1.4
+python-dateutil==1.5

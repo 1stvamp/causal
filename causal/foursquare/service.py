@@ -31,12 +31,11 @@ def get_items(user, since, model_instance=None):
             if checkin['venue'].has_key('geolat') and checkin['venue']['geolat']:
                 item.location['lat'] = checkin['venue']['geolat']
                 item.location['long'] = checkin['venue']['geolong']
-            item.created = datetime.strptime(
-                checkin['created'].replace(' +0000', ''),
-                '%a, %d %b %y %H:%M:%S') + timedelta(hours=datetime.now().utcoffset() or 0)
+            item.created = datetime.strptime(checkin['created'].replace(' +0000', ''), '%a, %d %b %y %H:%M:%S')
             item.service = serv
             if checkin['venue'].has_key('primarycategory'):
                 item.icon = checkin['venue']['primarycategory']['iconurl']
+            item.user = user
             items.append(item)
             del(item)
     return items

@@ -42,6 +42,7 @@ def get_items(user, since, model_instance=None):
         item.created = datetime.fromtimestamp(result.updated_time)
         item.body = result.message
         item.service = serv
+        item.user = user
         items.append(item)
 
     return items

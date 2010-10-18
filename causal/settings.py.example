@@ -113,12 +113,21 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-    'django.contrib.admin',
     'south',
     'registration',
     'jogging',
+    'timezones',
     'causal.main',
 )
+if ENABLE_ADMIN:
+    INSTALLED_APPS += (
+        'django.contrib.admin',
+    )
+if ENABLE_ADMIN_DOCS:
+    INSTALLED_APPS += (
+        'django.contrib.admindocs',
+    )
+
 INSTALLED_SERVICES = (
     #'causal.twitter',
     #'causal.foursquare',
@@ -158,3 +167,6 @@ GLOBAL_LOG_HANDLERS = [
     },
 ]
 GLOBAL_LOG_LEVEL = logging.ERROR
+
+# User profile model to provide extra data for Tiqual users
+AUTH_PROFILE_MODULE = 'main.userprofile'

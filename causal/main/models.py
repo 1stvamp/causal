@@ -3,7 +3,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.importlib import import_module
 from django.core.urlresolvers import reverse
+from timezones.fields import TimeZoneField, MAX_TIMEZONE_LENGTH
+from timezones.utils import adjust_datetime_to_timezone
+from django.conf import settings
 
+TIME_ZONE = getattr(settings, 'TIME_ZONE', 'Europe/London')
 
 class OAuthSetting(models.Model):
     """OAuth App Settings."""
@@ -84,6 +88,36 @@ class AccessToken(RequestToken):
     def __unicode__(self):
         return u'%s access token for %s' % (self.service.app.module.DISPLAY_NAME, self.service.user,)
 
+class UserProfile(models.Model):
+    """Model for providing extra information for a user, can be
+    accessed via the User.get_profile() method.
+    """
+    user = models.ForeignKey(User)
+    timezone = TimeZoneField()
+
+def user_save_handler(sender, **kwargs):
+    # Make sure we create a matching UserProfile instance whenever
+    # a new User is created.
+    if kwargs['created']:
+        up = UserProfile()
+        up.user = kwargs['instance']
+        up.timezone = TIME_ZONE
+        up.save()
+
+# Allow South to handle TimeZoneField smoothly
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules(
+        rules=[(
+            (TimeZoneField,), 
+            [],
+            { "max_length": ["max_length", { "default": MAX_TIMEZONE_LENGTH }],}
+        )],
+        patterns=['timezones\.fields\.']
+    )
+except ImportError:
+    pass
+
 # Not a django.db.models.Model, just a common container for service data
 
 class ServiceItem(object):
@@ -96,6 +130,7 @@ class ServiceItem(object):
     } #dict
     service = None #Service
     link_back = None #str/unicode
+    user = None #auth.user instance
 
     @property
     def class_name(self):
@@ -103,3 +138,10 @@ class ServiceItem(object):
 
     def has_location(self):
         return self.location.has_key('long') is not False and self.location.has_key('lat') is not False
+
+    @property
+    def created_local(self):
+        if hasattr(self.user, 'get_profile'):
+            return adjust_datetime_to_timezone(self.created, 'UTC', unicode(self.user.get_profile().timezone))
+        else:
+            return adjust_datetime_to_timezone(self.created, 'UTC', TIME_ZONE)
