@@ -1,19 +1,14 @@
 BODY {
     font-family: Helvetica,  Arial, FreeSans, sans-serif;
     margin: 0;
-    /* default background colour, for all layout engines that don't implement gradients */
-background: #F0EDED;
-
-/* gecko based browsers */
-background: -moz-linear-gradient(top, #F0EDED, #003366);
-
-/* webkit based browsers */
-background: -webkit-gradient(linear, left top, left bottom, from(#F0EDED), to(#003366));
-
-color: #000000; /* text colour (black) */
-height: auto; /* gradient uses the full height of the element */
-padding: 5px; /* distance from border edge to text */
+    background: #F0EDED;
+    background: -moz-linear-gradient(top, #F0EDED, #003366);
+    background: -webkit-gradient(linear, left top, left bottom, from(#F0EDED), to(#003366));
+    color: #000000;
+    height: auto;
+    padding: 5px;
 }
+
 li {
     list-style: none;
 }
