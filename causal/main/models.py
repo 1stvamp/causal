@@ -103,6 +103,7 @@ def user_save_handler(sender, **kwargs):
         up.user = kwargs['instance']
         up.timezone = TIME_ZONE
         up.save()
+post_save.connect(user_save_handler, User)
 
 # Allow South to handle TimeZoneField smoothly
 try:
