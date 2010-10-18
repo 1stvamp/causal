@@ -98,7 +98,7 @@ def history_callback(request, username, service_id):
 def user_settings(request):
     """Edit access to various services"""
     available_services = ServiceApp.objects.all().exclude(userservice__user=request.user, userservice__setup=True)
-    enabled_services = ServiceApp.objects.all().filter(userservice__user=request.user, userservice__setup=True)
+    enabled_services = UserService.objects.all().filter(user=request.user, setup=True)
     if request.method == 'POST':
         if request.POST.get('user', None) != str(request.user.id):
             return HttpResponseNotAllowed('Not your user!')
