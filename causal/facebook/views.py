@@ -24,14 +24,16 @@ def verify_auth(request):
     response = cgi.parse_qs(urllib.urlopen(url).read())
     access_token = response["access_token"][-1]
     
-    at = AccessToken.objects.filter(service=service).delete()
-    new_at = AccessToken()
-    new_at.service = service
-    new_at.oauth_token = access_token
-    new_at.oauth_token_secret = ''
-    new_at.created = datetime.now()
-    new_at.oauth_verify = ''
-    new_at.save()
+    # Delete existing token
+    AccessToken.objects.filter(service=service).delete()
+    # Before creating a new one
+    AccessToken.objects.create(
+        service=service,
+        oauth_token=access_token,
+        oauth_token_secret='',
+        created=datetime.now(),
+        oauth_verify=''
+    )
     
     service.setup = True
     service.save()

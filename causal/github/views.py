@@ -22,13 +22,14 @@ def auth(request):
         username = request.POST['username']
 
         # Delete existing token
-        existing_access_token = AccessToken.objects.filter(service=service).delete()
-
-        access_token = AccessToken(service=service)
-        access_token.username = username
-        access_token.created = datetime.now()
-        access_token.api_token = service.app.oauth.consumer_key
-        access_token.save()
+        AccessToken.objects.filter(service=service).delete()
+        # Before creating a new one
+        AccessToken.objects.create(
+            service=service,
+            username=username,
+            created=datetime.now(),
+            api_token=service.app.oauth.consumer_key
+        )
 
         service.setup = True
         service.save()

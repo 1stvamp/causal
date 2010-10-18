@@ -27,17 +27,14 @@ def user_login(service, cust_callback_url=None):
 
         request_token_params = dict((token.split('=') for token in content.split('&')))
         
-        # fetch old token if there is one and remove it
-        # so we can start from a fresh token
-        rt = RequestToken.objects.filter(service=service)
-        if rt:
-            rt.delete()
-        new_token = RequestToken()
-        new_token.service = service
-        new_token.oauth_token = request_token_params['oauth_token']
-        new_token.oauth_token_secret = request_token_params['oauth_token_secret']
-        new_token.created = datetime.now()
-        new_token.save()
+        # Remove any old tokens, so we can start from a fresh token
+        RequestToken.objects.filter(service=service).delete()
+        RequestToken.objects.create(
+            service=service,
+            oauth_token=request_token_params['oauth_token'],
+            oauth_token_secret=request_token_params['oauth_token_secret'],
+            created=datetime.now()
+        )
 
         redirect_url = "%s?oauth_token=%s" % (service.app.oauth.user_auth_url, request_token_params['oauth_token'],)
     except:
@@ -58,18 +55,16 @@ def generate_access_token(service, request_token):
 
     access_token_params = dict((token.split('=') for token in content.split('&')))
     
-    # check if we have existing AccessToken
-    # if so delete it.
-    at = AccessToken.objects.filter(service=service)
-    if at:
-        at.delete()
-    new_at = AccessToken()
-    new_at.service = service
-    new_at.oauth_token = access_token_params['oauth_token']
-    new_at.oauth_token_secret = access_token_params['oauth_token_secret']
-    new_at.created = datetime.now()
-    new_at.oauth_verify = request_token.oauth_verify
-    new_at.save()
+    # Delete any previous tokens
+    AccessToken.objects.filter(service=service).delete()
+    # Before creating a new one
+    AccessToken.objects.create(
+        service=service,
+        oauth_token=access_token_params['oauth_token'],
+        oauth_token_secret=access_token_params['oauth_token_secret'],
+        created=datetime.now(),
+        oauth_verify=request_token.oauth_verify
+    )
     
 def get_data(service, url, disable_oauth=False):
     if disable_oauth:
