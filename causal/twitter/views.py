@@ -10,7 +10,7 @@ import re
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from causal.main.decorators import can_view_service
-
+from django.http import HttpResponseRedirect
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
 
@@ -22,12 +22,12 @@ def verify_auth(request):
     request_token.oauth_verify = request.GET.get('oauth_verifier')
     request_token.save()
     generate_access_token(service, request_token)
-    return_url = request.session.get('causal_twitter_oauth_return_url', None) or 'history'
+    return_url = request.session.get('causal_twitter_oauth_return_url', None) or '/' + request.user.username
     # Mark as setup completed
     service.setup = True
     service.save()
     request_token.delete()
-    return redirect(return_url)
+    return HttpResponseRedirect(return_url)
 
 @login_required(redirect_field_name='redirect_to')
 def auth(request):

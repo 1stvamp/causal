@@ -112,10 +112,14 @@ def enable_service(request, app_id):
     """Edit access to various services"""
     app = get_object_or_404(ServiceApp, pk=app_id)
 
-    if not request.user.userservice_set.all().filter(app=app):
-        service = UserService(user=request.user, app=app)
-        request.user.userservice_set.add(service)
-        request.user.save()
+    if app.oauth:
+        if app.module_name.split('.')[1] == 'twitter':
+            return redirect('causal-twitter-auth')
+    
+    #if not request.user.userservice_set.all().filter(app=app):
+    #    service = UserService(user=request.user, app=app)
+    #    request.user.userservice_set.add(service)
+    #    request.user.save()
     return redirect('user-settings')
 
 def index(request):
