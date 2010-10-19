@@ -47,7 +47,7 @@ def history(request, username):
     template_values['day_names'] = day_names
 
     return render_to_response(
-        'index.html',
+        'causal/history.html',
         template_values,
         context_instance=RequestContext(request)
     )
@@ -110,7 +110,7 @@ def user_settings(request):
     else:
         form = UserProfileForm(instance=request.user.get_profile())
     return render_to_response(
-        'accounts/settings.html',
+        'cauusal/users/settings.html',
         {
             'enabled_services' : enabled_services,
             'available_services': available_services,
@@ -149,7 +149,7 @@ def index(request):
         .annotate(service_count=Count('userservice')).filter(service_count__gt=0)
         
     return render_to_response(
-        'homepage.html',
+        'userlist.html',
         {
             'users': users,
         },
