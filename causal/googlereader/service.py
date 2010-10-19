@@ -11,8 +11,33 @@ CUSTOM_FORM = False
 OAUTH_FORM = False
 
 def get_items(user, since, model_instance=None):
-    pass
+    serv = model_instance or get_model_instance(user, __name__)
+    items = []
+    at = AccessToken.objects.get(service=serv)
 
+    url = at.username
+    try:
+        feed = feedparser.parse(url)
+        for entry in feed.entries:
+            item = ServiceItem()
+            item.title = entry.title
+            # we dont take the summary as its huge
+            #if entry.has_key('summary'):
+            item.body = ''
+            if entry.has_key('links'):            
+                item.link_back = entry['links'] 
+            if entry.has_key('link'):            
+                item.link_back = entry['link'] 
+            updated = parser.parse(entry.updated)
+            updated = (updated - updated.utcoffset()).replace(tzinfo=None)
+            item.created = updated
+            item.service = serv
+            item.user = user
+            items.append(item)
+    except Exception, e:
+        raise LoggedServiceError(original_exception=e)
+
+    return items
 def get_items_as_json(user, since, model_instance=None):
     serv = model_instance or get_model_instance(user, __name__)
     pass
