@@ -14,6 +14,10 @@ DISPLAY_NAME = 'Twitter'
 CUSTOM_FORM = False
 OAUTH_FORM = True
 
+def enable():
+    """Setup and authorise the service."""
+    return redirect('causal-twitter-auth')
+
 def get_items(user, since, model_instance=None):
     items = []
     serv = model_instance or get_model_instance(user, __name__)

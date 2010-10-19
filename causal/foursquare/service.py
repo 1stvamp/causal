@@ -9,6 +9,10 @@ DISPLAY_NAME = 'Foursquare'
 CUSTOM_FORM = False
 OAUTH_FORM = True
 
+def enable():
+    """Setup and authorise the service."""
+    return redirect('causal-foursquare-auth')
+
 def get_items(user, since, model_instance=None):
     serv = model_instance or get_model_instance(user, __name__)
     items = []
