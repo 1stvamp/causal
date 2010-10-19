@@ -99,7 +99,7 @@ def user_settings(request):
     """Edit access to various services"""
     
     # services available to user
-    available_services = ServiceApp.objects.all().exclude(userservice__user=request.user, userservice__setup=True)
+    available_services = ServiceApp.objects.all().exclude(userservice__user=request.user)
     
     # services yet to be setup
     available_services_unconfigured = UserService.objects.all().filter(user=request.user, setup=False)
