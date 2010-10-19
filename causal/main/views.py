@@ -97,8 +97,16 @@ def history_callback(request, username, service_id):
 @login_required(redirect_field_name='redirect_to')
 def user_settings(request):
     """Edit access to various services"""
+    
+    # services available to user
     available_services = ServiceApp.objects.all().exclude(userservice__user=request.user, userservice__setup=True)
+    
+    # services yet to be setup
+    available_services_unconfigured = UserService.objects.all().filter(user=request.user, setup=False)
+    
+    # services setup and running
     enabled_services = UserService.objects.all().filter(user=request.user, setup=True)
+    
     if request.method == 'POST':
         if request.POST.get('user', None) != str(request.user.id):
             return HttpResponseNotAllowed('Not your user!')
@@ -114,6 +122,7 @@ def user_settings(request):
         {
             'enabled_services' : enabled_services,
             'available_services': available_services,
+            'available_services_unconfigured' : available_services_unconfigured,
             'form': form,
         },
         context_instance=RequestContext(request)
@@ -123,14 +132,17 @@ def user_settings(request):
 def enable_service(request, app_id):
     """Edit access to various services"""
     app = get_object_or_404(ServiceApp, pk=app_id)
-    app_redirect = app.module.enable()
     
-    #if not request.user.userservice_set.all().filter(app=app):
-    #    service = UserService(user=request.user, app=app)
-    #    request.user.userservice_set.add(service)
-    #    request.user.save()
-    if app_redirect:
-        return app_redirect
+    # setup oauth based service
+    if hasattr(app.module, 'enable'):
+        return app.module.enable()
+    
+    # setup username services
+    if not request.user.userservice_set.all().filter(app=app):
+        service = UserService(user=request.user, app=app)
+        request.user.userservice_set.add(service)
+        request.user.save()
+    
     return redirect('user-settings')
 
 def index(request):
