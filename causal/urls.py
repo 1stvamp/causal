@@ -23,10 +23,10 @@ handler404 = '%s.return_404' % (settings.ROOT_URLCONF,)
 handler500 = '%s.return_500' % (settings.ROOT_URLCONF,)
 
 def return_404(request):
-    return HttpResponseNotFound(render_to_string("404.html"))
+    return HttpResponseNotFound(render_to_string("causal/errors/404.html"))
 
 def return_500(request):
-    return HttpResponseServerError(render_to_string("500.html"))
+    return HttpResponseServerError(render_to_string("causal/errors/500.html"))
 
 cache_time = getattr(settings, 'ITEM_CACHE_TIME', 60 * 30)
 
@@ -69,7 +69,7 @@ urlpatterns += patterns('',
     url(
         r'^accounts/logout/$',
         'django.contrib.auth.views.logout',
-        {'next_page': getattr(settings, 'LOGOUT_REDIRECT_URL', '/'),'template_name': 'registration/logout.html'},
+        {'next_page': getattr(settings, 'LOGOUT_REDIRECT_URL', '/'), 'template_name': 'registration/logout.html'},
         name='auth_logout'
     ),
     url(r'^accounts/', include('registration.urls')),
