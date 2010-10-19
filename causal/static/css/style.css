@@ -1,11 +1,14 @@
+HTML {
+    height: 100%;
+}
 BODY {
     font-family: Helvetica,  Arial, FreeSans, sans-serif;
     margin: 0;
+    height: 100%;
     background: #F0EDED;
-    background: -moz-linear-gradient(top, #F0EDED, #003366);
-    background: -webkit-gradient(linear, left top, left bottom, from(#F0EDED), to(#003366));
+    background: -moz-linear-gradient(top, #F0EDED, #003366) fixed;
+    background: -webkit-gradient(linear, left top, left bottom, from(#F0EDED), to(#003366)) fixed;
     color: #000000;
-    height: auto;
     padding: 5px;
 }
 
