@@ -149,7 +149,7 @@ def index(request):
         .annotate(service_count=Count('userservice')).filter(service_count__gt=0)
         
     return render_to_response(
-        'userlist.html',
+        'causal/userlist.html',
         {
             'users': users,
         },
