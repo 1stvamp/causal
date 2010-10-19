@@ -5,6 +5,7 @@ from datetime import datetime
 from causal.main.models import AccessToken, ServiceItem
 from causal.main.service_utils import get_model_instance
 from causal.main.exceptions import LoggedServiceError
+from urlparse import urlparse
 
 DISPLAY_NAME = 'Google Reader'
 CUSTOM_FORM = False
@@ -33,6 +34,13 @@ def get_items(user, since, model_instance=None):
             item.created = updated
             item.service = serv
             item.user = user
+            
+            # for stats
+            o = urlparse(entry.source.link)
+            item.source = o.netloc
+            
+            item.author = entry.author # person making comment
+            # entry.content[0].value == coment
             items.append(item)
     except Exception, e:
         raise LoggedServiceError(original_exception=e)
