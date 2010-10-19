@@ -9,6 +9,8 @@ from django.core.urlresolvers import reverse
 from timezones.fields import TimeZoneField, MAX_TIMEZONE_LENGTH
 from timezones.utils import adjust_datetime_to_timezone
 
+User = auth_app.User
+
 # Prevent interactive question about wanting a superuser created.  (This
 # code has to go in this otherwise empty "models" module so that it gets
 # processed by the "syncdb" command during database creation.)
@@ -52,7 +54,7 @@ class ServiceApp(models.Model):
 class UserService(models.Model):
     """User service handler. e.g. twitter, flickr etc."""
 
-    user = models.ForeignKey(auth_app.User)
+    user = models.ForeignKey(User)
     app = models.ForeignKey(ServiceApp)
     setup = models.NullBooleanField(null=True, blank=True, default=False)
     share = models.NullBooleanField(null=True, blank=True, default=True)
@@ -103,7 +105,7 @@ class UserProfile(models.Model):
     """Model for providing extra information for a user, can be
     accessed via the User.get_profile() method.
     """
-    user = models.ForeignKey(auth_app.User)
+    user = models.ForeignKey(User)
     timezone = TimeZoneField()
 
 def user_save_handler(sender, **kwargs):
@@ -117,7 +119,7 @@ def user_save_handler(sender, **kwargs):
         up._meta.fields[-1].to_python = lambda x: unicode(x)
         up.timezone = TIME_ZONE
         up.save()
-post_save.connect(user_save_handler, auth_app.User)
+post_save.connect(user_save_handler, User)
 
 # Allow South to handle TimeZoneField smoothly
 try:
