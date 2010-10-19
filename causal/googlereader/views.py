@@ -42,7 +42,7 @@ def stats(request, service_id):
     service = get_object_or_404(UserService, pk=service_id)
     commits = get_items(request.user, date.today() - timedelta(days=7), service)
     return render_to_response(
-      service.app.module_name + '/stats.html',
-      {'commits': commits},
-      context_instance=RequestContext(request)
+        service.template_name + '/stats.html',
+        {'commits': commits},
+        context_instance=RequestContext(request)
     )

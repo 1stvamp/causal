@@ -76,8 +76,8 @@ def stats(request, service_id):
         # order by value and reverse to put most popular at the top
         template_values['atters'] = SortedDict(sorted(ats.items(), reverse=True, key=lambda x: x[1]))
     return render_to_response(
-      service.app.module_name + '/stats.html',
-      template_values,
-      context_instance=RequestContext(request)
+        service.template_name + '/stats.html',
+        template_values,
+        context_instance=RequestContext(request)
     )
 

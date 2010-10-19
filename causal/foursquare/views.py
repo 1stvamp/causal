@@ -48,7 +48,7 @@ def stats(request, service_id):
     # for example http://api.foursquare.com/v1/venue?vid=940763
     
     return render_to_response(
-      service.app.module_name + '/stats.html',
-      template_values,
-      context_instance=RequestContext(request)
+        service.template_name + '/stats.html',
+        template_values,
+        context_instance=RequestContext(request)
     )

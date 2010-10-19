@@ -61,7 +61,7 @@ def stats(request, service_id):
         template_values['number_of_pictures_uploaded'] = len(pictures)
     
     return render_to_response(
-      service.app.module_name + '/stats.html',
-      template_values,
-      context_instance=RequestContext(request)
+        service.template_name + '/stats.html',
+        template_values,
+        context_instance=RequestContext(request)
     )

@@ -62,7 +62,7 @@ class UserService(models.Model):
     @property
     def form_template_path(self):
         if self.app.module.CUSTOM_FORM:
-            path = "%s/form.html" % (self.app.module_name,)
+            path = "%s/form.html" % (self.app.template_name,)
         elif self.app.module.OAUTH_FORM:
             path = "services/oauth_form.html"
         else:
@@ -78,6 +78,10 @@ class UserService(models.Model):
     @property
     def class_name(self):
         return self.app.module_name.replace('.', '-')
+
+    @property
+    def template_name(self):
+        return self.app.module_name.replace('.', '/')
 
 class RequestToken(models.Model):
     """OAuth Request Token."""
