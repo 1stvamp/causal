@@ -10,6 +10,7 @@ DEBUG = True
 # the corresponding apps
 ENABLE_ADMIN = True
 ENABLE_ADMIN_DOCS = True
+SERVE_STATIC = True
 
 DATABASES = {
     'default': {
