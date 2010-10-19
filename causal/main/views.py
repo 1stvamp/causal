@@ -110,7 +110,7 @@ def user_settings(request):
     else:
         form = UserProfileForm(instance=request.user.get_profile())
     return render_to_response(
-        'cauusal/users/settings.html',
+        'causal/users/settings.html',
         {
             'enabled_services' : enabled_services,
             'available_services': available_services,
