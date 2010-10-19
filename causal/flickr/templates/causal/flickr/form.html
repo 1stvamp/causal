@@ -8,5 +8,5 @@
         {% with service.requesttoken_set.all.0.accesstoken.username as username %}
             <input type="text" name="username" id="id_{{ service.class_name }}_username" value="{{ username }}" />
         {% endwith %}
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Change" />
 </form>
