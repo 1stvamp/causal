@@ -62,11 +62,11 @@ class UserService(models.Model):
     @property
     def form_template_path(self):
         if self.app.module.CUSTOM_FORM:
-            path = "%s/form.html" % (self.app.template_name,)
+            path = "%s/form.html" % (self.template_name,)
         elif self.app.module.OAUTH_FORM:
-            path = "services/oauth_form.html"
+            path = "causal/services/oauth_form.html"
         else:
-            path = "services/username_form.html"
+            path = "causal/services/username_form.html"
         return path
 
     def __unicode__(self):
