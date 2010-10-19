@@ -5,6 +5,7 @@ from causal.main.models import ServiceItem, AccessToken
 from causal.main.service_utils import get_model_instance
 from facegraph.fql import FQL
 from causal.main.exceptions import LoggedServiceError
+from django.shortcuts import render_to_response, redirect
 
 DISPLAY_NAME = 'Facebook'
 CUSTOM_FORM = False

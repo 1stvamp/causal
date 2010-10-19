@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from causal.main.models import ServiceItem
 from causal.main.service_utils import get_model_instance, get_data
 from causal.main.exceptions import LoggedServiceError
+from django.shortcuts import render_to_response, redirect
 
 DISPLAY_NAME = 'Foursquare'
 CUSTOM_FORM = False
