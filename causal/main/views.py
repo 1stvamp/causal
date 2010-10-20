@@ -97,21 +97,21 @@ def history_callback(request, username, service_id):
 @login_required(redirect_field_name='redirect_to')
 def user_settings(request):
     """Edit access to various services"""
-    
+
     # services available to user
     available_services = ServiceApp.objects.all().exclude(userservice__user=request.user)
-    
+
     # services yet to be setup
     available_services_unconfigured = UserService.objects.all().filter(user=request.user, setup=False)
-    
+
     # services setup and running
     enabled_services = UserService.objects.all().filter(user=request.user, setup=True)
-    
+
     if request.method == 'POST':
         if request.POST.get('user', None) != str(request.user.id):
             return HttpResponseNotAllowed('Not your user!')
         form = UserProfileForm(request.POST)
-        
+
         if form.is_valid():
             form.save()
             return redirect('user-settings')
@@ -132,17 +132,17 @@ def user_settings(request):
 def enable_service(request, app_id):
     """Edit access to various services"""
     app = get_object_or_404(ServiceApp, pk=app_id)
-    
+
     # setup oauth based service
     if hasattr(app.module, 'enable'):
         return app.module.enable()
-    
+
     # setup username services
     if not request.user.userservice_set.all().filter(app=app):
         service = UserService(user=request.user, app=app)
         request.user.userservice_set.add(service)
         request.user.save()
-    
+
     return redirect('user-settings')
 
 def index(request):
@@ -155,10 +155,10 @@ def index(request):
         services = UserService.objects.all().filter(user=request.user)
         if not services:
             return redirect(reverse('user-settings'))
-    
+
     users = User.objects.all().filter(is_active=True, userservice__share=True, userservice__setup=True) \
         .annotate(service_count=Count('userservice')).filter(service_count__gt=0)
-        
+
     return render_to_response(
         'causal/userlist.html',
         {
@@ -201,9 +201,9 @@ def userfeed(request, username):
         filters['share'] = True
 
     services = UserService.objects.filter(**filters).order_by('app__module_name')
-    
+
     data = []
     for service in services:
         data = data + service.app.module.get_items_as_json(request.user, date.today() - timedelta(days=7), service)
-    
+
     return HttpResponse(simplejson.dumps({'results': data}))
