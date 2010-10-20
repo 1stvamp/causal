@@ -153,7 +153,7 @@ GLOBAL_LOG_HANDLERS = [
         'handler': handler,
         'level': GLOBAL_LOG_LEVEL,
         'format': "%(asctime)s %(source)s: %(message)s"
-    },
+        },
 ]
 
 # User profile model to provide extra data for Tiqual users
@@ -175,7 +175,7 @@ if ENABLE_ADMIN_DOCS:
     )
 
 if SECRET_KEY is None:
-	raise Exception('SECRET_KEY needs to be changed to a unique, sekrit, random string')
+    raise Exception('SECRET_KEY needs to be changed to a unique, sekrit, random string')
 
 TEMPLATE_DEBUG = DEBUG
 
