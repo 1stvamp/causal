@@ -52,9 +52,11 @@ def stats(request, service_id):
 	    sources[share.source] = 1
 	    
     sources = SortedDict(sorted(sources.items(), reverse=True, key=lambda x: x[1]))
+    sources_reversed = SortedDict(sorted(sources.items(), reverse=False, key=lambda x: x[1]))
     return render_to_response(
         service.template_name + '/stats.html',
         {'shares' : shares,
-         'sources' : sources,},
+         'sources' : sources,
+         'sources_reversed' : sources_reversed},
         context_instance=RequestContext(request)
     )
