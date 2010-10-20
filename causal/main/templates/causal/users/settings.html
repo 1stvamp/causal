@@ -12,10 +12,10 @@
                 uncheckedLabel: 'Private'
             });
             $('.share_control').parent('div').addClass('share_wrapper');
-            $('form#share-prefs-form').submit(function() {
+            $('.share_control').change(function() {
                 $.post(
-                    this.action,
-                    $(this).serialize(),
+                    '{% url share-prefs %}',
+                    $('form#share-prefs-form').serialize(),
                     function(data) {
                         console.log(data);
                     }
