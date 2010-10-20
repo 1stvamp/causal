@@ -124,6 +124,7 @@ INSTALLED_SERVICES = (
     #'causal.facebook',
     #'causal.github',
     #'causal.lastfm',
+    #'causal.googlereader',
 )
 INSTALLED_APPS += INSTALLED_SERVICES
 
