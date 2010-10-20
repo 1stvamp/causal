@@ -10,6 +10,7 @@ from causal.main.decorators import can_view_service
 from causal.googlereader.service import get_items
 from datetime import date, timedelta
 from BeautifulSoup import BeautifulSoup, SoupStrainer
+from django.utils.datastructures import SortedDict
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
@@ -40,9 +41,22 @@ def auth(request):
 def stats(request, service_id):
     """Create up some stats."""
     service = get_object_or_404(UserService, pk=service_id)
-    commits = get_items(request.user, date.today() - timedelta(days=7), service)
+    shares = get_items(request.user, date.today() - timedelta(days=7), service)
+    sources = {}
+    
+    # count source websites
+    for share in shares:
+        if sources.has_key(share.source):
+	    sources[share.source] = sources[share.source] + 1
+ 	else:
+	    sources[share.source] = 1
+	    
+    sources = SortedDict(sorted(sources.items(), reverse=True, key=lambda x: x[1]))
+    sources_reversed = SortedDict(sorted(sources.items(), reverse=False, key=lambda x: x[1]))
     return render_to_response(
         service.template_name + '/stats.html',
-        {'commits': commits},
+        {'shares' : shares,
+         'sources' : sources,
+         'sources_reversed' : sources_reversed},
         context_instance=RequestContext(request)
     )

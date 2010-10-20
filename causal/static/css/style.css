@@ -241,6 +241,9 @@ LI.causal-foursquare {
 LI.causal-flickr {
     list-style-image: url(/static/images/flickr.jpg);
 }
+LI.causal-googlereader {
+    list-style-image: url(/static/images/googlereader.jpg);
+}
 A.causal-twitter {
     background: transparent url(/static/images/twitter.jpg) no-repeat 50% 50%;
 }
@@ -258,6 +261,9 @@ A.causal-foursquare {
 }
 A.causal-flickr {
     background: transparent url(/static/images/flickr.jpg) no-repeat 50% 50%;
+}
+A.causal-googlereader {
+    background: transparent url(/static/images/googlereader.jpg) no-repeat 50% 50%;
 }
 A.causal-timeline {
     background: transparent url(/static/images/time.png) no-repeat 50% 50%;
