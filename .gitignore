@@ -5,4 +5,4 @@ pip-log.txt
 egg-cache
 *.log
 local_settings.py
-_sites
+_site
