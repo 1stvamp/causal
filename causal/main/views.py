@@ -58,6 +58,11 @@ def history_callback(request, username, service_id):
     template_values = {}
     service = get_object_or_404(UserService, pk=service_id, user__username=username)
 
+    if request.method == "DELETE":
+        service.app.module.disable(request.user, service)
+        # doesnt redirect currently
+        return redirect('user-settings')
+
     days = []
     days_to_i = {}
     day_one = date.today() - timedelta(days=7)
@@ -116,7 +121,11 @@ def user_settings(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'This is a success message.')
-            return redirect('user-settings')
+        else:
+            messages.success(request, 'This is a successful delete message.')
+
+        return redirect('user-settings')
+
     else:
         form = UserProfileForm(instance=request.user.get_profile())
     return render_to_response(
@@ -154,8 +163,7 @@ def index(request):
     # check if user has available services and they are logged in
     # if so send them to the profile page to get setup
     if request.user.is_authenticated():
-        services = UserService.objects.all().filter(user=request.user)
-        if not services:
+        if UserService.objects.all().filter(user=request.user).count() == 0:
             return redirect(reverse('user-settings'))
         return redirect('/%s/' % (request.user.username,))
 
