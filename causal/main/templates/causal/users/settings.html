@@ -24,6 +24,11 @@
             });
         });
         //]>
+        $(document).ready(function() {
+            $('.iPhoneCheckContainer').click(function() {
+                alert($('.iPhoneCheckContainer input')[0].checked);
+            });
+        }); 
     </script>
 {% endblock head %}
 
@@ -45,7 +50,7 @@
                     {% for service in enabled_services %}
                         <li>{% if service.setup %}
                                 {% include service.form_template_path %}
-                                <input type="checkbox" name="service_{{ service.pk }}" class="share_control" {% if service.share %}checked="checked"{% endif %}/>
+                                <input type="checkbox" id="service_{{ service.pk }}" name="service_{{ service.pk }}" class="share_control" {% if service.share %}checked="checked"{% endif %}/>
                                 {% if not forloop.last %}
                                     <hr/>
                                 {% endif %}
