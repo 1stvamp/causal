@@ -14,6 +14,7 @@ from causal.main.models import *
 from causal.main.decorators import can_view_service
 from causal.main.exceptions import ServiceError
 from causal.main.forms import UserProfileForm
+from django.contrib import messages
 
 def history(request, username):
     template_values = {}
@@ -114,6 +115,7 @@ def user_settings(request):
 
         if form.is_valid():
             form.save()
+            messages.success(request, 'This is a success message.')
             return redirect('user-settings')
     else:
         form = UserProfileForm(instance=request.user.get_profile())
