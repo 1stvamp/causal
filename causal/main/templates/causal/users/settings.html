@@ -1,6 +1,6 @@
 {% extends "causal/base.html" %}
 {% load extras %}
-
+{% load messages %}
 {% block head %}
     <script src="/static/js/iphone-style-checkboxes.js" type="text/javascript"></script>
     <link rel="stylesheet" href="/static/css/iphone-style-checkboxes.css" type="text/css" media="screen" />
@@ -85,4 +85,6 @@
             </ul>
         {% endif %}
     </div>
+    {% render_messages messages %}
+{% endif %}
 {% endblock primary %}
