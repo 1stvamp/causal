@@ -43,14 +43,14 @@ def stats(request, service_id):
     service = get_object_or_404(UserService, pk=service_id)
     shares = get_items(request.user, date.today() - timedelta(days=7), service)
     sources = {}
-    
+
     # count source websites
     for share in shares:
         if sources.has_key(share.source):
-	    sources[share.source] = sources[share.source] + 1
- 	else:
-	    sources[share.source] = 1
-	    
+            sources[share.source] = sources[share.source] + 1
+        else:
+            sources[share.source] = 1
+
     sources = SortedDict(sorted(sources.items(), reverse=True, key=lambda x: x[1]))
     sources_reversed = SortedDict(sorted(sources.items(), reverse=False, key=lambda x: x[1]))
     return render_to_response(
