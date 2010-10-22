@@ -165,8 +165,9 @@ def index(request):
     if request.user.is_authenticated():
         services = UserService.objects.all().filter(user=request.user)
         if not services:
-            return redirect('/%s/' % request.user.username)
-        
+            return redirect(reverse('user-settings'))
+        return redirect('/%s/' % (request.user.username,))
+
     users = User.objects.all().filter(is_active=True, userservice__share=True, userservice__setup=True) \
         .annotate(service_count=Count('userservice')).filter(service_count__gt=0)
 
