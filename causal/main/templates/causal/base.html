@@ -32,11 +32,13 @@
 	    {% endif %}
 	</div>
 	<div id="content">
-        <div id="primary" class="clearfix">
-            {% block primary %}{% endblock primary %}
+	{% load messages %}
+	{% render_messages messages %}
+	    <div id="primary" class="clearfix">
+		{% block primary %}{% endblock primary %}
 	    </div>
 	    <div id="secondary">
-            {% block secondary %}{% endblock secondary %}
+		{% block secondary %}{% endblock secondary %}
 	    </div>
 	</div>
 	<div id="footer">
