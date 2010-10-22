@@ -6,3 +6,7 @@ egg-cache
 *.log
 local_settings.py
 _site
+bin
+develop-eggs
+parts
+eggs
