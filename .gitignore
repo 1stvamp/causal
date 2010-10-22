@@ -1,5 +1,6 @@
 *.wpr
 *.pyc
+*.pyo
 helios.wsgi
 pip-log.txt
 egg-cache
@@ -10,3 +11,7 @@ bin
 develop-eggs
 parts
 eggs
+.installed.cfg
+dist
+downloads
+src/*.egg-info
