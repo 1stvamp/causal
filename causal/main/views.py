@@ -59,8 +59,7 @@ def history_callback(request, username, service_id):
     service = get_object_or_404(UserService, pk=service_id, user__username=username)
 
     if request.method == "DELETE":
-        service.app.module.disable(request.user, service)
-        # doesnt redirect currently
+        service.delete()
         return redirect('user-settings')
     
     days = []
