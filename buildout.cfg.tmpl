@@ -1,7 +1,6 @@
 [buildout]
 parts = django
 cwd = {{CWD}}
-eggs = ${django:project}
 
 [django]
 recipe = isotoma.recipe.django
@@ -10,4 +9,3 @@ project = causal
 projectegg = ${django:project}
 settings = settings
 test = causal
-apps = main
