@@ -5,6 +5,29 @@
     <link rel="stylesheet" href="/static/css/iphone-style-checkboxes.css" type="text/css" media="screen" />
     <script>
         //<![CDATA[
+	function _ajax_request(url, data, callback, type, method) {
+	    if (jQuery.isFunction(data)) {
+		callback = data;
+		data = {};
+	    }
+	    return jQuery.ajax({
+		type: method,
+		url: url,
+		data: data,
+		success: callback,
+		dataType: type
+		});
+	}
+	jQuery.extend({
+	    put: function(url, data, callback, type) {
+		return _ajax_request(url, data, callback, type, 'PUT');
+	    },
+	    delete_: function(url, data, callback, type) {
+		return _ajax_request(url, data, callback, type, 'DELETE');
+	    }
+	});
+	function reloadPage() { location.reload(true); }	
+	
         $(function() {
             $('.share_control').iphoneStyle({
                 checkedLabel: 'Shared',
@@ -21,42 +44,18 @@
                 );
                 return false;
             });
+	    $("button.delete_button").button();
+	    $("button.delete_button").click(function() {
+		var id = $(this).attr('id').replace('delete_service_', '');
+		$.delete_(
+		    '/{{ request.user.username }}/service/' + id + '.json',
+		    {},
+		    reloadPage
+		);
+	    });
         });
         //]>
-	function _ajax_request(url, data, callback, type, method) {
-	    if (jQuery.isFunction(data)) {
-		callback = data;
-		data = {};
-	    }
-	    return jQuery.ajax({
-		type: method,
-		url: url,
-		data: data,
-		success: callback,
-		dataType: type
-		});
-	}
-
-	jQuery.extend({
-	    put: function(url, data, callback, type) {
-		return _ajax_request(url, data, callback, type, 'PUT');
-	    },
-	    delete_: function(url, data, callback, type) {
-		return _ajax_request(url, data, callback, type, 'DELETE');
-	    }
-	});
-	function reloadPage() {location.reload(true);}
-        $(document).ready(function() {
-    	    $(function() {
-	        $( ".delete_button" ).button();
-	        $( "button", ".delete_button" ).click(function() { 
-		    $.delete_('http://localhost:8080/bassdread/service/6.json', {}, reloadPage);
-		});
-	    });
-        }); 	
-
     </script>
-    
 {% endblock head %}
 
 {% block primary %}
@@ -77,11 +76,7 @@
                         <li>{% if service.setup %}
                                 {% include service.form_template_path %}
                                 <input type="checkbox" id="service_{{ service.pk }}" name="service_{{ service.pk }}" class="share_control" {% if service.share %}checked="checked"{% endif %}/>
-                                
-                                <div class="delete_button">
-				<button>{{service.app.module_name}}</button>
-				</div>
-                                
+                                <button id="delete_service_{{ service.pk }}" class="delete_button">Delete</button>
                                 {% if not forloop.last %}
                                     <hr/>
                                 {% endif %}
