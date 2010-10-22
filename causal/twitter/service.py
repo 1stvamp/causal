@@ -18,13 +18,6 @@ def enable():
     """Setup and authorise the service."""
     return redirect('causal-twitter-auth')
 
-def disable(user, model_instance=None):
-    serv = model_instance or get_model_instance(user, __name__)
-    # delete service
-    serv.delete()
-    
-    return True
-
 def get_items(user, since, model_instance=None):
     items = []
     serv = model_instance or get_model_instance(user, __name__)
