@@ -1,0 +1,15 @@
+[buildout]
+parts = django
+eggs = south 
+cwd = {{CWD}}
+
+[django]
+recipe = isotoma.recipe.django
+version = 1.2.3
+project = causal
+projectegg = ${django:project}
+settings = settings
+test = causal
+eggs = ${buildout:eggs}
+apps = main
+external_apps = south

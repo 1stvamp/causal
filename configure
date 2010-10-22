@@ -1,0 +1,6 @@
+#!/bin/bash
+
+tmpl=`cat buildout.cfg.tmpl`
+tmpl=${tmpl/\{\{CWD\}\}/$PWD}
+
+echo "$tmpl" > buildout.cfg
