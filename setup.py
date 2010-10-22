@@ -8,7 +8,7 @@ except ImportError:
 setup(
         name='causal',
         description='Open source lifestream aggregator',
-        version='0.2',
+        version='0.9',
         author='Chris Hannam',
         author_email='bassdread@gmail.com',
         url='http://github.com/bassdread/causal',
