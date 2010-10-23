@@ -119,11 +119,14 @@ def user_settings(request):
 
         if form.is_valid():
             form.save()
-            messages.success(request, 'This is a success message.')
+            messages.success(request, 'Timezone saved.')
         else:
-            messages.success(request, 'This is a successful delete message.')
+            messages.success(request, "Couldn't save that timezone, sorry.")
 
-        return redirect('user-settings')
+        if request.is_ajax():
+            return HttpResponse(simplejson.dumps({'message': 'Saved'}))
+        else:
+            return redirect('user-settings')
 
     else:
         form = UserProfileForm(instance=request.user.get_profile())

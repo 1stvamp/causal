@@ -52,6 +52,15 @@
                     reloadPage
                 );
             });
+            $('form#user-profile-form select#id_timezone_flat').change(function() {
+                $.post(
+                    $('form#user-profile-form').attr('action'),
+                    $('form#user-profile-form').serialize(),
+                    function(data) {
+                        console.log(data);
+                    }
+                );
+            });
         });
         //]>
     </script>
@@ -63,9 +72,6 @@
             <form id="user-profile-form" method="post" action=".">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <p>
-                    <input type="submit" value="Save" />
-                </p>
             </form>
         </div>
         {% if enabled_services %}
