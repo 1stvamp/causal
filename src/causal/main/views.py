@@ -61,7 +61,7 @@ def history_callback(request, username, service_id):
     if request.method == "DELETE":
         service.delete()
         return redirect('user-settings')
-    
+
     days = []
     days_to_i = {}
     day_one = date.today() - timedelta(days=7)
@@ -119,12 +119,15 @@ def user_settings(request):
 
         if form.is_valid():
             form.save()
-            messages.success(request, 'This is a success message.')
+            messages.success(request, 'Timezone saved.')
         else:
-            messages.success(request, 'This is a successful delete message.')
-            
-        return redirect('user-settings')
-        
+            messages.success(request, "Couldn't save that timezone, sorry.")
+
+        if request.is_ajax():
+            return HttpResponse(simplejson.dumps({'message': 'Saved'}))
+        else:
+            return redirect('user-settings')
+
     else:
         form = UserProfileForm(instance=request.user.get_profile())
     return render_to_response(
@@ -162,8 +165,7 @@ def index(request):
     # check if user has available services and they are logged in
     # if so send them to the profile page to get setup
     if request.user.is_authenticated():
-        services = UserService.objects.all().filter(user=request.user)
-        if not services:
+        if UserService.objects.all().filter(user=request.user).count() == 0:
             return redirect(reverse('user-settings'))
         return redirect('/%s/' % (request.user.username,))
 

@@ -7,7 +7,7 @@ import sys
 #site.addsitedir('%s/lib/python2.5/site-packages' % VIRTUAL_ENV_PATH)
 
 # Put the Django project on sys.path
-BASE_DIR = os.path.normpath(os.path.dirname(__file__))
+BASE_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), 'src'))
 my_paths = (
 	BASE_DIR,
 )
@@ -15,7 +15,7 @@ my_paths = (
 sys.path.extend(my_paths)
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'causal.settings'
-os.environ['PYTHON_EGG_CACHE'] = os.path.join(BASE_DIR, 'egg-cache')
+os.environ['PYTHON_EGG_CACHE'] = os.path.join(os.path.dirname(BASE_DIR), 'egg-cache')
 
 from django.core.handlers.wsgi import WSGIHandler
 application = WSGIHandler()

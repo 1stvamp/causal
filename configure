@@ -1,6 +1,82 @@
+<<<<<<< HEAD
 #!/bin/bash
 
 tmpl=`cat buildout.cfg.tmpl`
 tmpl=${tmpl/\{\{CWD\}\}/$PWD}
 
 echo "$tmpl" > buildout.cfg
+=======
+#! /usr/bin/env python
+
+"""CLI script to generate a buildout.cfg with the correct
+environment variables and requirements.
+"""
+
+import os
+import sys
+import shutil
+import subprocess
+from optparse import OptionParser
+
+template = """[buildout]
+parts = django
+cwd = %(cwd)s
+eggs =
+  %(eggs)s
+versions = versions
+
+[django]
+recipe = isotoma.recipe.django
+version = 1.2.3
+project = causal
+projectegg = ${django:project}
+settings = settings
+test = causal
+eggs = ${buildout:eggs}
+
+[versions]
+%(versions)s
+"""
+
+usage = """usage: %prog [options]"""
+parser = OptionParser(usage=usage)
+
+parser.add_option("-b", "--base", dest="base", action="store_true",
+	help="only install base requirements")
+
+def main():
+	file_path = os.path.dirname(__file__)
+	(options, pos_args) = parser.parse_args()
+
+	print "Reading base_requirements.txt"
+	requirements = open('virtualenv_build/base_requirements.txt', 'r').readlines()
+	if not options.base:
+		print "Reading extras_requirements.txt"
+		requirements += open('virtualenv_build/extras_requirements.txt', 'r').readlines()
+
+	eggs = []
+	versions = []
+	for req in requirements:
+		if "==" in req:
+			(name, version) = req.split('==')
+			versions.append("%s = %s" % (name, version,))
+		else:
+			name = req
+		if name != "Django":
+			eggs.append(name)
+
+	out = template % {
+		'cwd': os.path.realpath(file_path),
+		'eggs': "\n  ".join(eggs),
+		'versions': "".join(versions),
+	}
+
+	print "Writing config to ./buildout.cfg"
+	f = open(os.path.join(file_path, 'buildout.cfg'), 'w+')
+	f.write(out)
+	f.close()
+	return 0
+
+if __name__ == "__main__":
+	sys.exit(main())
+>>>>>>> upstream/master

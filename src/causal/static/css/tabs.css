@@ -42,3 +42,9 @@
 DIV#service-tabs  {
         padding-left: 0;
 }
+
+.tab-loading {
+    background: url(/static/images/large_throbber.gif) center center no-repeat !important;
+    width: 95%;
+    height: 95%;
+}
