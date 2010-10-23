@@ -59,7 +59,7 @@
 {% endblock head %}
 
 {% block primary %}
-    <div class="form-data">
+    <div class="form-data user-settings">
         <div>
             <form id="user-profile-form" method="post" action=".">
                 {% csrf_token %}
@@ -74,9 +74,9 @@
                 <ul>
                     {% for service in enabled_services %}
                         <li>{% if service.setup %}
-                                {% include service.form_template_path %}
                                 <input type="checkbox" id="service_{{ service.pk }}" name="service_{{ service.pk }}" class="share_control" {% if service.share %}checked="checked"{% endif %}/>
-                                <button id="delete_service_{{ service.pk }}" class="delete_button">Delete</button>
+                                <button id="delete_service_{{ service.pk }}" class="delete_button" title="Disable service">X</button>
+                                {% include service.form_template_path %}
                                 {% if not forloop.last %}
                                     <hr/>
                                 {% endif %}
