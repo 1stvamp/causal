@@ -13,7 +13,8 @@ from optparse import OptionParser
 template = """[buildout]
 parts = django
 cwd = %(cwd)s
-eggs = %(eggs)s
+eggs =
+  %(eggs)s
 versions = versions
 
 [django]
@@ -23,6 +24,7 @@ project = causal
 projectegg = ${django:project}
 settings = settings
 test = causal
+eggs = ${buildout:eggs}
 
 [versions]
 %(versions)s
@@ -52,11 +54,12 @@ def main():
 			versions.append("%s = %s" % (name, version,))
 		else:
 			name = req
-		eggs.append(name)
+		if name != "Django":
+			eggs.append(name)
 
 	out = template % {
-		'cwd': file_path,
-		'eggs': " ".join(eggs),
+		'cwd': os.path.realpath(file_path),
+		'eggs': "\n  ".join(eggs),
 		'versions': "".join(versions),
 	}
 
