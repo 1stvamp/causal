@@ -6,6 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from causal.main.models import AccessToken, ServiceApp, UserService, RequestToken
 from causal.main.service_utils import get_model_instance, user_login, generate_access_token, get_module_name
+from django.shortcuts import render_to_response, get_object_or_404
+from causal.facebook.service import get_items
+from datetime import date, timedelta
+from causal.main.decorators import can_view_service
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
@@ -53,4 +57,15 @@ def auth(request):
             'read_stream',
             service.app.oauth.consumer_key
         )
+    )
+
+@can_view_service
+def stats(request, service_id):
+    """Display stats based on checkins."""
+    service = get_object_or_404(UserService, pk=service_id)
+    
+    return render_to_response(
+        service.template_name + '/stats.html',
+        {'statuses' : get_items(request.user, date.today() - timedelta(days=7), service)},
+        context_instance=RequestContext(request)
     )
