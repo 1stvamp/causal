@@ -38,6 +38,7 @@ INSTALLED_SERVICES = (
     'causal.facebook',
     'causal.github',
     'causal.lastfm',
+    'causal.googlereader',
 )
 
 # *Don't* use the below example, generate your own random string of chars
