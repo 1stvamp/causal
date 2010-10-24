@@ -5,31 +5,6 @@
     <link rel="stylesheet" href="/static/css/iphone-style-checkboxes.css" type="text/css" media="screen" />
     <script>
         //<![CDATA[
-<<<<<<< HEAD:causal/main/templates/causal/users/settings.html
-	function _ajax_request(url, data, callback, type, method) {
-	    if (jQuery.isFunction(data)) {
-		callback = data;
-		data = {};
-	    }
-	    return jQuery.ajax({
-		type: method,
-		url: url,
-		data: data,
-		success: callback,
-		dataType: type
-		});
-	}
-	jQuery.extend({
-	    put: function(url, data, callback, type) {
-		return _ajax_request(url, data, callback, type, 'PUT');
-	    },
-	    delete_: function(url, data, callback, type) {
-		return _ajax_request(url, data, callback, type, 'DELETE');
-	    }
-	});
-	function reloadPage() { location.reload(true); }	
-	
-=======
         function _ajax_request(url, data, callback, type, method) {
             if (jQuery.isFunction(data)) {
             callback = data;
@@ -52,7 +27,6 @@
             }
         });
         function reloadPage() { location.reload(true); }	
->>>>>>> upstream/master:src/causal/main/templates/causal/users/settings.html
         $(function() {
             $('.share_control').iphoneStyle({
                 checkedLabel: 'Shared',
@@ -62,28 +36,13 @@
             $('.share_control').change(function() {
                 $.post(
                     '{% url share-prefs %}',
-<<<<<<< HEAD:causal/main/templates/causal/users/settings.html
-                    $('form#share-prefs-form').serialize(),
-=======
                     $('input.share_control').serialize(),
->>>>>>> upstream/master:src/causal/main/templates/causal/users/settings.html
                     function(data) {
                         console.log(data);
                     }
                 );
                 return false;
             });
-<<<<<<< HEAD:causal/main/templates/causal/users/settings.html
-	    $("button.delete_button").button();
-	    $("button.delete_button").click(function() {
-		var id = $(this).attr('id').replace('delete_service_', '');
-		$.delete_(
-		    '/{{ request.user.username }}/service/' + id + '.json',
-		    {},
-		    reloadPage
-		);
-	    });
-=======
             $("button.delete_button").button();
             $("button.delete_button").click(function() {
                 var id = $(this).attr('id').replace('delete_service_', '');
@@ -102,7 +61,6 @@
                     }
                 );
             });
->>>>>>> upstream/master:src/causal/main/templates/causal/users/settings.html
         });
         //]>
     </script>
@@ -122,12 +80,8 @@
                     {% for service in enabled_services %}
                         <li>{% if service.setup %}
                                 <input type="checkbox" id="service_{{ service.pk }}" name="service_{{ service.pk }}" class="share_control" {% if service.share %}checked="checked"{% endif %}/>
-<<<<<<< HEAD:causal/main/templates/causal/users/settings.html
-                                <button id="delete_service_{{ service.pk }}" class="delete_button">Delete</button>
-=======
                                 <button id="delete_service_{{ service.pk }}" class="delete_button" title="Disable service">X</button>
                                 {% include service.form_template_path %}
->>>>>>> upstream/master:src/causal/main/templates/causal/users/settings.html
                                 {% if not forloop.last %}
                                     <hr/>
                                 {% endif %}
