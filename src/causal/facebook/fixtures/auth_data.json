@@ -1,0 +1,15 @@
+[
+  {
+    "pk": null, 
+    "model": "main.oauthsetting", 
+    "fields": {
+      "callback_url_base": "", 
+      "created": null,
+      "user_auth_url": "https://graph.facebook.com/oauth/access_token?client_id=####CLIENT_ID####", 
+      "consumer_secret": "####CONSUMER_SECRET####", 
+      "request_token_url": "https://graph.facebook.com/oauth/authorize?client_id=####CLIENT_ID####", 
+      "consumer_key": "####CONSUMER_KEY####",
+      "access_token_url": "https://graph.facebook.com/oauth/access_token?client_id=####CLIENT_ID####"
+    }
+  }
+]
