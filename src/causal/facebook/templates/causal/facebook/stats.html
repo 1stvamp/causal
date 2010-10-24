@@ -1,3 +1,5 @@
+<ul>
 {% for status in statuses %}
-{{status.created}} - {{status.body}}
+{%if status.body %} <li>{{status.created}} - {{status.body}}</li> {% endif%}
 {% endfor %}
+</ul>

@@ -11,6 +11,7 @@ from causal.facebook.service import get_items
 from datetime import date, timedelta
 from causal.main.decorators import can_view_service
 from django.contrib import messages
+from django.template import RequestContext
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
