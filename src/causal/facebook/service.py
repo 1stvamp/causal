@@ -35,7 +35,7 @@ def get_items(user, since, model_instance=None):
         results = q(SELECT_FQL)
     except Exception, e:
         raise LoggedServiceError(original_exception=e)
-    
+
     if getattr(results, 'error_code', False):
         raise LoggedServiceError(
         'Facebook service failed to fetch items for causal-user %s, error: %s' % \
@@ -49,26 +49,5 @@ def get_items(user, since, model_instance=None):
         item.service = serv
         item.user = user
         items.append(item)
-
-    return items
-
-def get_items_as_json(user, since, model_instance=None):
-    serv = model_instance or get_model_instance(user, __name__)
-    items = []
-
-    try:
-        at = AccessToken.objects.get(service=serv)
-
-        q = FQL(at.oauth_token)
-        results = q(SELECT_FQL)
-
-        for result in results:
-            item = ServiceItem()
-            item.created = datetime.fromtimestamp(result.updated_time)
-            item.body = result.message
-            item.service = serv
-            items.append(item)
-    except:
-        pass
 
     return items

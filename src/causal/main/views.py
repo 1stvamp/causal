@@ -53,15 +53,7 @@ def history(request, username):
         context_instance=RequestContext(request)
     )
 
-@can_view_service
-def history_callback(request, username, service_id):
-    template_values = {}
-    service = get_object_or_404(UserService, pk=service_id, user__username=username)
-
-    if request.method == "DELETE":
-        service.delete()
-        return redirect('user-settings')
-
+def _get_service_history(service, json=True):
     days = []
     days_to_i = {}
     day_one = date.today() - timedelta(days=7)
@@ -78,7 +70,7 @@ def history_callback(request, username, service_id):
         'items': [],
     }
     try:
-        items = service.app.module.get_items(request.user, day_one, service)
+        items = service.app.module.get_items(service.user, day_one, service)
         if items:
             for item in items:
                 if item.created_local.date() > day_one:
@@ -97,7 +89,20 @@ def history_callback(request, username, service_id):
     except ServiceError:
         response['error'] = True
 
-    return HttpResponse(simplejson.dumps(response))
+    if json:
+        response = simplejson.dumps(response)
+    return response
+
+@can_view_service
+def history_callback(request, username, service_id):
+    service = get_object_or_404(UserService, pk=service_id, user__username=username)
+
+    if request.method == "DELETE":
+        service.delete()
+        return redirect('user-settings')
+
+    return HttpResponse(_get_service_history(service))
+
 
 @login_required(redirect_field_name='redirect_to')
 def user_settings(request):
@@ -215,8 +220,8 @@ def userfeed(request, username):
 
     services = UserService.objects.filter(**filters).order_by('app__module_name')
 
-    data = []
+    data = {}
     for service in services:
-        data = data + service.app.module.get_items_as_json(request.user, date.today() - timedelta(days=7), service)
+        data[service.app.module.DISPLAY_NAME] = _get_service_history(service, json=False)
 
-    return HttpResponse(simplejson.dumps({'results': data}))
+    return HttpResponse(simplejson.dumps(data))
