@@ -10,6 +10,8 @@ from django.shortcuts import render_to_response, get_object_or_404
 from causal.facebook.service import get_items
 from datetime import date, timedelta
 from causal.main.decorators import can_view_service
+from django.contrib import messages
+from django.template import RequestContext
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
@@ -25,24 +27,29 @@ def verify_auth(request):
         service.app.oauth.consumer_secret,
         callback,
     )
+    
     response = cgi.parse_qs(urllib.urlopen(url).read())
-    access_token = ''.join(response["access_token"])
 
-    # Delete existing token
-    AccessToken.objects.filter(service=service).delete()
-    # Before creating a new one
-    AccessToken.objects.create(
-        service=service,
-        oauth_token=access_token,
-        oauth_token_secret='',
-        created=datetime.now(),
-        oauth_verify=''
-    )
-
-    service.setup = True
-    service.save()
-
+    if response.has_key('access_token'):
+        # Delete existing token
+        AccessToken.objects.filter(service=service).delete()
+        # Before creating a new one
+        AccessToken.objects.create(
+            service=service,
+            oauth_token=''.join(response["access_token"]),
+            oauth_token_secret='',
+            created=datetime.now(),
+            oauth_verify=''
+        )
+        service.setup = True
+        service.save()
+        messages.success(request, 'Connection to Facebook complete.')
+        
+    else:
+        messages.success(request, 'There was an error connnecting to Facebook.')
+        
     return_url = request.session.get('causal_facebook_oauth_return_url', None) or 'user-settings'
+    
     return redirect(return_url)
 
 @login_required(redirect_field_name='redirect_to')
