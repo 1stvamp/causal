@@ -46,7 +46,7 @@ def verify_auth(request):
         messages.success(request, 'Connection to Facebook complete.')
         
     else:
-        messages.success(request, 'There was an error connnecting to Facebook.')
+        messages.error(request, 'There was an error connnecting to Facebook.')
         
     return_url = request.session.get('causal_facebook_oauth_return_url', None) or 'user-settings'
     
@@ -57,15 +57,19 @@ def auth(request):
     request.session['causal_facebook_oauth_return_url'] = request.GET.get('HTTP_REFERER', None)
     service = get_model_instance(request.user, MODULE_NAME)
 
+    if not service:
+        app = ServiceApp.objects.get(module_name=MODULE_NAME)
+        service = UserService(user=request.user, app=app)
+        service.save()
     callback = "%s%s" % (service.app.oauth.callback_url_base, reverse('causal-facebook-callback'),)
     return redirect("%s&redirect_uri=%s&scope=%s&client_id=%s" % (
             service.app.oauth.request_token_url,
             callback,
-            'read_stream',
+            'read_stream,offline_access',
             service.app.oauth.consumer_key
         )
     )
-
+        
 @can_view_service
 def stats(request, service_id):
     """Display stats based on checkins."""
