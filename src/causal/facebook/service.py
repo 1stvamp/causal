@@ -6,12 +6,14 @@ from causal.main.service_utils import get_model_instance
 from facegraph.fql import FQL
 from causal.main.exceptions import LoggedServiceError
 from django.shortcuts import render_to_response, redirect
+from datetime import datetime, timedelta
+import time
 
 DISPLAY_NAME = 'Facebook'
 CUSTOM_FORM = False
 OAUTH_FORM = True
 
-SELECT_FQL = """SELECT uid,status_id,message,time FROM status WHERE uid = me()"""
+SELECT_FQL = """SELECT uid,status_id,message,time FROM status WHERE uid = me() AND time > %s"""
 
 def enable():
     """Setup and authorise the service."""
@@ -25,7 +27,9 @@ def get_items(user, since, model_instance=None):
 
     try:
         q = FQL(at.oauth_token)
-        results = q(SELECT_FQL)
+        week_ago = datetime.now() - timedelta(days=7)
+        week_ago_epoch = time.mktime(week_ago.timetuple())
+        results = q(SELECT_FQL % int(week_ago_epoch))
     except Exception, e:
         raise LoggedServiceError(original_exception=e)
 
