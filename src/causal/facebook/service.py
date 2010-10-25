@@ -11,14 +11,7 @@ DISPLAY_NAME = 'Facebook'
 CUSTOM_FORM = False
 OAUTH_FORM = True
 
-SELECT_FQL = """SELECT post_id, actor_id, target_id, updated_time, message
-FROM stream
-WHERE filter_key IN (
-    SELECT filter_key
-    FROM stream_filter
-    WHERE uid = me() AND type = 'newsfeed'
-)
-AND (actor_id = me() OR target_id =  me() OR source_id = me())"""
+SELECT_FQL = """SELECT uid,status_id,message,time FROM status WHERE uid = me()"""
 
 def enable():
     """Setup and authorise the service."""
@@ -44,7 +37,7 @@ def get_items(user, since, model_instance=None):
 
     for result in results:
         item = ServiceItem()
-        item.created = datetime.fromtimestamp(result.updated_time)
+        item.created = datetime.fromtimestamp(result.time)
         item.body = result.message
         item.service = serv
         item.user = user
