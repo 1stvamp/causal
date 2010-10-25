@@ -1,5 +1,10 @@
 <ul>
 {% for status in statuses %}
-{%if status.body %} <li>{{status.created}} - {{status.body}}</li> {% endif%}
+{%if status.body %} <li> 
+
+{{status.created}} 
+{%if status.liked %} Liked {% endif%} 
+{%if status.linked %} Linked {% endif%} 
+- {{status.body}}</li> {% endif%}
 {% endfor %}
 </ul>

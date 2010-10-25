@@ -13,7 +13,13 @@ DISPLAY_NAME = 'Facebook'
 CUSTOM_FORM = False
 OAUTH_FORM = True
 
-SELECT_FQL = """SELECT uid,status_id,message,time FROM status WHERE uid = me() AND time > %s"""
+STATUS_FQL = """SELECT uid,status_id,message,time FROM status WHERE uid = me() AND time > %s"""
+#TAGGED_FQL = """SELECT post_id,actor_id FROM stream_tag WHERE target_id=me()""" # currently unable to spec time
+LINKED_FQL = """SELECT owner_comment,created_time,title,summary,url FROM link WHERE owner=me() AND created_time > %s"""
+
+STREAM_FQL = """SELECT likes,message,created_time 
+FROM stream WHERE  filter_key IN 
+(SELECT filter_key FROM stream_filter WHERE uid = me()) AND created_time > %s"""
 
 def enable():
     """Setup and authorise the service."""
@@ -29,22 +35,47 @@ def get_items(user, since, model_instance=None):
         q = FQL(at.oauth_token)
         week_ago = datetime.now() - timedelta(days=7)
         week_ago_epoch = time.mktime(week_ago.timetuple())
-        results = q(SELECT_FQL % int(week_ago_epoch))
+        status = q(STATUS_FQL % int(week_ago_epoch))
+        links = q(LINKED_FQL % int(week_ago_epoch))
+        stream = q(STREAM_FQL % int(week_ago_epoch))
     except Exception, e:
         raise LoggedServiceError(original_exception=e)
 
-    if getattr(results, 'error_code', False):
+    if getattr(status, 'error_code', False):
         raise LoggedServiceError(
         'Facebook service failed to fetch items for causal-user %s, error: %s' % \
             (user.username, results['error_msg'])
     )
-
-    for result in results:
-        item = ServiceItem()
-        item.created = datetime.fromtimestamp(result.time)
-        item.body = result.message
-        item.service = serv
-        item.user = user
-        items.append(item)
+    
+    for stat in status:
+        if stat.has_key('message'):
+            item = ServiceItem()
+            item.created = datetime.fromtimestamp(stat.time)
+            item.body = stat.message
+            item.service = serv
+            item.user = user
+            items.append(item)
+            
+    for strm in stream:
+        if strm.has_key('message'):
+            if strm.has_key('likes') and strm['likes'].has_key('user_likes'):
+                if strm['likes']['user_likes']:
+                    item = ServiceItem()
+                    item.liked = strm['likes']['user_likes']
+                    item.created = datetime.fromtimestamp(strm.created_time)
+                    item.body = strm.message
+                    item.service = serv
+                    item.user = user
+                    items.append(item)
+            
+    for link in links:
+        if link.has_key('message'):
+            item = ServiceItem()
+            item.created = datetime.fromtimestamp(link.created_time)
+            item.link = True
+            item.body = link.message
+            item.service = serv
+            item.user = user
+            items.append(item)
 
     return items
