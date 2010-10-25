@@ -32,14 +32,15 @@
 	    {% endif %}
 	</div>
 	<div id="content">
-            {% load messages %}
-            {% render_messages messages %}
+        {% load messages %}
+        {% render_messages messages %}
 	    <div id="primary" class="clearfix">
 		{% block primary %}{% endblock primary %}
 	    </div>
 	    <div id="secondary">
 		{% block secondary %}{% endblock secondary %}
 	    </div>
+        {% include 'causal/snippets/messages.js' %}
 	</div>
 	<div id="footer">
 	</div>
