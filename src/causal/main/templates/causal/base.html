@@ -2,16 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>History</title>
-    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/style.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/messages.css" />
+    {% load media_loaders %}
+    {% load_css "style.css" %}
+    {% load_css "messages.css" %}
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <style type="text/css">
       html { height: 100% }
       body { height: 100%; margin: 0px; padding: 0px }
       #map_canvas { height: 100% }
     </style>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/js/jquery.jqote2.min.js"></script>
+    {% load_js "jquery.min.js" %}
+    {% load_js "jquery.jqote2.min.js" %}
     {% block head %}{% endblock head %}
 </head>
 

@@ -68,6 +68,10 @@ MEDIA_URL = ''
 # Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/_ca-media/'
 
+# Whether or not to offload static requests to the Google CDN,
+# e.g. for jQuery, jQueryUI etc.
+USE_GOOGLE_CDN = False
+
 # URLConf regex that defines the base dir for the admin URL.
 # Should be set to something other than admin
 ADMIN_URL = r'^_ca-admin/'
