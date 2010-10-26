@@ -2,10 +2,9 @@
 {% for status in statuses %}
 {%if status.body %} <li> 
 
-<a href="{{status.link_bacl}}">{{status.created}}</a> 
+<a href="{{status.link_back}}">{{status.created}}</a> 
 {%if status.liked %} Liked {% endif%} 
 {%if status.linked %} Linked {% endif%} 
-- {{status.body}} {% for comment in status.other_peoples_comments%} {{comment.name}}  <img src="{{ comment.profile_pic}}"/>{%endfor%}
-{{status.other_peoples_comments}}</li> {% endif%}
+- {{status.body}} {% for comment in status.other_peoples_comments%} {{comment.name}}  <img src="{{ comment.profile_pic}}"/>{%endfor%}</li> {% endif%}
 {% endfor %}
 </ul>
