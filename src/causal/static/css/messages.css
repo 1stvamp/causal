@@ -33,27 +33,27 @@ body {
     color: #00529B;
     border-color: #789FCC;
     background-color: #CDEAF7;
-    background-image: url('/static/images/info.png');
+    background-image: url('../images/info.png');
 }
 
 .success {
     color: #264409;
     border-color: #C6D880;
     background-color: #E6EFC2;
-    background-image:url('/static/images/success.png');
+    background-image:url('../images/success.png');
 }
 
 .warning {
     color: #514721;
     border-color: #FFD324;
     background-color: #FFF6BF;
-    background-image: url('/static/images/warning.png');
+    background-image: url('../images/warning.png');
 }
 
 .error {
     color: #8A1F11;
     border-color: #FBC2C4; 
     background-color: #FBE3E4;
-    background-image: url('/static/images/error.png');
+    background-image: url('../images/error.png');
 }
 /******** /User feedback messages ********/

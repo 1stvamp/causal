@@ -210,13 +210,13 @@ table.list-table thead {
 
 /* Services */
 UL#loading-services LI {
-    list-style-image: url(/static/images/throbber.gif);
+    list-style-image: url(../images/throbber.gif);
 }
 UL#loading-services LI.loaded {
-    list-style-image: url(/static/images/tick.png);
+    list-style-image: url(../images/tick.png);
 }
 UL#loading-services LI.service-error {
-    list-style-image: url(/static/images/cross.png);
+    list-style-image: url(../images/cross.png);
 }
 UL#loading-services LI.service-error span {
     color: #FF0000;
@@ -224,49 +224,49 @@ UL#loading-services LI.service-error span {
     margin-left: 1em;
 }
 LI.causal-twitter {
-    list-style-image: url(/static/images/twitter.jpg);
+    list-style-image: url(../images/twitter.jpg);
 }
 LI.causal-github {
-    list-style-image: url(/static/images/github.jpg);
+    list-style-image: url(../images/github.jpg);
 }
 LI.causal-facebook {
-    list-style-image: url(/static/images/facebook.png);
+    list-style-image: url(../images/facebook.png);
 }
 LI.causal-lastfm {
-    list-style-image: url(/static/images/lastfm.jpg);
+    list-style-image: url(../images/lastfm.jpg);
 }
 LI.causal-foursquare {
-    list-style-image: url(/static/images/foursquare.jpg);
+    list-style-image: url(../images/foursquare.jpg);
 }
 LI.causal-flickr {
-    list-style-image: url(/static/images/flickr.jpg);
+    list-style-image: url(../images/flickr.jpg);
 }
 LI.causal-googlereader {
-    list-style-image: url(/static/images/googlereader.jpg);
+    list-style-image: url(../images/googlereader.jpg);
 }
 A.causal-twitter {
-    background: transparent url(/static/images/twitter.jpg) no-repeat 50% 50%;
+    background: transparent url(../images/twitter.jpg) no-repeat 50% 50%;
 }
 A.causal-github {
-    background: transparent url(/static/images/github.jpg) no-repeat 50% 50%;
+    background: transparent url(../images/github.jpg) no-repeat 50% 50%;
 }
 A.causal-facebook {
-    background: transparent url(/static/images/facebook.png) no-repeat 50% 50%;
+    background: transparent url(../images/facebook.png) no-repeat 50% 50%;
 }
 A.causal-lastfm {
-    background: transparent url(/static/images/lastfm.jpg) no-repeat 50% 50%;
+    background: transparent url(../images/lastfm.jpg) no-repeat 50% 50%;
 }
 A.causal-foursquare {
-    background: transparent url(/static/images/foursquare.jpg) no-repeat 50% 50%;
+    background: transparent url(../images/foursquare.jpg) no-repeat 50% 50%;
 }
 A.causal-flickr {
-    background: transparent url(/static/images/flickr.jpg) no-repeat 50% 50%;
+    background: transparent url(../images/flickr.jpg) no-repeat 50% 50%;
 }
 A.causal-googlereader {
-    background: transparent url(/static/images/googlereader.jpg) no-repeat 50% 50%;
+    background: transparent url(../images/googlereader.jpg) no-repeat 50% 50%;
 }
 A.causal-timeline {
-    background: transparent url(/static/images/time.png) no-repeat 50% 50%;
+    background: transparent url(../images/time.png) no-repeat 50% 50%;
 }
 
 /* Profile */
