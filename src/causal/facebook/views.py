@@ -77,6 +77,6 @@ def stats(request, service_id):
     
     return render_to_response(
         service.template_name + '/stats.html',
-        {'statuses' : get_items(request.user, date.today() - timedelta(days=7), service)},
+        {'statuses' : get_items(request.user, date.today() - timedelta(days=7), service, True)},
         context_instance=RequestContext(request)
     )

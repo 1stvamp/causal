@@ -28,7 +28,7 @@ def enable():
     """Setup and authorise the service."""
     return redirect('causal-facebook-auth')
 
-def get_items(user, since, model_instance=None):
+def get_items(user, since, model_instance=None, stats=None):
     serv = model_instance or get_model_instance(user, __name__)
     items = []
 
@@ -39,8 +39,9 @@ def get_items(user, since, model_instance=None):
         week_ago = datetime.now() - timedelta(days=7)
         week_ago_epoch = time.mktime(week_ago.timetuple())
         status = q(STATUS_FQL % int(week_ago_epoch))
-        links = q(LINKED_FQL % int(week_ago_epoch))
-        stream = q(STREAM_FQL % int(week_ago_epoch))
+        if stats:
+            links = q(LINKED_FQL % int(week_ago_epoch))
+            stream = q(STREAM_FQL % int(week_ago_epoch))
     except Exception, e:
         raise LoggedServiceError(original_exception=e)
 
@@ -57,55 +58,56 @@ def get_items(user, since, model_instance=None):
                 item.body = stat.message
                 item.service = serv
                 item.user = user
+                item.link_back = 'http://www.facebook.com'
                 items.append(item)
-         
-    if getattr(links, 'error_code', False):
-        raise LoggedServiceError(
-        'Facebook service failed to fetch items for causal-user %s, error: %s' % \
-            (user.username, results['error_msg'])
-        )
-    else:
-        for link in links:
-            if link.has_key('message'):
-                item = ServiceItem()
-                item.created = datetime.fromtimestamp(link.created_time)
-                item.link = True
-                item.body = link.message
-                item.service = serv
-                item.user = user
-                items.append(item)
-    
-    if getattr(stream, 'error_code', False):
-        raise LoggedServiceError(
-        'Facebook service failed to fetch items for causal-user %s, error: %s' % \
-            (user.username, results['error_msg'])
-        )
-    else:    
-        for strm in stream:
-            # do we have permission from the user to post entry?
-            # ignore if the post is entry
-            if strm['comments']['can_post'] and strm.has_key('message'):
-                if strm.has_key('likes') and strm['likes'].has_key('user_likes'):
-                    if strm['likes']['user_likes']:
-                        item = ServiceItem()
-                        item.liked = strm['likes']['user_likes']
-                        item.who_else_liked = strm['likes']['href']
-                        item.created = datetime.fromtimestamp(strm.created_time)
-                        item.body = strm.message
-                        
-                        # go off and fetch details about a user
-                        item.other_peoples_comments = []
-                        for comment in strm['comments']['comment_list']:
-                            users = q(USER_NAME_FETCH % comment['fromid'])
-                            for user in users:
-                                user_details = {
-                                    'name' : user['name'],
-                                    'profile_pic' : user['pic_small']
-                                }
-                                item.other_peoples_comments.append(user_details)
-                        item.service = serv
-                        item.user = user
-                        item.link_back = strm['permalink']
-                        items.append(item)
+    if stats:
+        if getattr(links, 'error_code', False):
+            raise LoggedServiceError(
+            'Facebook service failed to fetch items for causal-user %s, error: %s' % \
+                (user.username, results['error_msg'])
+            )
+        else:
+            for link in links:
+                if link.has_key('message'):
+                    item = ServiceItem()
+                    item.created = datetime.fromtimestamp(link.created_time)
+                    item.link = True
+                    item.body = link.message
+                    item.service = serv
+                    item.user = user
+                    items.append(item)
+        
+        if getattr(stream, 'error_code', False):
+            raise LoggedServiceError(
+            'Facebook service failed to fetch items for causal-user %s, error: %s' % \
+                (user.username, results['error_msg'])
+            )
+        else:    
+            for strm in stream:
+                # do we have permission from the user to post entry?
+                # ignore if the post is entry
+                if strm['comments']['can_post'] and strm.has_key('message'):
+                    if strm.has_key('likes') and strm['likes'].has_key('user_likes'):
+                        if strm['likes']['user_likes']:
+                            item = ServiceItem()
+                            item.liked = strm['likes']['user_likes']
+                            item.who_else_liked = strm['likes']['href']
+                            item.created = datetime.fromtimestamp(strm.created_time)
+                            item.body = strm.message
+                            
+                            # go off and fetch details about a user
+                            item.other_peoples_comments = []
+                            for comment in strm['comments']['comment_list']:
+                                users = q(USER_NAME_FETCH % comment['fromid'])
+                                for user in users:
+                                    user_details = {
+                                        'name' : user['name'],
+                                        'profile_pic' : user['pic_small']
+                                    }
+                                    item.other_peoples_comments.append(user_details)
+                            item.service = serv
+                            item.user = user
+                            item.link_back = strm['permalink']
+                            items.append(item)
     
     return items
