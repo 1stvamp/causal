@@ -11,7 +11,7 @@ DEBUG = True
 ENABLE_ADMIN = True
 ENABLE_ADMIN_DOCS = True
 SERVE_STATIC = True
-USE_GOOGLE_CDN = DEBUG
+USE_GOOGLE_CDN = False
 
 DATABASES = {
     'default': {

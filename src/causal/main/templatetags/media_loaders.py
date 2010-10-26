@@ -9,7 +9,7 @@ GOOGLE_FILES = {
         'jquery-ui.min.js': 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js',
     },
     'css': {
-        'jquery-ui.css': 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css',
+        'cupertino/jquery-ui.css': 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css',
     },
     'image': {
     }
