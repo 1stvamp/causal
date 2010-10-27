@@ -5,6 +5,7 @@ body {
 /******** User feedback messages ********/
 .messages {
     font-size: 0.85em;
+    min-height: 40px;
 }
 
 .messages ul {

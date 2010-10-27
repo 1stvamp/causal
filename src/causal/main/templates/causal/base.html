@@ -13,6 +13,7 @@
     </style>
     {% load_js "jquery.min.js" %}
     {% load_js "jquery.jqote2.min.js" %}
+    {% load_js "messages.js" %}
     {% block head %}{% endblock head %}
 </head>
 
@@ -33,15 +34,20 @@
 	    {% endif %}
 	</div>
 	<div id="content">
-        {% load messages %}
-        {% render_messages messages %}
+	    {% load messages %}
+	    {% if messages %}
+		{% render_messages messages %}
+	    {% else %}
+		{% include 'causal/snippets/empty_messages.html' %}
+	    {% endif %}
+	    {% include 'causal/snippets/messages.js' %}
+	    
 	    <div id="primary" class="clearfix">
 		{% block primary %}{% endblock primary %}
 	    </div>
 	    <div id="secondary">
 		{% block secondary %}{% endblock secondary %}
 	    </div>
-        {% include 'causal/snippets/messages.js' %}
 	</div>
 	<div id="footer">
 	</div>

@@ -97,7 +97,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'jogging.middleware.LoggingMiddleware',
-    'causal.main.middleware.AjaxMessaging',
+    'causal.main.middleware.messaging.AjaxMessaging',
 )
 
 ROOT_URLCONF = 'causal.urls'

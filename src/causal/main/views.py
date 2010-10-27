@@ -122,14 +122,16 @@ def user_settings(request):
             return HttpResponseNotAllowed('Not your user!')
         form = UserProfileForm(request.POST)
 
+        saved = False
         if form.is_valid():
             form.save()
+            saved = True
             messages.success(request, 'Timezone saved.')
         else:
             messages.success(request, "Couldn't save that timezone, sorry.")
 
         if request.is_ajax():
-            return HttpResponse(simplejson.dumps({'message': 'Saved'}))
+            return HttpResponse(simplejson.dumps({'saved': saved}))
         else:
             return redirect('user-settings')
 
@@ -203,8 +205,9 @@ def sharing_prefs(request):
         for service in services:
             service.share = options.get(service.pk, False)
             service.save()
+    messages.success(request, 'Sharing preferences updated.')
     if request.is_ajax():
-        return HttpResponse(simplejson.dumps({'message': 'Saved'}))
+        return HttpResponse(simplejson.dumps({'updated': options}))
     else:
         return redirect('user-settings')
 

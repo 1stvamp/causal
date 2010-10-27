@@ -1,27 +1,34 @@
-function addMessage(text, extra_tags) {
-    var message = $('<li class="'+extra_tags+'">'+text+'</li>').hide();
-    $("#messages").append(message);
+var messages_wrapper = null;
+function add_message(item) {
+    var message = $($('#message_template').jqote(item, '*')).hide();
+    $(messages_wrapper, "ul.messages-list-" + item.extra_tags).append(message);
+    if (!messages_wrapper.hasClass(item.extra_tags)) {
+        messages_wrapper.addClass(item.extra_tags);
+    }
+    if (messages_wrapper.is(':hidden')) {
+        messages_wrapper.fadeIn(500);
+    }
     message.fadeIn(500);
 
     setTimeout(function() {
-        message.fadeOut(500, function() {
+        messages_wrapper.fadeOut(500, function() {
             message.remove();
+            messages_wrapper.removeClass(item.extra_tags);
         });
     }, 3000);
 }
 
-$(document).ready(function() {
+$(function() {
     $('#messages').ajaxComplete(function(e, xhr, settings) {
-        var contentType = xhr.getResponseHeader("Content-Type");
-
-        if (contentType == "application/javascript" || contentType == "application/json") {
-            var json = $.evalJSON(xhr.responseText);
-
-            $.each(json.django_messages, function (i, item) {
-                addMessage(item.message, item.extra_tags);
-            });
-        }
+        var json = jQuery.parseJSON(xhr.responseText);
+        $.each(json.django_messages, function(i, item){
+            add_message(item);
+        });
     }).ajaxError(function(e, xhr, settings, exception) {
-        addMessage("There was an error processing your request, please try again.", "error");
+        add_message({
+            message: "There was an error processing your request, please try again.",
+            extra_tags: "error"
+        });
     });
+    messages_wrapper = $('#messages');
 });
