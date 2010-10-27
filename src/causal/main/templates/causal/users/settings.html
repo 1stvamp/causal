@@ -40,9 +40,7 @@
                 $.post(
                     '{% url share-prefs %}',
                     $('input.share_control').serialize(),
-                    function(data) {
-                        console.log(data);
-                    }
+                    function(data) {}
                 );
                 return false;
             });
@@ -59,9 +57,7 @@
                 $.post(
                     $('form#user-profile-form').attr('action'),
                     $('form#user-profile-form').serialize(),
-                    function(data) {
-                        console.log(data);
-                    }
+                    function(data) {}
                 );
             });
         });
