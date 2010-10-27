@@ -31,4 +31,7 @@ $(function() {
         });
     });
     messages_wrapper = $('#messages');
+    if (messages_wrapper.is(':visible')) {
+        messages_wrapper.fadeOut(500);
+    }
 });
