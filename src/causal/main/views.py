@@ -162,6 +162,7 @@ def enable_service(request, app_id):
         service = UserService(user=request.user, app=app)
         request.user.userservice_set.add(service)
         request.user.save()
+        messages.success(request, '%s enabled.' % (service.app.module.DISPLAY_NAME,))
 
     return redirect('user-settings')
 
