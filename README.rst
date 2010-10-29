@@ -1,5 +1,5 @@
 1. Intro
-==============
+========
 
 Firstly causal and its developers are not associated with any of the services we integrate with.
 
@@ -17,59 +17,123 @@ amounts of permissions required to get data from a third party. That said not ev
 fine grained permissions so please be aware that the oauth tokens should not be shared.
 
 2. Design
-==============
+=========
 
-We have broken each service we integrate with in a Django application. Each service can enabled from local.settings.py like so:
+We have broken each service we integrate with in a Django application. Each service can enabled from local.settings.py like so::
 
-INSTALLED_SERVICES = (
- - 'causal.twitter',
- - 'causal.foursquare',
- - #'causal.flickr',
- - #'causal.feed',
- - #'causal.facebook',
- - #'causal.github',
- - #'causal.lastfm',
- - #'causal.googlereader',
-)
+  INSTALLED_SERVICES = (
+    'causal.twitter',
+    'causal.foursquare',
+    #'causal.flickr',
+    #'causal.feed',
+    #'causal.facebook',
+    #'causal.github',
+    #'causal.lastfm',
+    #'causal.googlereader',
+  )
 
 This enables only Foursqaure and Twitter services to the user to integrate with.
 
 3. Run Modes
-==============
+============
 
-Causal can be run as multi user service by enabling user registration in local.settings.py as so:
+Causal can be run as multi user service by enabling user registration in local.settings.py as so::
 
-ENABLE_REGISTRATION = True
+  ENABLE_REGISTRATION = True
 
 This will allow users to register with the site user the django-registration app. This will email the user after sign up with a link to validate their email address.
 
-If multi user access isnt required as for example you wish to run you own causal instance just for your updates set ENABLE_REGISTRATION = False to disable user registration. You will then need to register a user by hand in the admin interface, locate at http://HOSTNAME:PORT/_ca-admin That is the default address of the admin interface.
+If multi user access isnt required as for example you wish to run you own causal instance just for your updates set ENABLE_REGISTRATION = False to disable user registration. You will then need to register a user by hand in the admin interface, locate at http://HOSTNAME/_ca-admin That is the default address of the admin interface.
 
 4. Build/Install
-==============
+================
 
-Currently the build for causal is configured in buildout. This is on going and should be finished soon.
+Causal can be configured using the ``setup.py`` installer, ``buildout``, or via ``easy_install`` or ``pip``.
+As well as buildout, you can install Causal and it's dependencies within a ``virtualenv`` using either of ``setup.py`` or ``pip``.
 
-In the mean time you will need to have the following installed for the core of the system:
+setup.py
+--------
 
- - Django - 1.2.3
- - oauth2 - 1.2.0
- - south - 0.7.1
- - django-registration - 0.7
- - jogging - 0.2.2 
- - django-timezones - 0.1.4
- - python-dateutil - 1.5
- - pytz 
+To install from the setuputils/distutils installer::
+
+  python setup.py install
+
+This unfortunately doesn't install all the dependencies for the core services, you would need to install these seperately, as listed in ``virtualenv_builds/extras_requirements.txt``.
+
+easy_install/pip
+----------------
+
+To install from PyPi using ``easy_install``::
+
+  easy_install causal
+
+and core-services::
+
+  easy_install causal[core-services]
+
+Using ``pip``::
+
+  pip install causal
+
+``pip`` unfortunately has the same restriction regards installing extras like core-services that ``setup.py`` does, so you would need to install the requirements seperately (see below).
+
+buildout
+--------
+
+To build a sandboxed Django environment containing Causal using ``buildout``::
+
+  ./configure
+  buildout
+
+After which you should have a set of endpoints in ``bin/``, e.g.::
+
+  bin/django syncdb
+  bin/django migrate
+  bin/django createsuperuser
+  bin/django runserver
+
+(Notice we don't distribute the buildout ``bootstrap.py``, as it has many problems, so you'll need a system, or virtualenv, installed buildout.)
+
+Bootstrapping a virtualenv
+--------------------------
+
+To quickly bootstrap a virtualenv for development (or even deployment), we recommend using the ``virtualenv_wrapper`` and ``pip`` tools::
+
+  mkvirtualenv causal
+  cd path/to/causal/
+  cd virtualenv_build
+  # This will use pip to install the dependancies for causal AND it's core-services
+  # as well as adding any source directories to your virtualenv's PYTHONPATH
+  ./bootstrap.py 
+  cd ../src/causal
+  cp local_settings.py.example local_settings.py
+  # At this point you'll probably want to open local_settings.py and customise the settings
+  ./manage.py syncdb
+  ./manage.py migrate
+  ./manage.py createsuperuser
+  ./manage.py runserver
+
+Requirements
+------------
+
+ * Django - 1.2.3
+ * oauth2 - 1.2.0
+ * south - 0.7.1
+ * django-registration - 0.7
+ * jogging - 0.2.2 
+ * django-timezones - 0.1.4
+ * python-dateutil - 1.5
+ * pytz 
 
 The following allow the different services to be interacted with:
 
- - BeautifulSoup - 3.0.8.1  Required for github.com integration
- - feedparser - 4.1  Required for general rss parsing - google/com/reader
- - flickrapi - 1.4.2  Required to talk to flickr.com
- - github2 - 0.1.2  Required to talk to github.com
- - tweepy - 1.7.1  Required to talk to twitter.com
- - twitter-text-py - 1.0.3  Required to parse data back from twitter.com
- - pyfacegraph - 0.0.4  Required for facebook.com
+ * BeautifulSoup - 3.0.8.1  Required for github.com integration
+ * feedparser - 4.1  Required for general rss parsing - google/com/reader
+ * flickrapi - 1.4.2  Required to talk to flickr.com
+ * github2 - 0.1.2  Required to talk to github.com
+ * tweepy - 1.7.1  Required to talk to twitter.com
+ * twitter-text-py - 1.0.3  Required to parse data back from twitter.com
+ * pyfacegraph - 0.0.4  Required for facebook.com
 
 5. Accessing Services
 =====================
@@ -81,12 +145,12 @@ After enabling a service the user will be prompted either for a username for the
 
 The service is shared using the sliders on the settings page. Once a service is shared its available as a json feed:
 
-http://hostname.com/username.json
+http://HOSTNAME/USERNAME.json
 
-Where username is the username of the user.
+Where ``USERNAME`` is the username of the user.
 
 5.2 Stats
------------
+---------
 
 The front page contains links to stats about each service. 
 
@@ -95,7 +159,7 @@ The front page contains links to stats about each service.
 
 Add the service into INSTALLED_APPS. 
 
-Next you need to add an oauth in the backand http://hostname.com/_ca-admin. Next you need to create a Service app 
+Next you need to add an oauth in the backand http://HOSTNAME/_ca-admin. Next you need to create a Service app 
 linking to the oauth object.
 
 The service is then ready to roll.
@@ -105,7 +169,7 @@ The service is then ready to roll.
 
 We had our own ideas of where we wanted to lead the project but we decided its the users who know best. With this in mind we are open to suggestions for improvements and feature requests. Email us at team@causal.com or find the current ticket list at: http://github.com/causality/causal/issues
 
-The project is hosted at http://github.com/causality please fork away!
+The project is hosted at http://github.com/causality/causal please fork away!
 
 7. Hacking
 ===========
@@ -125,6 +189,6 @@ A service is django app. Create a basic app. The are a few key this to note.
 ----------------
 
 get_items
----------------
+---------
 
 This is the key method that fetches the data and returns data in json for the interface to render.
