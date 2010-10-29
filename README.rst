@@ -19,7 +19,7 @@ fine grained permissions so please be aware that the oauth tokens should not be 
 2. Design
 =========
 
-We have broken each service we integrate with in a Django application. Each service can enabled from local.settings.py like so::
+We have broken each service we integrate with in a Django application. Each service can enabled from ``local_settings.py`` like so::
 
   INSTALLED_SERVICES = (
     'causal.twitter',
@@ -51,7 +51,7 @@ If multi user access isnt required as for example you wish to run you own causal
 Causal can be configured using the ``setup.py`` installer, ``buildout``, or via ``easy_install`` or ``pip``.
 As well as buildout, you can install Causal and it's dependencies within a ``virtualenv`` using either of ``setup.py`` or ``pip``.
 
-setup.py
+4.1 setup.py
 --------
 
 To install from the setuputils/distutils installer::
@@ -60,7 +60,7 @@ To install from the setuputils/distutils installer::
 
 This unfortunately doesn't install all the dependencies for the core services, you would need to install these seperately, as listed in ``virtualenv_builds/extras_requirements.txt``.
 
-easy_install/pip
+4.2 easy_install/pip
 ----------------
 
 To install from PyPi using ``easy_install``::
@@ -77,7 +77,7 @@ Using ``pip``::
 
 ``pip`` unfortunately has the same restriction regards installing extras like core-services that ``setup.py`` does, so you would need to install the requirements seperately (see below).
 
-buildout
+4.3 buildout
 --------
 
 To build a sandboxed Django environment containing Causal using ``buildout``::
@@ -94,7 +94,7 @@ After which you should have a set of endpoints in ``bin/``, e.g.::
 
 (Notice we don't distribute the buildout ``bootstrap.py``, as it has many problems, so you'll need a system, or virtualenv, installed buildout.)
 
-Bootstrapping a virtualenv
+4.4 Bootstrapping a virtualenv
 --------------------------
 
 To quickly bootstrap a virtualenv for development (or even deployment), we recommend using the ``virtualenv_wrapper`` and ``pip`` tools::
@@ -113,7 +113,7 @@ To quickly bootstrap a virtualenv for development (or even deployment), we recom
   ./manage.py createsuperuser
   ./manage.py runserver
 
-Requirements
+4.5 Requirements
 ------------
 
  * Django - 1.2.3
@@ -181,14 +181,14 @@ A service is django app. Create a basic app. The are a few key this to note.
 7.1.1 urls.py
 -------------
 
- - / : callback called by the third party usually on oauth callback
- - /auth : called when the user enables the service this typically sends the user off to the third party
- - /stats : adds a link on the home page
+ - ``/`` - callback called by the third party usually on oauth callback
+ - ``/auth`` - called when the user enables the service this typically sends the user off to the third party
+ - ``/stats`` - adds a link on the home page
 
 7.1.2 service.py
 ----------------
 
 get_items
----------
+*********
 
 This is the key method that fetches the data and returns data in json for the interface to render.
