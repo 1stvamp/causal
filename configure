@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-#!/bin/bash
-
-tmpl=`cat buildout.cfg.tmpl`
-tmpl=${tmpl/\{\{CWD\}\}/$PWD}
-
-echo "$tmpl" > buildout.cfg
-=======
 #! /usr/bin/env python
 
 """CLI script to generate a buildout.cfg with the correct
@@ -79,4 +71,3 @@ def main():
 
 if __name__ == "__main__":
 	sys.exit(main())
->>>>>>> upstream/master
