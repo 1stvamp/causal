@@ -82,6 +82,8 @@ Using ``pip``::
 
 To build a sandboxed Django environment containing Causal using ``buildout``::
 
+  git clone git://github.com/causality/causal.git
+  cd causal
   ./configure
   buildout
 
@@ -100,7 +102,8 @@ After which you should have a set of endpoints in ``bin/``, e.g.::
 To quickly bootstrap a virtualenv for development (or even deployment), we recommend using the ``virtualenv_wrapper`` and ``pip`` tools::
 
   mkvirtualenv causal
-  cd path/to/causal/
+  git clone git://github.com/causality/causal.git
+  cd causal
   cd virtualenv_build
   # This will use pip to install the dependancies for causal AND it's core-services
   # as well as adding any source directories to your virtualenv's PYTHONPATH
