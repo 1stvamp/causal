@@ -57,7 +57,7 @@ class UserService(models.Model):
     user = models.ForeignKey(User)
     app = models.ForeignKey(ServiceApp)
     setup = models.NullBooleanField(null=True, blank=True, default=False)
-    share = models.NullBooleanField(null=True, blank=True, default=True)
+    share = models.NullBooleanField(null=True, blank=True, default=False)
 
     @property
     def form_template_path(self):
