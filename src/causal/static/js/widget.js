@@ -105,8 +105,7 @@ CausalWidget.prototype.lastPoll = function() {
 
 CausalWidget.prototype.widget_callback = function(data) {
     settimeout(500, function(){
-        var item = data[data.length - 1];
-        delete data[data.length - 1];
+        var item = data.pop();
         list_item = document.createElement('li');
         list_item.className = item.class;
         list_item.innerHTML = item.date + ': ' + item.body;
