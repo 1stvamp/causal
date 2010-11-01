@@ -8,6 +8,11 @@
     {% load_js "iphone-style-checkboxes.js" %}
     <script>
         //<![CDATA[
+        var services = {
+            {% for service in user.userservice_set.all %}
+                {{ service.id }}: "{{ service.app.module.DISPLAY_NAME|escapejs }}"{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        };
         function _ajax_request(url, data, callback, type, method) {
             if (jQuery.isFunction(data)) {
             callback = data;
@@ -47,12 +52,14 @@
             $("button.delete_button").button();
             $("button.delete_button").click(function() {
 		var id = $(this).attr('id').replace('delete_service_', '');
-		$("#disable-confirm-dialog").replaceWith($("#disable-confirm-dialog-template").jqote(id, '*'));
+                $("#disable-confirm-dialog").html($("#disable-confirm-dialog-template").jqote({'name': services[id]}, '*'));
 		$("#disable-confirm-dialog").dialog({
 		    resizable: false,
-		    height: 400,
-		    width: 250,
+                    draggable: false,
+		    height: $(window).height() / 2,
+		    width: $(window).width() / 2,
 		    modal: true,
+                    title: "Disable service?",
 		    buttons: {
 			'Disable': function() {
 			    $(this).dialog('close');
@@ -67,6 +74,9 @@
 			}
 		    }
 		});
+                $('.ui-widget-overlay').click(function() {
+                    $('#disable-confirm-dialog').dialog('close');
+                });
             });
             $('form#user-profile-form select#id_timezone_flat').change(function() {
                 $.post(
@@ -126,4 +136,12 @@
             </ul>
         {% endif %}
     </div>
+    <div id="disable-confirm-dialog" class="hide"></div>
+    <script type="text/x-jqote-template" id="disable-confirm-dialog-template">
+        <![CDATA[
+        <p>Do you really want to completely disable <strong><*= this.name *></strong>?</p>
+        <p>It will no longer appear on in your 7 day history, and any authentication data will be erased.<br/>
+        If at any time you want to re-enable the service you can do so from this page, but you'll have to re-enter any authentication info (or re-authorize with an external service).</p>
+        ]]>
+    </script>
 {% endblock primary %}
