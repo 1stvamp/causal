@@ -55,6 +55,7 @@ As well as buildout, you can install Causal and it's dependencies within a ``vir
 ------------
 
 If you're installing with ``setup.py``, ``buildout`` or installing from source within a virtualenv, you can grab the source 1 of 2 ways:
+
 Checkout our development HEAD from Github, via ``git``::
 
   git clone git://github.com/causality/causal.git
