@@ -51,8 +51,10 @@ If multi user access isnt required as for example you wish to run you own causal
 Causal can be configured using the ``setup.py`` installer, ``buildout``, or via ``easy_install`` or ``pip``.
 As well as buildout, you can install Causal and it's dependencies within a ``virtualenv`` using either of ``setup.py`` or ``pip``.
 
-If you're installing with ``setup.py``, ``buildout`` or installing from source within a virtualenv, you can grab the source 1 of 2 ways:
+4.1 Download
+------------
 
+If you're installing with ``setup.py``, ``buildout`` or installing from source within a virtualenv, you can grab the source 1 of 2 ways:
 Checkout our development HEAD from Github, via ``git``::
 
   git clone git://github.com/causality/causal.git
@@ -67,7 +69,7 @@ Or download a stable tagged release as a tar::
   curl -C - -O http://github.com/causality/causal/tarball/v0.9
   tar xzf causality-causal-*.tar.gz -C ./causal
 
-4.1 setup.py
+4.2 setup.py
 --------
 
 To install from the setuputils/distutils installer::
@@ -78,7 +80,7 @@ To install from the setuputils/distutils installer::
 
 This unfortunately doesn't install all the dependencies for the core services, you would need to install these seperately, as listed in ``virtualenv_builds/extras_requirements.txt``.
 
-4.2 easy_install/pip
+4.3 easy_install/pip
 ----------------
 
 To install from PyPi using ``easy_install``::
@@ -95,7 +97,7 @@ Using ``pip``::
 
 ``pip`` unfortunately has the same restriction regards installing extras like core-services that ``setup.py`` does, so you would need to install the requirements seperately (see below).
 
-4.3 buildout
+4.4 buildout
 --------
 
 To build a sandboxed Django environment containing Causal using ``buildout``::
@@ -114,7 +116,7 @@ After which you should have a set of endpoints in ``bin/``, e.g.::
 
 (Notice we don't distribute the buildout ``bootstrap.py``, as it has many problems, so you'll need a system, or virtualenv, installed buildout.)
 
-4.4 Bootstrapping a virtualenv
+4.5 Bootstrapping a virtualenv
 --------------------------
 
 To quickly bootstrap a virtualenv for development (or even deployment), we recommend using the ``virtualenv_wrapper`` and ``pip`` tools::
@@ -134,7 +136,7 @@ To quickly bootstrap a virtualenv for development (or even deployment), we recom
   ./manage.py createsuperuser
   ./manage.py runserver
 
-4.5 Requirements
+4.6 Requirements
 ------------
 
  * Django - 1.2.3
