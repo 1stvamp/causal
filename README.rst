@@ -51,11 +51,29 @@ If multi user access isnt required as for example you wish to run you own causal
 Causal can be configured using the ``setup.py`` installer, ``buildout``, or via ``easy_install`` or ``pip``.
 As well as buildout, you can install Causal and it's dependencies within a ``virtualenv`` using either of ``setup.py`` or ``pip``.
 
+If you're installing with ``setup.py``, ``buildout`` or installing from source within a virtualenv, you can grab the source 1 of 2 ways:
+
+Checkout our development HEAD from Github, via ``git``::
+
+  git clone git://github.com/causality/causal.git
+ 
+Download our development HEAD as a tar::
+
+  curl -C - -O http://github.com/causality/causal/tarball/master
+  tar xzf causality-causal-*.tar.gz -C ./causal
+
+Or download a stable tagged release as a tar::
+
+  curl -C - -O http://github.com/causality/causal/tarball/v0.9
+  tar xzf causality-causal-*.tar.gz -C ./causal
+
 4.1 setup.py
 --------
 
 To install from the setuputils/distutils installer::
 
+  ### git clone the source, or curl and untar here ###
+  cd causal
   python setup.py install
 
 This unfortunately doesn't install all the dependencies for the core services, you would need to install these seperately, as listed in ``virtualenv_builds/extras_requirements.txt``.
@@ -82,7 +100,7 @@ Using ``pip``::
 
 To build a sandboxed Django environment containing Causal using ``buildout``::
 
-  git clone git://github.com/causality/causal.git
+  ### git clone the source, or curl and untar here ###
   cd causal
   ./configure
   buildout
@@ -102,7 +120,7 @@ After which you should have a set of endpoints in ``bin/``, e.g.::
 To quickly bootstrap a virtualenv for development (or even deployment), we recommend using the ``virtualenv_wrapper`` and ``pip`` tools::
 
   mkvirtualenv causal
-  git clone git://github.com/causality/causal.git
+  ### git clone the source, or curl and untar here ###
   cd causal
   cd virtualenv_build
   # This will use pip to install the dependancies for causal AND it's core-services
