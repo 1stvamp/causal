@@ -46,12 +46,27 @@
             });
             $("button.delete_button").button();
             $("button.delete_button").click(function() {
-                var id = $(this).attr('id').replace('delete_service_', '');
-                $.delete_(
-                    '/{{ request.user.username }}/service/' + id + '.json',
-                    {},
-                    reloadPage
-                );
+		var id = $(this).attr('id').replace('delete_service_', '');
+		$("#disable-confirm-dialog").replaceWith($("#disable-confirm-dialog-template").jqote(id, '*'));
+		$("#disable-confirm-dialog").dialog({
+		    resizable: false,
+		    height: 400,
+		    width: 250,
+		    modal: true,
+		    buttons: {
+			'Disable': function() {
+			    $(this).dialog('close');
+			    $.delete_(
+				'/{{ request.user.username }}/service/' + id + '.json',
+				{},
+				reloadPage
+			    );
+			},
+			Cancel: function() {
+			    $(this).dialog('close');
+			}
+		    }
+		});
             });
             $('form#user-profile-form select#id_timezone_flat').change(function() {
                 $.post(
