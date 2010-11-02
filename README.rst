@@ -6,8 +6,8 @@ Firstly causal and its developers are not associated with any of the services we
 All integration is done using publicly available APIs. Where extra permission is required we ask the logged in user to 
 provide us/causal with permission to access their data using the API supplied by the service owner.
 
-WE DO NOT STORE ANY DATA FROM THE THIRD PARTY EXCEPT OAUTH TOKENS
-We only store the oauth details, causal doesn't store any updates from the third party. Causal does cache
+| WE DO NOT STORE ANY DATA FROM THE THIRD PARTY EXCEPT OAUTH TOKENS
+| We only store the oauth details, causal doesn't store any updates from the third party. Causal does cache
 pages locally, these only survice as long as the server is running. Restarting the server should clear the cache.
 
 It was deliberate choice not to store any data to avoid any potential privacy issues.
@@ -25,14 +25,13 @@ We have broken each service we integrate with in a Django application. Each serv
     'causal.twitter',
     'causal.foursquare',
     #'causal.flickr',
-    #'causal.feed',
     #'causal.facebook',
     #'causal.github',
     #'causal.lastfm',
     #'causal.googlereader',
   )
 
-This enables only Foursqaure and Twitter services to the user to integrate with.
+This enables only Foursqaure and Twitter services for the user to integrate with.
 
 3. Run Modes
 ============
@@ -151,8 +150,8 @@ To quickly bootstrap a virtualenv for development (or even deployment), we recom
 
 The following allow the different services to be interacted with:
 
- * BeautifulSoup - 3.0.8.1  Required for github.com integration
- * feedparser - 4.1  Required for general rss parsing - google/com/reader
+ * BeautifulSoup - 3.0.8.1  Required to parse data back from github.com
+ * feedparser - 4.1  Required for general rss parsing - google.com/reader
  * flickrapi - 1.4.2  Required to talk to flickr.com
  * github2 - 0.1.2  Required to talk to github.com
  * tweepy - 1.7.1  Required to talk to twitter.com
