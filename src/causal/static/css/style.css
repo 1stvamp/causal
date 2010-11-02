@@ -304,3 +304,7 @@ BUTTON.delete_button .ui-button-text {
     font-weight: bold;
     font-size: 0.5ex;
 }
+
+.ui-widget-overlay {
+    cursor: pointer;
+}
