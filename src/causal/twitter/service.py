@@ -9,6 +9,7 @@ from causal.main.models import ServiceItem
 from causal.twitter.utils import get_api, user_login
 from causal.main.service_utils import get_model_instance
 from causal.main.exceptions import LoggedServiceError
+import re
 
 DISPLAY_NAME = 'Twitter'
 CUSTOM_FORM = False
@@ -51,6 +52,8 @@ def get_items(user, since, model_instance=None):
         raise LoggedServiceError(original_exception=e)
     else:
         screen_name = api.me().screen_name
+        word_split_re = re.compile(r'(\s+)')
+        
         for status in timeline:
             item = ServiceItem()
             item.location = {}
@@ -58,8 +61,14 @@ def get_items(user, since, model_instance=None):
             tt.autolink.auto_link_usernames_or_lists()
             tt.autolink.auto_link_hashtags()
             item.body = unicode(tt.text)
-            item.created =status.created_at
-            item.link_back = 'http://twitter.com/%s/status/%s' % (screen_name, str(status.id))
+
+            words = word_split_re.split(item.body)
+            for word in words:
+                if word.startswith('http://twitpic.com'):
+                    item.pic_link = True
+            
+            item.created = status.created_at
+            item.link_back = "http://twitter.com/%s/status/%s" % (screen_name, str(status.id))
             if status.geo:
                 item.location['lat'] = status.geo['coordinates'][0]
                 item.location['long'] = status.geo['coordinates'][1]

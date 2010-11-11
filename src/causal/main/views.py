@@ -15,6 +15,7 @@ from causal.main.decorators import can_view_service
 from causal.main.exceptions import ServiceError
 from causal.main.forms import UserProfileForm
 from django.contrib import messages
+import re
 
 def history(request, username):
     template_values = {}
@@ -73,6 +74,9 @@ def _get_service_history(service, json=True):
         items = service.app.module.get_items(service.user, day_one, service)
         if items:
             for item in items:
+                if item.class_name.endswith('twitter') and hasattr(item, 'pic_link'):
+                    item.body = _add_image_html(item.body)
+                    
                 if item.created_local.date() > day_one:
                     item_dict = {
                         'title': item.title,
@@ -92,6 +96,18 @@ def _get_service_history(service, json=True):
     if json:
         response = simplejson.dumps(response)
     return response
+
+def _add_image_html(body):
+    word_split_re = re.compile(r'(\s+)')
+    words = word_split_re.split(body)
+    result = ""
+    for word in words:
+        converted_body = word
+        if word.startswith('http://twitpic.com'):
+            converted_body = '<img src="http://twitpic.com/show/thumb/%s"/>' % word.rsplit('/')[-1]
+        result = result + word
+    result = result + ' </br> ' + converted_body
+    return result
 
 @can_view_service
 def history_callback(request, username, service_id):

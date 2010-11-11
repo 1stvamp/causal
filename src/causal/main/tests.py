@@ -3,6 +3,7 @@ from causal.main.models import User, OAuthSetting
 from causal.main.views import history
 from django.test.client import Client
 from django.core.urlresolvers import reverse
+from views import _add_image_html
 
 try:
     import wingdbstub
@@ -46,3 +47,10 @@ class TestMain(TestCase):
                     'password': self.user_detauls['password'],
                 }
         )
+
+    def test_add_image_html(self):
+        """Test replacing twitpic text with a link to twit pic."""
+        tweet = "Some text #ahashtag http://twitpic.com/354bkr some more text."
+        converted_tweet = 'Some text #ahashtag http://twitpic.com/354bkr some more text. <img src="http://twitpic.com/show/mini/354bkr"/>'
+        self.assertTrue(_add_image_html(tweet), converted_tweet)
+        
