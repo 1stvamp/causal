@@ -28,29 +28,15 @@ class TestMain(TestCase):
     def tearDown(self):
         self.user.delete()
 
-    def test_history_view(self):
-        """Test raw history view from main."""
-
-        post_params = {}
-
-        response = self.client.post(reverse('history'), post_params)
-        # Test we get redirected to login screen
-        self.assertEquals(response.status_code, 302)
-
-    def _login(self):
-        """Log a user in."""
-        self.client = Client()
-        self.client.post(
-                '/login/',
-                {
-                    'username': self.user_details['username'],
-                    'password': self.user_detauls['password'],
-                }
-        )
-
-    def test_add_image_html(self):
-        """Test replacing twitpic text with a link to twit pic."""
+    def test_add_image_html_twitpic(self):
+        """Test replacing twitpic text with a link to twitpic."""
         tweet = "Some text #ahashtag http://twitpic.com/354bkr some more text."
-        converted_tweet = 'Some text #ahashtag http://twitpic.com/354bkr some more text. <img src="http://twitpic.com/show/mini/354bkr"/>'
-        self.assertTrue(_add_image_html(tweet), converted_tweet)
+        converted_tweet = 'Some text #ahashtag http://twitpic.com/354bkr some more text.</br> <img src="http://twitpic.com/show/mini/354bkr"/>'
+        self.assertEqual(_add_image_html(tweet), converted_tweet)
+        
+    def test_add_image_html_yfrogpic(self):
+        """Test replacing yfrog pic text with a link to yfrog pic."""
+        tweet = "Some text #ahashtag http://yfrog.com/b9hmwkj some more text."
+        converted_tweet = 'Some text #ahashtag http://yfrog.com/b9hmwkj some more text.</br> <img src="http://yfrog.com/b9hmwkj.th.jpg"/>'
+        self.assertEqual(_add_image_html(tweet), converted_tweet)
         

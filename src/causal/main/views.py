@@ -98,16 +98,19 @@ def _get_service_history(service, json=True):
     return response
 
 def _add_image_html(body):
-    word_split_re = re.compile(r'(\s+)')
-    words = word_split_re.split(body)
-    result = ""
-    for word in words:
-        converted_body = word
-        if word.startswith('http://twitpic.com'):
-            converted_body = '<img src="http://twitpic.com/show/thumb/%s"/>' % word.rsplit('/')[-1]
-        result = result + word
-    result = result + ' </br> ' + converted_body
-    return result
+    """Add the html src of the image to the body of the tweet."""
+    
+    twitpic_url = re.findall("http://twitpic.com/\S*", body)
+    
+    if twitpic_url:
+        body = ''.join((body, '</br> <img src="http://twitpic.com/show/mini/%s"/>' % twitpic_url[0].rsplit('/')[-1]))
+    
+    yfrog_url = re.findall("http://yfrog.com/\S*", body)
+    
+    if yfrog_url:
+        body = ''.join((body, '</br> <img src="%s.th.jpg"/>' % yfrog_url[0]))
+    
+    return body
 
 @can_view_service
 def history_callback(request, username, service_id):
