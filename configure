@@ -25,6 +25,7 @@ projectegg = ${django:project}
 settings = settings
 test = causal
 eggs = ${buildout:eggs}
+wsgi = true
 
 [versions]
 %(versions)s

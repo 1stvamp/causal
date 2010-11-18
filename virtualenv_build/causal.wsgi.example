@@ -3,8 +3,8 @@ import sys
 
 # Add virtual site-packages if you're using virtualenv
 #import site
-#VIRTUAL_ENV_PATH = '/home/my_user/virtualenvs/causal'
-#site.addsitedir('%s/lib/python2.5/site-packages' % VIRTUAL_ENV_PATH)
+#VIRTUAL_ENV_PATH = '/home/my_user/virtualenvs/causal' # Change for your virtualenv dir, e.g. mine is $HOME/.virtualenvs/
+#site.addsitedir('%s/lib/python2.5/site-packages' % VIRTUAL_ENV_PATH) # Change 2.5 for your python version
 
 # Put the Django project on sys.path
 BASE_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), 'src'))
