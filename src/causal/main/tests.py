@@ -31,12 +31,12 @@ class TestMain(TestCase):
     def test_add_image_html_twitpic(self):
         """Test replacing twitpic text with a link to twitpic."""
         tweet = "Some text #ahashtag http://twitpic.com/354bkr some more text."
-        converted_tweet = 'Some text #ahashtag http://twitpic.com/354bkr some more text.</br> <img src="http://twitpic.com/show/mini/354bkr"/>'
+        converted_tweet = 'Some text #ahashtag http://twitpic.com/354bkr some more text. </br> <img src="http://twitpic.com/show/mini/354bkr"/>'
         self.assertEqual(_add_image_html(tweet), converted_tweet)
         
     def test_add_image_html_yfrogpic(self):
         """Test replacing yfrog pic text with a link to yfrog pic."""
         tweet = "Some text #ahashtag http://yfrog.com/b9hmwkj some more text."
-        converted_tweet = 'Some text #ahashtag http://yfrog.com/b9hmwkj some more text.</br> <img src="http://yfrog.com/b9hmwkj.th.jpg"/>'
+        converted_tweet = 'Some text #ahashtag http://yfrog.com/b9hmwkj some more text. </br> <img src="http://yfrog.com/b9hmwkj.th.jpg"/>'
         self.assertEqual(_add_image_html(tweet), converted_tweet)
         

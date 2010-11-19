@@ -103,12 +103,12 @@ def _add_image_html(body):
     twitpic_url = re.findall("http://twitpic.com/\S*", body)
     
     if twitpic_url:
-        body = ''.join((body, '</br> <img src="http://twitpic.com/show/mini/%s"/>' % twitpic_url[0].rsplit('/')[-1]))
+        body = ''.join((body, ' </br> <img src="http://twitpic.com/show/mini/%s"/>' % twitpic_url[0].rsplit('/')[-1]))
     
     yfrog_url = re.findall("http://yfrog.com/\S*", body)
     
     if yfrog_url:
-        body = ''.join((body, '</br> <img src="%s.th.jpg"/>' % yfrog_url[0]))
+        body = ''.join((body, ' </br> <img src="%s.th.jpg"/>' % yfrog_url[0]))
     
     return body
 
