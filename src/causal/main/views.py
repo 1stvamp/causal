@@ -74,7 +74,7 @@ def _get_service_history(service, json=True):
         items = service.app.module.get_items(service.user, day_one, service)
         if items:
             for item in items:
-                if item.class_name.endswith('twitter') and hasattr(item, 'pic_link'):
+                if hasattr(item, 'pic_link'):
                     item.body = _add_image_html(item.body)
                     
                 if item.created_local.date() > day_one:
@@ -103,12 +103,12 @@ def _add_image_html(body):
     twitpic_url = re.findall("http://twitpic.com/\S*", body)
     
     if twitpic_url:
-        body = ''.join((body, ' </br> <img src="http://twitpic.com/show/mini/%s"/>' % twitpic_url[0].rsplit('/')[-1]))
+        body = ''.join((body, ' </br> <a href="%s"><img src="http://twitpic.com/show/mini/%s"/></a>' % (twitpic_url[0], twitpic_url[0].rsplit('/')[-1])))
     
     yfrog_url = re.findall("http://yfrog.com/\S*", body)
     
     if yfrog_url:
-        body = ''.join((body, ' </br> <img src="%s.th.jpg"/>' % yfrog_url[0]))
+        body = ''.join((body, ' </br> <a href="%s.th.jpg"><img src="%s.th.jpg"/></a>' % (yfrog_url[0], yfrog_url[0])))
     
     return body
 
