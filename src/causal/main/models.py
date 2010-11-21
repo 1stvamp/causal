@@ -58,6 +58,9 @@ class UserService(models.Model):
     app = models.ForeignKey(ServiceApp)
     setup = models.NullBooleanField(null=True, blank=True, default=False)
     share = models.NullBooleanField(null=True, blank=True, default=False)
+    
+    # used to identify if the remote service is publically available i.e. twitter
+    public = models.NullBooleanField(null=True, blank=True, default=False)
 
     @property
     def form_template_path(self):

@@ -25,6 +25,11 @@ def verify_auth(request):
     return_url = request.session.get('causal_twitter_oauth_return_url', None) or '/' + request.user.username
     # Mark as setup completed
     service.setup = True
+    
+    # test if service is protected on twitter's side
+    # if so mark it
+    # service.public = False
+    
     service.save()
     request_token.delete()
     return HttpResponseRedirect(return_url)
