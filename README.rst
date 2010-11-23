@@ -30,6 +30,7 @@ We have broken each service we integrate with in a Django application. Each serv
     #'causal.lastfm',
     #'causal.googlereader',
   )
+  # Lines beginning with # are commented out and so are not enabled
 
 This enables only Foursqaure and Twitter services for the user to integrate with.
 
@@ -61,13 +62,15 @@ Checkout our development HEAD from Github, via ``git``::
  
 Download our development HEAD as a tar::
 
-  curl -C - -O http://github.com/causality/causal/tarball/master
-  tar xzf causality-causal-*.tar.gz -C ./causal
+  curl -L -C - -O https://github.com/causality/causal/tarball/master
+  tar xzf causality-causal-*.tar.gz
+  mv causality-causal-*/ causal/
 
 Or download a stable tagged release as a tar::
 
-  curl -C - -O http://github.com/causality/causal/tarball/v0.9
-  tar xzf causality-causal-*.tar.gz -C ./causal
+  curl -L -C - -O https://github.com/causality/causal/tarball/v0.9
+  tar xzf causality-causal-*.tar.gz
+  mv causality-causal-*/ causal/
 
 4.2 setup.py
 --------
