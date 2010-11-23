@@ -20,6 +20,7 @@ def verify_auth(request):
     return_url = request.session.get('causal_foursquare_oauth_return_url', None) or 'user-settings'
     generate_access_token(service, request_token)
     service.setup = True
+    service.public = True
     service.save()
     request_token.delete()
     return redirect(return_url)

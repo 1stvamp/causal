@@ -32,6 +32,7 @@ def auth(request):
         )
 
         service.setup = True
+        service.public = True
         service.save()
 
     return redirect(reverse('user-settings'))
