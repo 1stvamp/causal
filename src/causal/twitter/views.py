@@ -11,6 +11,9 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from causal.main.decorators import can_view_service
 from django.http import HttpResponseRedirect
+
+from causal.twitter.utils import _auth
+import tweepy
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
 
@@ -25,7 +28,17 @@ def verify_auth(request):
     return_url = request.session.get('causal_twitter_oauth_return_url', None) or '/' + request.user.username
     # Mark as setup completed
     service.setup = True
+    
+    # test if service is protected on twitter's side
+    # if so mark it
+    auth = _auth(service.app.oauth)
+    user = tweepy.API(auth).get_user('twitter')
+    service.public = False
+    if not user.protected:
+        service.public = True
+    
     service.save()
+    
     request_token.delete()
     return HttpResponseRedirect(return_url)
 

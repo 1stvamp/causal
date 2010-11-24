@@ -42,6 +42,7 @@ def verify_auth(request):
             oauth_verify=''
         )
         service.setup = True
+        service.public = True
         service.save()
         messages.success(request, 'Connection to Facebook complete.')
         
