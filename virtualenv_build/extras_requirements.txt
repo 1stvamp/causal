@@ -1,4 +1,4 @@
-BeautifulSoup==3.0.8.1
+BeautifulSoup==3.2.0
 feedparser==4.1
 flickrapi==1.4.2
 github2==0.1.2
