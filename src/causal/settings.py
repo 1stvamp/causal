@@ -145,22 +145,6 @@ ACCOUNT_ACTIVATION_DAYS = 3
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# Logging
-import logging
-from logging.handlers import RotatingFileHandler
-LOG_FILENAME = 'causal.log'
-LOG_SIZE = 2097152 # 2 MB
-LOG_BACKUP_COUNT = 5 # Keep the main .log file, plus .log.[1-5]
-
-GLOBAL_LOG_LEVEL = logging.ERROR
-GLOBAL_LOG_HANDLERS = [
-    {
-        'handler': handler,
-        'level': GLOBAL_LOG_LEVEL,
-        'format': "%(asctime)s %(source)s: %(message)s"
-        },
-]
-
 # User profile model to provide extra data for Tiqual users
 AUTH_PROFILE_MODULE = 'main.userprofile'
 
@@ -169,8 +153,6 @@ try:
     from local_settings import *
 except ImportError:
     pass
-
-handler = RotatingFileHandler(LOG_FILENAME, maxBytes=LOG_SIZE, backupCount=LOG_BACKUP_COUNT)
 
 if ENABLE_ADMIN:
     INSTALLED_APPS += (

@@ -43,3 +43,21 @@ INSTALLED_SERVICES = (
 
 # *Don't* use the below example, generate your own random string of chars
 #SECRET_KEY = '`|9IK8w@VfU&([H{vaKpTRsmFq]zw7&pTIK4h#A$`@*>(&xSn<N(dg?=sxD|;*D'
+
+# Logging
+import logging
+from logging.handlers import RotatingFileHandler
+LOG_FILENAME = 'causal.log'
+LOG_SIZE = 2097152 # 2 MB
+LOG_BACKUP_COUNT = 5 # Keep the main .log file, plus .log.[1-5]
+
+GLOBAL_LOG_LEVEL = logging.ERROR
+GLOBAL_LOG_HANDLERS = [
+    {
+        'handler': handler,
+        'level': GLOBAL_LOG_LEVEL,
+        'format': "%(asctime)s %(source)s: %(message)s"
+        },
+]
+handler = RotatingFileHandler(LOG_FILENAME, maxBytes=LOG_SIZE, backupCount=LOG_BACKUP_COUNT)
+
