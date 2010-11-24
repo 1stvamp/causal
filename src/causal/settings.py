@@ -152,7 +152,6 @@ LOG_FILENAME = 'causal.log'
 LOG_SIZE = 2097152 # 2 MB
 LOG_BACKUP_COUNT = 5 # Keep the main .log file, plus .log.[1-5]
 
-handler = RotatingFileHandler(LOG_FILENAME, maxBytes=LOG_SIZE, backupCount=LOG_BACKUP_COUNT)
 GLOBAL_LOG_LEVEL = logging.ERROR
 GLOBAL_LOG_HANDLERS = [
     {
@@ -170,6 +169,8 @@ try:
     from local_settings import *
 except ImportError:
     pass
+
+handler = RotatingFileHandler(LOG_FILENAME, maxBytes=LOG_SIZE, backupCount=LOG_BACKUP_COUNT)
 
 if ENABLE_ADMIN:
     INSTALLED_APPS += (
