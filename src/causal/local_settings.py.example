@@ -52,6 +52,7 @@ LOG_SIZE = 2097152 # 2 MB
 LOG_BACKUP_COUNT = 5 # Keep the main .log file, plus .log.[1-5]
 
 GLOBAL_LOG_LEVEL = logging.ERROR
+handler = RotatingFileHandler(LOG_FILENAME, maxBytes=LOG_SIZE, backupCount=LOG_BACKUP_COUNT)
 GLOBAL_LOG_HANDLERS = [
     {
         'handler': handler,
@@ -59,5 +60,4 @@ GLOBAL_LOG_HANDLERS = [
         'format': "%(asctime)s %(source)s: %(message)s"
         },
 ]
-handler = RotatingFileHandler(LOG_FILENAME, maxBytes=LOG_SIZE, backupCount=LOG_BACKUP_COUNT)
 
