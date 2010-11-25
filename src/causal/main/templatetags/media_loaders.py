@@ -5,11 +5,11 @@ register = template.Library()
 
 GOOGLE_FILES = {
     'js': {
-        'jquery.min.js': 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js',
-        'jquery-ui.min.js': 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js',
+        'jquery.min.js': '//ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js',
+        'jquery-ui.min.js': '//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js',
     },
     'css': {
-        'cupertino/jquery-ui.css': 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css',
+        'cupertino/jquery-ui.css': '//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css',
     },
     'image': {
     }
