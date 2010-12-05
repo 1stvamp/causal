@@ -9,7 +9,7 @@
         {% else %}
             <h3>Activation failed..</h3>
             <p>
-                Sorry, the key you gave us, "{{ activation_key }}", didn't match our records.
+                Sorry, the key you gave us didn't match our records.<br/>
                 Either it was incorrect or it has experired; activation keys are
                 only valid for {{ expiration_days|apnumber }} days after registration.
             </p>
