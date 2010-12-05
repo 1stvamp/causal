@@ -6,7 +6,7 @@ using this email address.
 If this was you, you have {{ expiration_days }} day{{ expiration_days|pluralize }} to go to this following
 address to activate the account:
 
-https://{{ site.domain }}{% url registration_activate activation_key %}
+{% if request.is_secure %}https{% else %}http{% endif %}://{{ site.domain }}{% url registration_activate activation_key %}
 
 If this wasn't you, then please ignore.
 
