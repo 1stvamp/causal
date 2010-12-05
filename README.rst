@@ -1,5 +1,8 @@
+Causal 0.9 readme
+=================
+
 1. Intro
-========
+--------
 
 Firstly causal and its developers are not associated with any of the services we integrate with.
 
@@ -17,7 +20,7 @@ amounts of permissions required to get data from a third party. That said not ev
 fine grained permissions so please be aware that the oauth tokens should not be shared.
 
 2. Design
-=========
+---------
 
 We have broken each service we integrate with in a Django application. Each service can enabled from ``local_settings.py`` like so::
 
@@ -35,7 +38,7 @@ We have broken each service we integrate with in a Django application. Each serv
 This enables only Foursqaure and Twitter services for the user to integrate with.
 
 3. Run Modes
-============
+------------
 
 Causal can be run as multi user service by enabling user registration in local.settings.py as so::
 
@@ -46,13 +49,13 @@ This will allow users to register with the site user the django-registration app
 If multi user access isnt required as for example you wish to run you own causal instance just for your updates set ENABLE_REGISTRATION = False to disable user registration. You will then need to register a user by hand in the admin interface, locate at http://HOSTNAME/_ca-admin That is the default address of the admin interface.
 
 4. Build/Install
-================
+----------------
 
 Causal can be configured using the ``setup.py`` installer, ``buildout``, or via ``easy_install`` or ``pip``.
 As well as buildout, you can install Causal and it's dependencies within a ``virtualenv`` using either of ``setup.py`` or ``pip``.
 
 4.1 Download
-------------
+************
 
 If you're installing with ``setup.py``, ``buildout`` or installing from source within a virtualenv, you can grab the source 1 of 2 ways:
 
@@ -73,7 +76,7 @@ Or download a stable tagged release as a tar::
   mv causality-causal-*/ causal/
 
 4.2 setup.py
---------
+************
 
 To install from the setuputils/distutils installer::
 
@@ -84,7 +87,7 @@ To install from the setuputils/distutils installer::
 This unfortunately doesn't install all the dependencies for the core services, you would need to install these seperately, as listed in ``virtualenv_builds/extras_requirements.txt``.
 
 4.3 easy_install/pip
-----------------
+********************
 
 To install from PyPi using ``easy_install``::
 
@@ -101,7 +104,7 @@ Using ``pip``::
 ``pip`` unfortunately has the same restriction regards installing extras like core-services that ``setup.py`` does, so you would need to install the requirements seperately (see below).
 
 4.4 buildout
---------
+************
 
 To build a sandboxed Django environment containing Causal using ``buildout``::
 
@@ -120,7 +123,7 @@ After which you should have a set of endpoints in ``bin/``, e.g.::
 (Notice we don't distribute the buildout ``bootstrap.py``, as it has many problems, so you'll need a system, or virtualenv, installed buildout.)
 
 4.5 Bootstrapping a virtualenv
---------------------------
+******************************
 
 To quickly bootstrap a virtualenv for development (or even deployment), we recommend using the ``virtualenv_wrapper`` and ``pip`` tools::
 
@@ -140,7 +143,7 @@ To quickly bootstrap a virtualenv for development (or even deployment), we recom
   ./manage.py runserver
 
 4.6 Requirements
-------------
+****************
 
  * Django - 1.2.3
  * oauth2 - 1.2.0
@@ -162,12 +165,12 @@ The following allow the different services to be interacted with:
  * pyfacegraph - 0.0.4  Required for facebook.com
 
 5. Accessing Services
-=====================
+---------------------
 
 After enabling a service the user will be prompted either for a username for the basic services and oauth for restrictive ones.
 
 5.1 Sharing
------------
+***********
 
 The service is shared using the sliders on the settings page. Once a service is shared its available as a json feed:
 
@@ -176,12 +179,12 @@ http://HOSTNAME/USERNAME.json
 Where ``USERNAME`` is the username of the user.
 
 5.2 Stats
----------
+*********
 
 The front page contains links to stats about each service. 
 
 5.3 Enabling a service
-----------------------
+**********************
 
 Add the service into INSTALLED_APPS. 
 
@@ -191,30 +194,30 @@ linking to the oauth object.
 The service is then ready to roll.
 
 6. Upcoming
-===========
+-----------
 
 We had our own ideas of where we wanted to lead the project but we decided its the users who know best. With this in mind we are open to suggestions for improvements and feature requests. Email us at team@causal.com or find the current ticket list at: http://github.com/causality/causal/issues
 
 The project is hosted at http://github.com/causality/causal please fork away!
 
 7. Hacking
-===========
+-----------
 
 7.1 Adding more services
-------------------------
+************************
 A service is django app. Create a basic app. The are a few key this to note.
 
 7.1.1 urls.py
--------------
+*************
 
  - ``/`` - callback called by the third party usually on oauth callback
  - ``/auth`` - called when the user enables the service this typically sends the user off to the third party
  - ``/stats`` - adds a link on the home page
 
 7.1.2 service.py
-----------------
+****************
 
 get_items
-*********
+~~~~~~~~~
 
 This is the key method that fetches the data and returns data in json for the interface to render.
