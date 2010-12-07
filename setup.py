@@ -14,7 +14,7 @@ setup(
         version='0.9.1',
         author='Project Causal Team',
         author_email='team@projectcausal.com',
-        url='http://github.com/causality/causal',
+        url='http://www.projectcausal.com/',
         packages=find_packages('src', exclude=['ez_setup']),
         package_dir={'': 'src'},
         setup_requires=open(os.path.join(INSTALLER_DIR, 'virtualenv_build/base_requirements.txt'), 'r').readlines(),
