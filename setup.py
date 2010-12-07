@@ -20,7 +20,7 @@ setup(
         setup_requires=open(os.path.join(INSTALLER_DIR, 'virtualenv_build/base_requirements.txt'), 'r').readlines(),
         install_requires=['setuptools'],
         extras_require={
-            'services': open('virtualenv_build/extras_requirements.txt', 'r').readlines(),
+            'services': open(os.path.join(INSTALLER_DIR, 'virtualenv_build/extras_requirements.txt'), 'r').readlines(),
         },
         license='Apache License 2.0'
 )
