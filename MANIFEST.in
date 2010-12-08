@@ -1,0 +1,8 @@
+include virtualenv_build/*.txt
+include LICENSE
+global-exclude pip-log.txt
+graft src/causal/static
+recursive-include src/causal *.html
+recursive-include src/causal *.xml
+recursive-include src/causal *.json
+recursive-include src/causal *.js
