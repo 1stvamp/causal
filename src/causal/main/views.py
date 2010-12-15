@@ -248,3 +248,49 @@ def userfeed(request, username):
         data[service.app.module.DISPLAY_NAME] = _get_service_history(service, json=False)
 
     return HttpResponse(simplejson.dumps(data))
+
+def current_status(request, username):
+    """Return the last update from all enabled services for a user."""
+    user = get_object_or_404(User, username=username)
+
+    filters = {
+        'user': user,
+        'setup': True,
+    }
+    if not request.user.is_authenticated() or not request.user.pk == user.pk:
+        filters['share'] = True
+
+    services = UserService.objects.filter(**filters).order_by('app__module_name')
+    
+    data = {}
+    for service in services:
+        data[service.app.module.DISPLAY_NAME] = _get_service_history(service, json=False)
+        
+    last_entries = {}
+        
+    for connection in data:
+        last_entries[connection] = {}
+        for day in data[connection]['items']:
+            if day:
+                last_entries[connection] = day[0]
+                
+    # convert to serviceitems
+    connections = []
+    for name, status in last_entries.iteritems():
+        item = ServiceItem()
+        if status:
+            item.body = status['body']
+            item.clazz_name = status['class_name'].replace('.', '-')
+            item.created = status['created']
+            item.link_back = status['link_back']
+            item.title = status['title']
+            connections.append(item)
+        
+        
+    return render_to_response(
+        'causal/now.html',
+        {
+            'connections': connections,
+        },
+        context_instance=RequestContext(request)
+    )

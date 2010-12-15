@@ -1,0 +1,24 @@
+{% extends "causal/base.html" %}
+{% load extras %}
+{% load media_loaders %}
+
+{% block head %}
+    {% load_css "cupertino/jquery-ui.css" %}
+    {% load_css "tabs.css" %}
+    {% load_js "jquery-ui.min.js" %}
+    {% load_js "http://maps.google.com/maps/api/js?sensor=false" %}
+{% endblock head %}
+
+{% block primary %}
+    <div id="all-services" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+    <div id="connections">        
+    <ul>
+    {% for connection in connections %}
+    
+        <li class="{{connection.clazz_name}}">{{connection.title}} {{connection.body}}</li>
+    
+    {% endfor %}
+    <ul>
+    </div>
+    </div>
+{% endblock primary %}
