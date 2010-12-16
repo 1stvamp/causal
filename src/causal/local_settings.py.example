@@ -32,13 +32,14 @@ ENABLE_REGISTRATION = True
 # Same rules apply as in django's INSTALLED_APPS
 # adding any here will also add them to INSTALLED_APPS
 INSTALLED_SERVICES = (
-    'causal.twitter',
-    'causal.foursquare',
-    'causal.flickr',
+    'causal.delicious',
+    'causal.googlereader',
     'causal.facebook',
+    'causal.flickr',
+    'causal.foursquare',
     'causal.github',
     'causal.lastfm',
-    'causal.googlereader',
+    'causal.twitter',
 )
 
 # *Don't* use the below example, generate your own random string of chars
