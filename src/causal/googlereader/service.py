@@ -16,9 +16,8 @@ def get_items(user, since, model_instance=None):
     items = []
     at = AccessToken.objects.get(service=serv)
 
-    url = at.username
     try:
-        feed = feedparser.parse(url)
+        feed = feedparser.parse('http://www.google.com/reader/public/atom/user/%s/state/com.google/broadcast' % (at.username,))
         for entry in feed.entries:
             item = ServiceItem()
             item.title = entry.title
