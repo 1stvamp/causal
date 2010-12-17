@@ -21,11 +21,12 @@ def verify_auth(request):
     service = get_model_instance(request.user, MODULE_NAME)
     code = request.GET.get('code')
     callback = "%s%s" % (service.app.oauth.callback_url_base, reverse('causal-facebook-callback'),)
-    url = "%s&code=%s&client_secret=%s&redirect_uri=%s" % (
+    url = "%s&code=%s&client_secret=%s&redirect_uri=%s&client_id=%s" % (
         service.app.oauth.access_token_url,
         code,
         service.app.oauth.consumer_secret,
         callback,
+        service.app.oauth.consumer_key
     )
     
     response = cgi.parse_qs(urllib.urlopen(url).read())
