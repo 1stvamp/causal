@@ -1,47 +1,46 @@
-import time
-import feedparser
-from dateutil import parser
-from datetime import datetime
-from causal.main.models import AccessToken, ServiceItem
-from causal.main.service_utils import get_model_instance
+import httplib2
+import oauth2 as oauth
+from datetime import datetime, timedelta
+from causal.main.models import ServiceItem
+from causal.main.service_utils import get_model_instance, get_data
 from causal.main.exceptions import LoggedServiceError
-from urlparse import urlparse
+from django.shortcuts import render_to_response, redirect
 
 DISPLAY_NAME = 'Google Reader'
 CUSTOM_FORM = False
-OAUTH_FORM = False
+OAUTH_FORM = True
+
+def enable():
+    """Setup and authorise the service."""
+    return redirect('causal-googlereader-auth')
 
 def get_items(user, since, model_instance=None):
     serv = model_instance or get_model_instance(user, __name__)
     items = []
-    at = AccessToken.objects.get(service=serv)
 
     try:
-        feed = feedparser.parse('http://www.google.com/reader/public/atom/user/%s/state/com.google/broadcast' % (at.username,))
-        for entry in feed.entries:
-            item = ServiceItem()
-            item.title = entry.title
-            # we dont take the summary as its huge
-            #if entry.has_key('summary'):
-            item.body = ''
-            if entry.has_key('links'):
-                item.link_back = entry['links']
-            if entry.has_key('link'):
-                item.link_back = entry['link']
-            updated = parser.parse(entry.updated)
-            updated = (updated - updated.utcoffset()).replace(tzinfo=None)
-            item.created = updated
-            item.service = serv
-            item.user = user
-
-            # for stats
-            o = urlparse(entry.source.link)
-            item.source = o.netloc
-
-            item.author = entry.author # person making comment
-            # entry.content[0].value == coment
-            items.append(item)
+        checkins = get_data(serv, 'http://api.googlereader.com/v1/history.json')
     except Exception, e:
         raise LoggedServiceError(original_exception=e)
 
+    if checkins and checkins.has_key('checkins'):
+        for checkin in checkins['checkins']:
+            item = ServiceItem()
+            item.location = {}
+            item.link_back = 'http://googlereader.com/venue/%s' % checkin['venue']['id']
+            item.title = checkin['venue']['name']
+            if checkin.has_key('shout') and checkin['shout']:
+                item.body = checkin['shout']
+            else:
+                item.body = checkin['venue']['city']
+            if checkin['venue'].has_key('geolat') and checkin['venue']['geolat']:
+                item.location['lat'] = checkin['venue']['geolat']
+                item.location['long'] = checkin['venue']['geolong']
+            item.created = datetime.strptime(checkin['created'].replace(' +0000', ''), '%a, %d %b %y %H:%M:%S')
+            item.service = serv
+            if checkin['venue'].has_key('primarycategory'):
+                item.icon = checkin['venue']['primarycategory']['iconurl']
+            item.user = user
+            items.append(item)
+            del(item)
     return items
