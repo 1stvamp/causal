@@ -123,7 +123,7 @@ INSTALLED_APPS = (
 )
 
 INSTALLED_SERVICES = (
-    'causal.twitter',
+    #'causal.twitter',
     #'causal.foursquare',
     #'causal.flickr',
     #'causal.feed',
