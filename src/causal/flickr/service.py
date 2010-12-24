@@ -6,7 +6,7 @@ from causal.main.service_utils import get_model_instance
 from causal.main.exceptions import LoggedServiceError
 
 DISPLAY_NAME = 'Flickr'
-CUSTOM_FORM = True
+CUSTOM_FORM = False
 OAUTH_FORM = False
 
 def get_items(user, since, model_instance):
@@ -18,7 +18,7 @@ def get_items(user, since, model_instance):
 
     try:
         photos_json = flickr.photos_search(
-            user_id=at.username,
+            user_id=at.userid,
             per_page='10',
             format='json'
         )
