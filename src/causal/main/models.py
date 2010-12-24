@@ -103,6 +103,7 @@ class AccessToken(RequestToken):
 
     # For services such as Github et al that use user/API key auth
     username = models.CharField(max_length=255, blank=True, null=True)
+    userid = models.CharField(max_length=255, blank=True, null=True)
     api_token = models.CharField(max_length=255, blank=True, null=True)
 
     def __unicode__(self):

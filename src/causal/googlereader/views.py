@@ -1,67 +1,73 @@
+from datetime import datetime
+from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from causal.main.models import UserService, RequestToken, OAuthSetting, ServiceApp
+from causal.main.models import UserService, RequestToken, OAuthSetting, ServiceApp, AccessToken
 from causal.main.service_utils import get_model_instance, user_login, generate_access_token, get_module_name
+from django.template import RequestContext
+from django.shortcuts import render_to_response, get_object_or_404
+from causal.main.decorators import can_view_service
 from causal.googlereader.service import get_items
 from datetime import date, timedelta
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
-from causal.main.decorators import can_view_service
+from BeautifulSoup import Tag, BeautifulSoup as soup
+from BeautifulSoup import SoupStrainer
+from django.utils.datastructures import SortedDict
+import httplib2
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
 
 @login_required(redirect_field_name='redirect_to')
-def verify_auth(request):
-    service = get_model_instance(request.user, MODULE_NAME)
-    request_token = RequestToken.objects.get(service=service)
-    request_token.oauth_verify = request.GET.get('oauth_verifier')
-    request_token.save()
-    return_url = request.session.get('causal_googlereader_oauth_return_url', None) or 'user-settings'
-    generate_access_token(service, request_token)
-    service.setup = True
-    service.public = True
-    service.save()
-    request_token.delete()
-    return redirect(return_url)
-
-@login_required(redirect_field_name='redirect_to')
 def auth(request):
-    request.session['causal_googlereader_oauth_return_url'] = request.GET.get('HTTP_REFERER', None)
+    """We dont need a full oauth setup just a username."""
     service = get_model_instance(request.user, MODULE_NAME)
-    if not service:
-        app = ServiceApp.objects.get(module_name=MODULE_NAME)
-        service = UserService(user=request.user, app=app)
+    if service and request.method == 'POST':
+        username = request.POST['username']
+
+        # fetch the page and try to find the reader id
+        url = "http://www.google.com/reader/shared/%s" % username
+        links = SoupStrainer('link')
+        h = httplib2.Http()
+        resp, content = h.request(url, "GET")
+        parsed_links = [tag for tag in soup(str(content), parseOnlyThese=links)]
+        userid = parsed_links[2].attrs[2][1].split('%2F')[1]
+        # Delete existing token
+        AccessToken.objects.filter(service=service).delete()
+        # Before creating a new one
+        AccessToken.objects.create(
+            service=service,
+            username=username,
+            userid=userid,
+            created=datetime.now(),
+            api_token=service.app.oauth.consumer_key
+        )
+
+        service.setup = True
+        service.public = True
         service.save()
-        
-        # # USE http://gdata-python-client.googlecode.com/svn/trunk/pydocs/gdata.auth.html
-        url = service.app.oauth.request_token_url \
-            + '?oauth_consumer_key=%s&' \
-            + 'oauth_nonce=%s&' \
-            + 'oauth_signature_method=%s'\ 
-            + 'oauth_timestamp=%s&' \
-            + 'scope=%s&' \
-            + 'oauth_callback=%s' % (
-                service.app.oauth.consumer_key, 
-                # Random 64-bit, unsigned number encoded as an ASCII string in decimal format.
-            )
-    return user_login(service)
+
+    return redirect(reverse('user-settings'))
 
 @can_view_service
 def stats(request, service_id):
-    """Display stats based on checkins."""
+    """Create up some stats."""
     service = get_object_or_404(UserService, pk=service_id)
-    template_values = {}
-    # get checkins
-    checkins = get_items(request.user, date.today() - timedelta(days=7), service)
-    template_values['checkins'] = checkins
-    template_values['checkin_centre'] = checkins[-1]
-    
-    # get venue details ?
-    # for example http://api.googlereader.com/v1/venue?vid=940763
-    
+    shares = get_items(request.user, date.today() - timedelta(days=7), service)
+    sources = {}
+
+    # count source websites
+    for share in shares:
+        if sources.has_key(share.source):
+            sources[share.source] = sources[share.source] + 1
+        else:
+            sources[share.source] = 1
+
+    sources = SortedDict(sorted(sources.items(), reverse=True, key=lambda x: x[1]))
+    sources_reversed = SortedDict(sorted(sources.items(), reverse=False, key=lambda x: x[1]))
     return render_to_response(
         service.template_name + '/stats.html',
-        template_values,
+        {'shares' : shares,
+         'sources' : sources,
+         'sources_reversed' : sources_reversed},
         context_instance=RequestContext(request)
     )

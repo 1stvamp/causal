@@ -4,8 +4,6 @@ base_path = r'^googlereader/'
 shortcut = 'googlereader-urls'
 
 urlpatterns = patterns('',
-    url(r'^$', 'causal.googlereader.views.verify_auth', name='causal-googlereader-callback'),
-    url(r'^auth$', 'causal.googlereader.views.auth', name='causal-googlereader-auth'),
-    url(r'^stats/(?P<service_id>\d+)$', 'causal.googlereader.views.stats', name='causal-googlereader-stats'),
+        url(r'^auth$', 'causal.googlereader.views.auth', name='causal-googlereader-auth'),
+        url(r'^stats/(?P<service_id>\d+)$', 'causal.googlereader.views.stats', name='causal-googlereader-stats'),
 )
-
