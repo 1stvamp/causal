@@ -269,6 +269,9 @@ A.causal-flickr {
 A.causal-googlereader {
     background: transparent url(../images/googlereader.jpg) no-repeat 50% 50%;
 }
+A.causal-delicious {
+    background: transparent url(../images/delicious.jpg) no-repeat 50% 50%;
+}
 A.causal-timeline {
     background: transparent url(../images/time.png) no-repeat 50% 50%;
 }

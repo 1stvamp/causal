@@ -1,0 +1,8 @@
+Bookmarks
+<ul>
+{% for bookmark in bookmarks %}
+
+<li>{{bookmark.created}} - <a href="{{bookmark.link_back}}">{{bookmark.title}}</a></li>
+
+{% endfor %}
+</ul>
