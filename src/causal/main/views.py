@@ -276,6 +276,7 @@ def current_status(request, username):
         for day in data[connection]['items']:
             if day:
                 last_entries[connection] = day[0]
+                break
                 
     # convert to serviceitems
     connections = []
@@ -284,7 +285,7 @@ def current_status(request, username):
         if status:
             item.body = status['body']
             item.clazz_name = status['class_name'].replace('.', '-')
-            item.created = status['created']
+            item.created_date = datetime.fromtimestamp(status['created'])
             item.link_back = status['link_back']
             item.title = status['title']
             connections.append(item)
