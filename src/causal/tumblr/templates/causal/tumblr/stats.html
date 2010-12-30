@@ -1,8 +1,8 @@
-Bookmarks
+Posts
 <ul>
-{% for bookmark in bookmarks %}
+{% for post in posts %}
 
-<li>{{bookmark.created}} - <a href="{{bookmark.link_back}}">{{bookmark.title}}</a></li>
+<li>{{post.created}} - <a href="{{post.link_back}}">{{post.title}}</a></li>
 
 {% endfor %}
 </ul>

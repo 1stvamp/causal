@@ -272,6 +272,9 @@ A.causal-googlereader {
 A.causal-delicious {
     background: transparent url(../images/delicious.jpg) no-repeat 50% 50%;
 }
+A.causal-tumblr {
+    background: transparent url(../images/tumblr.jpg) no-repeat 50% 50%;
+}
 A.causal-timeline {
     background: transparent url(../images/time.png) no-repeat 50% 50%;
 }

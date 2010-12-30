@@ -11,7 +11,9 @@ class TestTumblrService(TestCase):
     """Test the module with fixtures."""
 
     def setUp(self):
-        self.rss_feed = """"""
+        f = open(__file__.rpartition('/')[0] + '/test_data/test_data.xml', 'r')
+        self.json_feed = f.read()
+        f.close()
         
     def tearDown(self):
         pass

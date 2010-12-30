@@ -41,7 +41,7 @@ def _convert_feed(feed, serv, user):
                 item.service = serv
                 item.user = user
                 items.append(item)
-    except e:
+    except Exception, e:
         raise LoggedServiceError(original_exception=e)
         
     return items

@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from causal.main.models import UserService, RequestToken, OAuthSetting, ServiceApp, AccessToken
 from causal.main.service_utils import get_model_instance, user_login, generate_access_token, get_module_name
@@ -41,9 +42,13 @@ def auth(request):
 def stats(request, service_id):
     """Create up some stats."""
     service = get_object_or_404(UserService, pk=service_id)
-    commits = get_items(request.user, date.today() - timedelta(days=7), service)
+    try:
+        posts = get_items(request.user, date.today() - timedelta(days=7), service)
+    except:
+        messages.error(request, 'There was an error connnecting to Tumblr.')
+        
     return render_to_response(
         service.template_name + '/stats.html',
-        {'commits': commits},
+        {'posts': posts},
         context_instance=RequestContext(request)
     )
