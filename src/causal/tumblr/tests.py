@@ -1,6 +1,5 @@
 from django.test import TestCase
 from causal.delicious.service import _convert_feed
-import feedparser
 
 try:
     import wingdbstub
