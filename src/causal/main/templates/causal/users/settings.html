@@ -141,6 +141,9 @@
                 {% endfor %}
             </ul>
         {% endif %}
+	<h3> JSON Feed  </h3>
+	<p>A feed of all your updates is available as a JSON feed.</p>
+	<p><a href="http://gargoyle.me/{{ request.user }}.json">http://gargoyle.me/{{ request.user }}.json</a></p>
     </div>
     <div id="disable-confirm-dialog" class="hide"></div>
     <script type="text/x-jqote-template" id="disable-confirm-dialog-template">
