@@ -54,7 +54,7 @@ def history(request, username):
         context_instance=RequestContext(request)
     )
 
-def _get_service_history(service, json=True):
+def _get_service_history(service):
     days = []
     days_to_i = {}
     day_one = date.today() - timedelta(days=7)
@@ -93,8 +93,6 @@ def _get_service_history(service, json=True):
     except ServiceError:
         response['error'] = True
 
-    if json:
-        response = simplejson.dumps(response)
     return response
 
 def _add_image_html(body):
@@ -120,7 +118,12 @@ def history_callback(request, username, service_id):
         service.delete()
         return redirect('user-settings')
 
-    return HttpResponse(_get_service_history(service))
+    data = _get_service_history(service)
+    if data['error']:
+        status_code = 502
+    else:
+        status_code = 200
+    return HttpResponse(simplejson.dumps(data), status_code=status_code)
 
 
 @login_required(redirect_field_name='redirect_to')
@@ -245,7 +248,7 @@ def userfeed(request, username):
 
     data = {}
     for service in services:
-        data[service.app.module.DISPLAY_NAME] = _get_service_history(service, json=False)
+        data[service.app.module.DISPLAY_NAME] = _get_service_history(service)
 
     return HttpResponse(simplejson.dumps(data))
 

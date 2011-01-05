@@ -13,8 +13,8 @@
     var item_sort_callback = function(a, b) {
         return a['created'] - b['created'];
     }
-    var success = function(data) {
-        if (!data['error']) {
+    var response_handler = function(data) {
+        if (typeof data != 'XMLHttpRequest' && !data['error']) {
             $('li#service_load_' + data['class']).addClass('loaded');
             data = data['items'];
             for (i in data) {
@@ -36,7 +36,14 @@
     }
     var load_services = function() {
         {% for service in services %}
-            $.get("{% url history-callback viewing_user.username service.pk %}", {}, success, 'json');
+            $.ajax({
+                url: "{% url history-callback viewing_user.username service.pk %}",
+                data: {},
+                success: response_handler,
+                error: response_handler,
+                dataType: 'json',
+                type: 'GET'
+            });
         {% endfor %}
     }
     $(function() {
