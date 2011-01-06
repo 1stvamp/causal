@@ -123,7 +123,7 @@ def history_callback(request, username, service_id):
         status_code = 502
     else:
         status_code = 200
-    return HttpResponse(simplejson.dumps(data), status_code=status_code)
+    return HttpResponse(simplejson.dumps(data), status=status_code)
 
 
 @login_required(redirect_field_name='redirect_to')

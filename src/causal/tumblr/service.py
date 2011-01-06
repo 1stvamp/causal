@@ -2,6 +2,7 @@ from causal.main.models import ServiceItem
 from causal.main.service_utils import get_model_instance, get_data
 from causal.main.exceptions import LoggedServiceError
 from django.shortcuts import render_to_response, redirect
+from django.utils import simplejson
 from causal.main.models import AccessToken, ServiceItem
 from causal.main.exceptions import LoggedServiceError
 from dateutil import parser
@@ -18,7 +19,7 @@ def get_items(user, since, model_instance=None):
     serv = model_instance or get_model_instance(user, __name__)
     
     at = AccessToken.objects.get(service=serv)
-    url = 'http://%s.tumblr.com/api/read' % (at.username,)
+    url = 'http://%s.tumblr.com/api/read/json?callback=callback' % (at.username,)
     h = httplib2.Http()
     resp, content = h.request(url, "GET")
     
@@ -27,20 +28,24 @@ def get_items(user, since, model_instance=None):
 def _convert_feed(feed, serv, user):
     items = []
     try:
-        tree = etree.fromstring(feed)
+        feed = feed.replace('callback(', '')
+        feed = feed.rstrip(');\n')
+        json = simplejson.loads(feed)
         
-        for entry in tree.xpath('/tumblr/posts/post'):
+        for entry in json['posts']:
             item = ServiceItem()
-            if entry.xpath('regular-title') and entry.xpath('regular-body'):
-                item.title = entry.xpath('regular-title')[0].text
-                item.body = entry.xpath('regular-body')[0].text
-                updated = parser.parse(entry.attrib['date-gmt'])
-                updated = (updated - updated.utcoffset()).replace(tzinfo=None)
-                item.created = updated
-                item.link_back = entry.attrib['url']
-                item.service = serv
-                item.user = user
-                items.append(item)
+            
+            if entry.has_key('regular-title'):
+                item.title = entry['regular-title']
+            if entry.has_key('regular-body'):
+                item.body = entry['regular-body']
+            updated = parser.parse(entry['date-gmt'])
+            updated = (updated - updated.utcoffset()).replace(tzinfo=None)
+            item.created = updated
+            item.link_back = entry['url']
+            item.service = serv
+            item.user = user
+            items.append(item)
     except Exception, e:
         raise LoggedServiceError(original_exception=e)
         
