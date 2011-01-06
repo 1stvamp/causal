@@ -7,4 +7,5 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ('id', 'user', 'timezone',)
+        fields = ('id', 'timezone', 'user',)
+

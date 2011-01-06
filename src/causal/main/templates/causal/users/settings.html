@@ -78,7 +78,7 @@
                     $('#disable-confirm-dialog').dialog('close');
                 });
             });
-            $('form#user-profile-form select#id_timezone_flat').change(function() {
+            $('form#user-profile-form select#id_timezone').change(function() {
                 $.post(
                     $('form#user-profile-form').attr('action'),
                     $('form#user-profile-form').serialize(),

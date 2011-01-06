@@ -120,9 +120,13 @@ def user_save_handler(sender, **kwargs):
     # Make sure we create a matching UserProfile instance whenever
     # a new User is created.
     if kwargs['created']:
-        up = UserProfile()
-        up.user = kwargs['instance']
-        up.save()
+        # Check for existing profile, possible if loaded from a fixture
+        try:
+            kwargs['instance'].get_profile()
+        except UserProfile.DoesNotExist:
+            up = UserProfile()
+            up.user = kwargs['instance']
+            up.save()
 post_save.connect(user_save_handler, User)
 
 
