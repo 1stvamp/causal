@@ -16,6 +16,7 @@ cwd = %(cwd)s
 eggs =
   %(eggs)s
 versions = versions
+%(findlinks)s
 
 [django]
 recipe = isotoma.recipe.django
@@ -48,8 +49,15 @@ def main():
 		requirements += open('virtualenv_build/extras_requirements.txt', 'r').readlines()
 
 	eggs = []
+	special_eggs = []
 	versions = []
+	find_links = []
 	for req in requirements:
+		if "://" in req:
+			req_bits = req.split("#")
+			req = req_bits[1]
+			url = req_bits[0]
+			find_links.append("find-links = %s" % (url,))
 		if "==" in req:
 			(name, version) = req.split('==')
 			versions.append("%s = %s" % (name, version,))
@@ -62,6 +70,7 @@ def main():
 		'cwd': os.path.realpath(file_path),
 		'eggs': "\n  ".join(eggs),
 		'versions': "".join(versions),
+		'findlinks': "".join(find_links),
 	}
 
 	print "Writing config to ./buildout.cfg"
