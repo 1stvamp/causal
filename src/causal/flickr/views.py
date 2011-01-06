@@ -11,8 +11,9 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
+from django.utils import simplejson
+
 import httplib2
-from lxml import etree
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
@@ -26,16 +27,18 @@ def auth(request):
         username = request.POST['username']
         
         # talk to flickr to get a flickr ID 1234567@N0 style
-        url = "http://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=%s&username=%s" % \
+        url = "http://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=%s&username=%s&format=json&nojsoncallback=1" % \
             (service.app.oauth.consumer_key, username)
         
         h = httplib2.Http()
         resp, content = h.request(url, "GET")
         
+        json = simplejson.loads(content)
+        
         # parse the request and check we have got back flickr id
-        try:
-            tree = etree.fromstring(content)
-            userid = tree.xpath('/rsp/user')[0].get('id')
+        if json['stat'] == 'ok':
+            
+            userid = json['user']['id']
               
             # Delete existing token
             AccessToken.objects.filter(service=service).delete()
@@ -52,7 +55,7 @@ def auth(request):
             service.setup = True
             service.public = True
             service.save()
-        except:
+        else:
             messages.error(request, 'Unable to validate your username with Flickr, please check your username and retry.')
             redirect(reverse('user-settings'))
 
