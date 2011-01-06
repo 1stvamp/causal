@@ -267,7 +267,7 @@ def current_status(request, username):
     
     data = {}
     for service in services:
-        data[service.app.module.DISPLAY_NAME] = _get_service_history(service, json=False)
+        data[service.app.module.DISPLAY_NAME] = _get_service_history(service)
         
     last_entries = {}
         
