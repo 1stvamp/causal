@@ -7,7 +7,7 @@ from causal.main.models import AccessToken, ServiceItem
 from causal.main.exceptions import LoggedServiceError
 from dateutil import parser
 from datetime import datetime, timedelta
-from lxml import etree
+
 import feedparser
 import httplib2
 
