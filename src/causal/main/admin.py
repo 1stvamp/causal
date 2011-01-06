@@ -35,3 +35,7 @@ class ServiceAppAdminForm(forms.ModelForm):
 class ServiceAppAdmin(admin.ModelAdmin):
     form = ServiceAppAdminForm
 admin.site.register(ServiceApp, ServiceAppAdmin)
+
+class UserProfileAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(UserProfile, UserProfileAdmin)
