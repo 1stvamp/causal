@@ -76,7 +76,7 @@ def _get_service_history(service):
             for item in items:
                 if hasattr(item, 'pic_link'):
                     item.body = _add_image_html(item.body)
-                    
+
                 if item.created_local.date() > day_one:
                     item_dict = {
                         'title': item.title,
@@ -97,17 +97,17 @@ def _get_service_history(service):
 
 def _add_image_html(body):
     """Add the html src of the image to the body of the tweet."""
-    
+
     twitpic_url = re.findall("http://twitpic.com/\S*", body)
-    
+
     if twitpic_url:
         body = ''.join((body, ' </br> <a href="%s"><img src="http://twitpic.com/show/mini/%s"/></a>' % (twitpic_url[0], twitpic_url[0].rsplit('/')[-1])))
-    
+
     yfrog_url = re.findall("http://yfrog.com/\S*", body)
-    
+
     if yfrog_url:
         body = ''.join((body, ' </br> <a href="%s.th.jpg"><img src="%s.th.jpg"/></a>' % (yfrog_url[0], yfrog_url[0])))
-    
+
     return body
 
 @can_view_service
@@ -237,7 +237,7 @@ def sharing_prefs(request):
     else:
         return redirect('user-settings')
 
-def userfeed(request, username):
+def user_feed(request, username):
     user = get_object_or_404(User, username=username)
 
     filters = {
@@ -267,20 +267,20 @@ def current_status(request, username):
         filters['share'] = True
 
     services = UserService.objects.filter(**filters).order_by('app__module_name')
-    
+
     data = {}
     for service in services:
         data[service.app.module.DISPLAY_NAME] = _get_service_history(service)
-        
+
     last_entries = {}
-        
+
     for connection in data:
         last_entries[connection] = {}
         for day in data[connection]['items']:
             if day:
                 last_entries[connection] = day[0]
                 break
-                
+
     # convert to serviceitems
     connections = []
     for name, status in last_entries.iteritems():
@@ -292,8 +292,8 @@ def current_status(request, username):
             item.link_back = status['link_back']
             item.title = status['title']
             connections.append(item)
-        
-        
+
+
     return render_to_response(
         'causal/now.html',
         {
