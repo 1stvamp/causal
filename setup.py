@@ -7,6 +7,24 @@ except ImportError:
     use_setuptools()
     from setuptools import setup, find_packages
 
+def parse_requires(path):
+    reqs = []
+    links = []
+    for req in open(path, 'r').readlines():
+        link = None
+        if '://' and '#' in req:
+            link, req = req.split('#')
+        reqs.append(req)
+        if link:
+            links.append(link)
+    return reqs, links
+
+setup_requires, dependency_links = parse_requires('virtualenv_build/base_requirements.txt')
+extras_requires, dependency_links2 = parse_requires('virtualenv_build/extras_requirements.txt')
+dependency_links.extend(dependency_links2)
+
+print dependency_links
+
 setup(
         name='causal',
         description='Open source lifestream aggregator',
@@ -18,11 +36,12 @@ setup(
         keywords=['lifestream', 'aggregator', 'socialnetwork', 'django', 'social'],
         packages=find_packages('src', exclude=['ez_setup']),
         package_dir={'': 'src'},
-        setup_requires=open('virtualenv_build/base_requirements.txt', 'r').readlines(),
+        setup_requires=setup_requires,
         install_requires=['setuptools'],
         extras_require={
-            'services': open('virtualenv_build/extras_requirements.txt', 'r').readlines(),
+            'services': extras_requires,
         },
+        dependency_links=dependency_links,
         license='Apache License 2.0',
         classifiers=[
             'Development Status :: 4 - Beta',
