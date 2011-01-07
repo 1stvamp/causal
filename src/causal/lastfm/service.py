@@ -24,20 +24,23 @@ def get_items(user, since, model_instance=None):
     except Exception, e:
         raise LoggedServiceError(original_exception=e)
 
-    for track in tracks_listing['recenttracks']['track']:
-        if track.has_key('date'):
-            item = ServiceItem()
-            item.title = track['name']
-            item.body = 'by %s' % (track['artist']['#text'],)
-            item.link_back = track['url']
-            item.created = datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M')
-            item.service = serv
-            item.user = user
-            items.append(item)
-
-            if type(item.created) == tuple and len(item.created):
-                item.created = item.created[0]
-
+    if tracks_listing.has_key('recenttracks'):
+        for track in tracks_listing['recenttracks']['track']:
+            if track.has_key('date'):
+                item = ServiceItem()
+                item.title = track['name']
+                item.body = 'by %s' % (track['artist']['#text'],)
+                item.link_back = track['url']
+                item.created = datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M')
+                item.service = serv
+                item.user = user
+                items.append(item)
+        
+                if type(item.created) == tuple and len(item.created):
+                    item.created = item.created[0]
+    else:
+        raise LoggedServiceError(original_exception=e)
+    
     return items
 
 def get_artists(user, since, model_instance=None):
