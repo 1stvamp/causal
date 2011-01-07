@@ -120,28 +120,15 @@ def user_save_handler(sender, **kwargs):
     # Make sure we create a matching UserProfile instance whenever
     # a new User is created.
     if kwargs['created']:
-        up = UserProfile()
-        up.user = kwargs['instance']
-        # *sigh*, because certain ppl haven't pushed a new release for Django 1.2,
-        # we'll have to monkey patch this for now
-        up._meta.fields[-1].to_python = lambda x: unicode(x)
-        up.timezone = TIME_ZONE
-        up.save()
+        # Check for existing profile, possible if loaded from a fixture
+        try:
+            kwargs['instance'].get_profile()
+        except UserProfile.DoesNotExist:
+            up = UserProfile()
+            up.user = kwargs['instance']
+            up.save()
 post_save.connect(user_save_handler, User)
 
-# Allow South to handle TimeZoneField smoothly
-try:
-    from south.modelsinspector import add_introspection_rules
-    add_introspection_rules(
-        rules=[(
-            (TimeZoneField,), 
-            [],
-            { "max_length": ["max_length", { "default": MAX_TIMEZONE_LENGTH }],}
-        )],
-        patterns=['timezones\.fields\.']
-    )
-except ImportError:
-    pass
 
 # Not a django.db.models.Model, just a common container for service data
 
