@@ -52,6 +52,8 @@ def auth(request):
         app = ServiceApp.objects.get(module_name=MODULE_NAME)
         service = UserService(user=request.user, app=app)
         service.save()
+    else:
+        logging.error('Service not found')
     return user_login(service)
 
 @can_view_service
