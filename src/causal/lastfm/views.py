@@ -45,12 +45,21 @@ def stats(request, service_id):
 
     template_values['favourite_artists'] = get_artists(request.user, date.today() - timedelta(days=7), service)
     template_values['recent_tracks'] = get_items(request.user, date.today() - timedelta(days=7), service)
+
+    gig_index = 0
     
     for artist in template_values['favourite_artists']:
         artist.gigs = get_upcoming_gigs(request.user, date.today() - timedelta(days=7), service, artist.name)
         if artist.gigs:
-            template_values['gig_centre'] = artist.gigs[0]
-        
+            if not template_values.has_key('gig_centre') and \
+               artist.gigs[gig_index].location.has_key('lat') and \
+               artist.gigs[gig_index].location.has_key('long') and \
+               artist.gigs[gig_index].location['lat'] and \
+               artist.gigs[gig_index].location['long']:
+                template_values['gig_centre'] = artist.gigs[0]
+            else:
+                gig_index = gig_index + 1
+            
     return render_to_response(
         service.template_name + '/stats.html',
         template_values,

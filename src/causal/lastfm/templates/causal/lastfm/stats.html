@@ -27,7 +27,7 @@
     }
 
     $(function() {
-        var latlng = new google.maps.LatLng({{gig_centre.location.lat }}, {{ gig_centre.location.long }});
+        var latlng = new google.maps.LatLng('{{gig_centre.location.lat }}', '{{ gig_centre.location.long }}');
         var myOptions = {
             zoom: 10,
             center: latlng,
