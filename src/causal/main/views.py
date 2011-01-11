@@ -126,7 +126,7 @@ def history_callback(request, username, service_id):
     return HttpResponse(simplejson.dumps(data), status=status_code)
 
 
-@login_required(redirect_field_name='redirect_to')
+@login_required
 def user_settings(request):
     """Edit access to various services"""
 
@@ -173,7 +173,7 @@ def user_settings(request):
         context_instance=RequestContext(request)
     )
 
-@login_required(redirect_field_name='redirect_to')
+@login_required
 def enable_service(request, app_id):
     """Edit access to various services"""
     app = get_object_or_404(ServiceApp, pk=app_id)
@@ -213,7 +213,7 @@ def index(request):
         context_instance=RequestContext(request)
     )
 
-@login_required(redirect_field_name='redirect_to')
+@login_required
 def sharing_prefs(request):
     """Enable/disable sharing preferences for services"""
     if request.method == 'POST':
