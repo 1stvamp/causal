@@ -99,6 +99,7 @@ def stats(request, service_id):
         template_values['total_tweets'] = len(tweets)
         template_values['tweets'] = tweets
 	template_values['tweets_per_day'] = sorted(days.iteritems(), key=lambda (k,v): (v,k))
+	template_values['max_tweets_per_day'] = template_values['tweets_per_day'][-1][1]
         
         days = {}
         
