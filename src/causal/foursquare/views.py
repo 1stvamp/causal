@@ -17,7 +17,7 @@ def verify_auth(request):
     request_token = RequestToken.objects.get(service=service)
     request_token.oauth_verify = request.GET.get('oauth_verifier')
     request_token.save()
-    return_url = request.session.get('causal_foursquare_oauth_return_url', None) or 'user-settings'
+    return_url = request.session.get('causal_foursquare_oauth_return_url', None) or '/' + request.user.username
     generate_access_token(service, request_token)
     service.setup = True
     service.public = True

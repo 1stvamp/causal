@@ -49,8 +49,8 @@ def verify_auth(request):
         
     else:
         messages.error(request, 'There was an error connnecting to Facebook.')
-        
-    return_url = request.session.get('causal_facebook_oauth_return_url', None) or 'user-settings'
+
+    return_url = request.session.get('causal_facebook_oauth_return_url', None) or '/' + request.user.username
     
     return redirect(return_url)
 

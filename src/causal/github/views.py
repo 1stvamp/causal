@@ -34,8 +34,8 @@ def auth(request):
         service.setup = True
         service.public = True
         service.save()
-
-    return redirect(reverse('user-settings'))
+    return_url = request.session.get('causal_foursquare_oauth_return_url', None) or '/' + request.user.username
+    return redirect(return_url)
 
 @can_view_service
 def stats(request, service_id):

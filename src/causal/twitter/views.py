@@ -52,6 +52,8 @@ def auth(request):
         app = ServiceApp.objects.get(module_name=MODULE_NAME)
         service = UserService(user=request.user, app=app)
         service.save()
+    else:
+        logging.error('Service not found')
     return user_login(service)
 
 @can_view_service
@@ -67,6 +69,9 @@ def stats(request, service_id):
     # retweet ratio
     # who you tweet the most
     ats = {}
+    
+    # to store a break down of tweets per day
+    days = {}
     if tweets:
         for tweet in tweets:
             if tweet.has_location():
@@ -80,11 +85,24 @@ def stats(request, service_id):
                         ats[i] = ats[i] + 1
                     else:
                         ats[i] = 1
+         
+        for t in tweets:
+	    if days.has_key(t.created.strftime('%d')):
+ 		days[t.created.strftime('%d')] = days[t.created.strftime('%d')] + 1
+	    else:
+ 		days[t.created.strftime('%d')] = 1
 
+	
+		
         template_values['retweets'] = retweets
         template_values['non_retweets'] = len(tweets) - retweets
         template_values['total_tweets'] = len(tweets)
         template_values['tweets'] = tweets
+	template_values['tweets_per_day'] = sorted(days.iteritems(), key=lambda (k,v): (v,k))
+        
+        days = {}
+        
+        # tweets per day
         
         # order by value and reverse to put most popular at the top
         template_values['atters'] = SortedDict(sorted(ats.items(), reverse=True, key=lambda x: x[1]))

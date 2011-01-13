@@ -58,8 +58,10 @@ def auth(request):
         else:
             messages.error(request, 'Unable to validate your username with Flickr, please check your username and retry.')
             redirect(reverse('user-settings'))
+            
+    return_url = request.session.get('causal_twitter_oauth_return_url', None) or '/' + request.user.username
 
-    return redirect(reverse('user-settings'))
+    return redirect(return_url)
 
 @can_view_service
 def stats(request, service_id):
