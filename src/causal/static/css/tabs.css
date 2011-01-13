@@ -43,8 +43,16 @@ DIV#service-tabs  {
         padding-left: 0;
 }
 
+#service-tabs {
+        background-color: #FFF !important;
+}
+
+.ui-widget-content {
+        background: #FFF !important;
+}
+
 .tab-loading {
-    background: url(../images/large_throbber.gif) center center no-repeat !important;
+    background: #FFF url(../images/large_throbber.gif) center center no-repeat !important;
     width: 95%;
     height: 95%;
 }
