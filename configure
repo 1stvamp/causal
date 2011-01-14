@@ -29,6 +29,7 @@ eggs = ${buildout:eggs}
 wsgi = true
 
 [versions]
+zc.recipe.egg = 1.0.0
 %(versions)s
 """
 
