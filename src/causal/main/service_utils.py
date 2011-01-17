@@ -4,7 +4,6 @@ from datetime import datetime
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
-
 from causal.main.models import RequestToken, AccessToken, UserService
 
 PARENT_PACKAGE_NAME = 'causal.'
@@ -90,3 +89,10 @@ def get_model_instance(user, module_name):
 
 def get_module_name(name):
     return name.rpartition('.')[0]
+
+def settings_redirect(request):
+    """Where the user is redirected to after configuring a service.
+    This can be overridden in the app itself."""
+    
+    # return the user back to the settings page
+    return reverse('user-settings') or '/' + request.user.username    

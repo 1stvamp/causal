@@ -1,16 +1,20 @@
-from datetime import datetime
+"""Handles all the user accessable pages for the Google Reader App.
+At present Google Reader (http://reader.google.com) lacks any API support.
+
+Everything done is from the publicly rss feeds from the users account."""
+
+from BeautifulSoup import Tag, BeautifulSoup as soup
+from BeautifulSoup import SoupStrainer
+from causal.googlereader.service import get_items
+from causal.main.models import UserService, AccessToken
+from causal.main.service_utils import get_model_instance, get_module_name, settings_redirect
+from causal.main.decorators import can_view_service
+from datetime import datetime, date, timedelta
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from causal.main.models import UserService, RequestToken, OAuthSetting, ServiceApp, AccessToken
-from causal.main.service_utils import get_model_instance, user_login, generate_access_token, get_module_name
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from causal.main.decorators import can_view_service
-from causal.googlereader.service import get_items
-from datetime import date, timedelta
-from BeautifulSoup import Tag, BeautifulSoup as soup
-from BeautifulSoup import SoupStrainer
 from django.utils.datastructures import SortedDict
 import httplib2
 
@@ -45,10 +49,8 @@ def auth(request):
         service.setup = True
         service.public = True
         service.save()
-
-    return_url = request.session.get('causal_twitter_oauth_return_url', None) or '/' + request.user.username    
         
-    return redirect(return_url)
+    return redirect(settings_redirect(request))
 
 @can_view_service
 def stats(request, service_id):
@@ -64,8 +66,11 @@ def stats(request, service_id):
         else:
             sources[share.source] = 1
 
-    sources = SortedDict(sorted(sources.items(), reverse=True, key=lambda x: x[1]))
-    sources_reversed = SortedDict(sorted(sources.items(), reverse=False, key=lambda x: x[1]))
+    sources = SortedDict(sorted(sources.items(), 
+                                reverse=True, key=lambda x: x[1]))
+    sources_reversed = SortedDict(sorted(sources.items(), 
+                                reverse=False, key=lambda x: x[1]))
+    
     return render_to_response(
         service.template_name + '/stats.html',
         {'shares' : shares,
