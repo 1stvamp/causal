@@ -1,15 +1,16 @@
-from datetime import datetime
-from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
-from causal.main.models import UserService, RequestToken, OAuthSetting, ServiceApp, AccessToken
-from causal.main.service_utils import get_model_instance, user_login, generate_access_token, get_module_name
-from django.template import RequestContext
-from django.shortcuts import render_to_response, get_object_or_404
+"""Handles user accessable urls for http://delicious.com service.
+There isn't an easy to user API for this service so we work on
+publicly rss feeds from the user's account."""
+
+from causal.main.models import UserService, AccessToken
+from causal.main.service_utils import get_model_instance, \
+get_module_name, settings_redirect
 from causal.main.decorators import can_view_service
 from causal.delicious.service import get_items
-from datetime import date, timedelta
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+from datetime import datetime, date, timedelta
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render_to_response, get_object_or_404
+from django.template import RequestContext
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
@@ -34,10 +35,8 @@ def auth(request):
         service.setup = True
         service.public = True
         service.save()
-        
-    return_url = request.session.get('causal_delicious_oauth_return_url', None) or '/' + request.user.username
 
-    return redirect(return_url)
+    return redirect(settings_redirect(request))
 
 @can_view_service
 def stats(request, service_id):
