@@ -33,11 +33,11 @@ ENABLE_REGISTRATION = True
 # adding any here will also add them to INSTALLED_APPS
 INSTALLED_SERVICES = (
     'causal.delicious',
-    'causal.googlereader',
     'causal.facebook',
     'causal.flickr',
     'causal.foursquare',
     'causal.github',
+    'causal.googlereader',
     'causal.lastfm',
     'causal.tumblr',
     'causal.twitter',
