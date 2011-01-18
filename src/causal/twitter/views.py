@@ -1,8 +1,11 @@
-from django.shortcuts import redirect
+"""Handles user accessable urls for http://twitter.com service.
+We ask for read only permissions using full blown oauth2.
+"""
+
 from django.contrib.auth.decorators import login_required
-from causal.main.models import UserService, RequestToken, OAuthSetting, ServiceApp
+from causal.main.models import UserService, RequestToken, ServiceApp
 from causal.twitter.utils import user_login
-from causal.main.service_utils import get_model_instance, generate_access_token, get_module_name
+from causal.main.service_utils import get_model_instance, generate_access_token, get_module_name, settings_redirect
 from causal.twitter.service import get_items
 from datetime import date, timedelta
 from django.utils.datastructures import SortedDict
@@ -25,22 +28,22 @@ def verify_auth(request):
     request_token.oauth_verify = request.GET.get('oauth_verifier')
     request_token.save()
     generate_access_token(service, request_token)
-    return_url = request.session.get('causal_twitter_oauth_return_url', None) or '/' + request.user.username
+
     # Mark as setup completed
     service.setup = True
-    
+
     # test if service is protected on twitter's side
     # if so mark it
-    auth = _auth(service.app.oauth)
-    user = tweepy.API(auth).get_user('twitter')
+    service_auth = _auth(service.app.oauth)
+    user = tweepy.API(service_auth).get_user('twitter')
     service.public = False
     if not user.protected:
         service.public = True
-    
+
     service.save()
-    
+
     request_token.delete()
-    return HttpResponseRedirect(return_url)
+    return HttpResponseRedirect(settings_redirect(request))
 
 @login_required(redirect_field_name='redirect_to')
 def auth(request):
@@ -69,7 +72,7 @@ def stats(request, service_id):
     # retweet ratio
     # who you tweet the most
     ats = {}
-    
+
     # to store a break down of tweets per day
     days = {}
     if tweets:
@@ -85,26 +88,26 @@ def stats(request, service_id):
                         ats[i] = ats[i] + 1
                     else:
                         ats[i] = 1
-         
-        for t in tweets:
-	    if days.has_key(t.created.strftime('%d')):
- 		days[t.created.strftime('%d')] = days[t.created.strftime('%d')] + 1
-	    else:
- 		days[t.created.strftime('%d')] = 1
 
-	
-		
+        for t in tweets:
+            if days.has_key(t.created.strftime('%d')):
+                days[t.created.strftime('%d')] = days[t.created.strftime('%d')] + 1
+            else:
+                days[t.created.strftime('%d')] = 1
+
+
+
         template_values['retweets'] = retweets
         template_values['non_retweets'] = len(tweets) - retweets
         template_values['total_tweets'] = len(tweets)
         template_values['tweets'] = tweets
-	template_values['tweets_per_day'] = sorted(days.iteritems(), key=lambda (k,v): (v,k))
-	template_values['max_tweets_per_day'] = template_values['tweets_per_day'][-1][1]
-        
+        template_values['tweets_per_day'] = sorted(days.iteritems(), key=lambda (k,v): (v,k))
+        template_values['max_tweets_per_day'] = template_values['tweets_per_day'][-1][1]
+
         days = {}
-        
+
         # tweets per day
-        
+
         # order by value and reverse to put most popular at the top
         template_values['atters'] = SortedDict(sorted(ats.items(), reverse=True, key=lambda x: x[1]))
     return render_to_response(
@@ -112,4 +115,3 @@ def stats(request, service_id):
         template_values,
         context_instance=RequestContext(request)
     )
-
