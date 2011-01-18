@@ -140,8 +140,6 @@ def user_settings(request):
     enabled_services = UserService.objects.all().filter(user=request.user, setup=True)
 
     if request.method == 'POST':
-        print request.POST.get('id', None)
-        print request.POST.get('user', None)
         if request.POST.get('id', None) != str(request.user.get_profile().id) or \
           request.POST.get('user', None) != str(request.user.id):
             return HttpResponseNotAllowed('Not your profile!')
