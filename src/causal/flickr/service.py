@@ -1,57 +1,81 @@
-import flickrapi
-from datetime import datetime
-from django.utils import simplejson
+"""This file provides the fetching and converting of the
+feed from flickr.com.
+"""
+
 from causal.main.models import ServiceItem, AccessToken
 from causal.main.service_utils import get_model_instance
 from causal.main.exceptions import LoggedServiceError
+from datetime import datetime
+from django.utils import simplejson
+import flickrapi
 
 DISPLAY_NAME = 'Flickr'
 CUSTOM_FORM = False
 OAUTH_FORM = False
 
 def get_items(user, since, model_instance):
+    """Fetch and normalise the updates from the service."""
+    
     serv = model_instance or get_model_instance(user, __name__)
     items = []
 
-    at = AccessToken.objects.get(service=serv)
-    flickr = flickrapi.FlickrAPI(at.api_token)
+    access_token = AccessToken.objects.get(service=serv)
+    flickr = flickrapi.FlickrAPI(access_token.api_token)
 
     try:
         photos_json = flickr.photos_search(
-            user_id=at.userid,
-            per_page='10',
-            format='json'
+            user_id = access_token.userid,
+            per_page = '10',
+            format = 'json'
         )
-    except Exception, e:
-        raise LoggedServiceError(original_exception=e)
+        
+    except Exception, exception:
+        raise LoggedServiceError(original_exception = exception)
 
+    # strip the jsonp leader and tail
     photos_json = photos_json.replace('jsonFlickrApi(', '')
     photos_json = photos_json.rstrip(')')
-    photos = simplejson.loads(photos_json)
+    
+    try:
+        photos = simplejson.loads(photos_json)
+    except:
+        return []
 
-    for photo in photos['photos']['photo']:
-        # flickr.photos.getInfo
-        pic = flickr.photos_getInfo(photo_id=photo['id'], format='json')
-        pic = pic.replace('jsonFlickrApi(', '')
-        pic = pic.rstrip(')')
-        p = simplejson.loads(pic)
-        epoch = p['photo']['dateuploaded']
-
-        item = ServiceItem()
-        item.location = {}
-        item.title = p['photo']['title']['_content']
-        item.body = p['photo']['urls']['url'][0]['_content']
-        item.created = datetime.fromtimestamp(float(epoch))
-        item.service = serv
-        item.link_back = p['photo']['urls']['url'][0]['_content']
-        item.tags = p['photo']['tags']['tag']
-        item.favorite = p['photo']['isfavorite']
-        item.number_of_comments = p['photo']['comments']['_content']
-        item.url = "http://farm%s.static.flickr.com/%s/%s_%s_m_d.jpg" %(p['photo']['farm'], p['photo']['server'], p['photo']['id'], p['photo']['secret'])
-        # add location
-        if p['photo'].has_key('location'):
-            item.location['lat'] = p['photo']['location']['latitude']
-            item.location['long'] = p['photo']['location']['longitude']
-        item.user = user
-        items.append(item)
+    # FIXME filter based on date/since
+    if photos['photos'].has_key('photo'):
+        for photo in photos['photos']['photo']:
+            # flickr.photos.getInfo
+            pic = flickr.photos_getInfo(photo_id=photo['id'], format='json')
+            pic = pic.replace('jsonFlickrApi(', '')
+            pic = pic.rstrip(')')
+            pic_json = simplejson.loads(pic)
+            epoch = pic_json['photo']['dateuploaded']
+    
+            item = ServiceItem()
+            item.location = {}
+            item.title = pic_json['photo']['title']['_content']
+            item.body = pic_json['photo']['urls']['url'][0]['_content']
+            item.created = datetime.fromtimestamp(float(epoch))
+            item.service = serv
+            
+            item.link_back = pic_json['photo']['urls']['url'][0]['_content']
+            item.tags = pic_json['photo']['tags']['tag']
+            item.favorite = pic_json['photo']['isfavorite']
+            item.number_of_comments = pic_json['photo']['comments']['_content']
+            item.url = "http://farm%s.static.flickr.com/%s/%s_%s_m_d.jpg" % \
+                         (pic_json['photo']['farm'], 
+                          pic_json['photo']['server'], 
+                          pic_json['photo']['id'], 
+                          pic_json['photo']['secret'])
+            
+            # add location
+            if pic_json['photo'].has_key('location'):
+                item.location['lat'] = pic_json['photo']['location']['latitude']
+                item.location['long'] = pic_json['photo']['location']['longitude']
+                
+            item.user = user
+            items.append(item)
+    else:
+        return []
+    
     return items
