@@ -19,8 +19,8 @@ def parse_requires(path):
             links.append(link)
     return reqs, links
 
-setup_requires, dependency_links = parse_requires('virtualenv_build/base_requirements.txt')
-extras_requires, dependency_links2 = parse_requires('virtualenv_build/extras_requirements.txt')
+setup_requires, dependency_links = parse_requires('requirements.txt')
+extras_requires, dependency_links2 = parse_requires('extras_requirements.txt')
 dependency_links.extend(dependency_links2)
 
 print dependency_links

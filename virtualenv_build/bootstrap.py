@@ -28,11 +28,11 @@ def main():
     file_path = os.path.dirname(__file__)
     print "Installing base requirements"
     subprocess.call(["pip", "install", "-E", virtualenv, "--requirement",
-                     os.path.join(file_path, "base_requirements.txt")])
+                     os.path.join(file_path, "../requirements.txt")])
     if not options.base:
         print "Installing extras requirements"
         subprocess.call(["pip", "install", "-E", virtualenv, "--requirement",
-                        os.path.join(file_path, "extras_requirements.txt")])
+                        os.path.join(file_path, "../extras_requirements.txt")])
 
     # Try to add the parent into PYTHONPATH for the virtualenv
     parent_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
