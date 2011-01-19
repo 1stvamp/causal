@@ -1,59 +1,70 @@
-import oauth2 as oauth
-from datetime import datetime, timedelta
+"""This module goes and fetches updates from http://last.fm. We
+access public json feeds and convert it to our ServiceItem format."""
+
 from causal.main.models import ServiceItem, AccessToken
 from causal.main.service_utils import get_model_instance, get_data
 from causal.main.exceptions import LoggedServiceError
+from datetime import datetime
 
 DISPLAY_NAME = 'Last.fm'
 CUSTOM_FORM = False
 OAUTH_FORM = False
 
 def get_items(user, since, model_instance=None):
+    """Fetch and filter the updates from Last.fm."""    
+    
     serv = model_instance or get_model_instance(user, __name__)
+    access_token = AccessToken.objects.get(service=serv)
+    tracks_listing = None
+    
+    if access_token:
+        try:
+            tracks_listing = get_data(
+                serv,
+                'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=%s&format=json&limit=200' \
+                    % (access_token.username, access_token.api_token,),
+                disable_oauth=True
+            )
+        except Exception, exception:
+            raise LoggedServiceError(original_exception = exception)
+        
+    return _convert_recent_tracks_json(user, serv, tracks_listing)
+
+def _convert_recent_tracks_json(user, serv, json):
+    """Convert the json returned from getrecenttrack into ServiceItems."""
+
     items = []
-
-    at = AccessToken.objects.get(service=serv)
-
-    try:
-        tracks_listing = get_data(
-            serv,
-            'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=%s&format=json&limit=200' \
-                % (at.username, at.api_token,),
-            disable_oauth=True
-        )
-    except Exception, e:
-        raise LoggedServiceError(original_exception=e)
-
-    if tracks_listing.has_key('recenttracks'):
-        for track in tracks_listing['recenttracks']['track']:
+    
+    if json.has_key('recenttracks') and json['recenttracks'].has_key('track'):
+        for track in json['recenttracks']['track']:
             if track.has_key('date'):
                 item = ServiceItem()
                 item.title = track['name']
                 item.body = 'by %s' % (track['artist']['#text'],)
                 item.link_back = track['url']
-                item.created = datetime.strptime(track['date']['#text'], '%d %b %Y, %H:%M')
+                item.created = datetime.strptime(track['date']['#text'], 
+                                                 '%d %b %Y, %H:%M')
                 item.service = serv
                 item.user = user
                 items.append(item)
         
                 if type(item.created) == tuple and len(item.created):
                     item.created = item.created[0]
-    else:
-        raise LoggedServiceError(original_exception=e)
-    
+
     return items
 
 def get_artists(user, since, model_instance=None):
     """Get a users top artists."""
+    
     serv = model_instance or get_model_instance(user, __name__)
     items = []
 
-    at = AccessToken.objects.get(service=serv)
+    access_token = AccessToken.objects.get(service=serv)
 
     fav_artists = get_data(
         serv,
         'http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=%s&api_key=%s&period=7day&format=json' \
-            % (at.username, at.api_token,),
+            % (access_token.username, access_token.api_token,),
         disable_oauth=True
     )
 
@@ -71,31 +82,39 @@ def get_artists(user, since, model_instance=None):
 
 def get_upcoming_gigs(user, since, model_instance=None, artist=None):
     """Return a list of up coming gigs for the user."""
+    
     serv = model_instance or get_model_instance(user, __name__)
     items = []
 
-    at = AccessToken.objects.get(service=serv)
+    access_token = AccessToken.objects.get(service=serv)
 
     gigs = get_data(
         serv,
         'http://ws.audioscrobbler.com/2.0/?method=artist.getevents&artist=%s&api_key=%s&format=json'
-            % (artist.replace(' ', '+'), at.api_token,),
+            % (artist.replace(' ', '+'), access_token.api_token,),
         disable_oauth=True
     )
 
     items = []
+    
+    # FIXME filter on date
     if gigs and gigs.has_key('events') and gigs['events'].has_key('event') :
         for gig in gigs['events']['event']:
             item = ServiceItem()
             item.location = {}
             try:
-                if gig.has_key('venue') and gig['venue'].has_key('name') and gig.has_key('startDate'):
+                if gig.has_key('venue') and \
+                   gig['venue'].has_key('name') and \
+                   gig.has_key('startDate'):
                     item.venue_name = gig['venue']['name']
                     item.event_url = gig['url']
                     item.date = gig['startDate']
-                    if gig['venue'].has_key('location') and gig['venue']['location'].has_key('geo:point'):
-                        item.location['long'] = gig['venue']['location']['geo:point']['geo:long']
-                        item.location['lat'] = gig['venue']['location']['geo:point']['geo:lat']
+                    if gig['venue'].has_key('location') and \
+                       gig['venue']['location'].has_key('geo:point'):
+                        item.location['long'] = \
+                            gig['venue']['location']['geo:point']['geo:long']
+                        item.location['lat'] = \
+                            gig['venue']['location']['geo:point']['geo:lat']
                     items.append(item)
             except:
                 pass

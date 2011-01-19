@@ -43,11 +43,11 @@ def main():
 	file_path = os.path.dirname(__file__)
 	(options, pos_args) = parser.parse_args()
 
-	print "Reading base_requirements.txt"
-	requirements = open('virtualenv_build/base_requirements.txt', 'r').readlines()
+	print "Reading requirements.txt"
+	requirements = open('requirements.txt', 'r').readlines()
 	if not options.base:
 		print "Reading extras_requirements.txt"
-		requirements += open('virtualenv_build/extras_requirements.txt', 'r').readlines()
+		requirements += open('extras_requirements.txt', 'r').readlines()
 
 	eggs = []
 	special_eggs = []
