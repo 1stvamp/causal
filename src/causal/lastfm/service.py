@@ -5,6 +5,7 @@ from causal.main.models import ServiceItem, AccessToken
 from causal.main.service_utils import get_model_instance, get_data
 from causal.main.exceptions import LoggedServiceError
 from datetime import datetime
+from time import time, mktime
 
 DISPLAY_NAME = 'Last.fm'
 CUSTOM_FORM = False
@@ -19,10 +20,14 @@ def get_items(user, since, model_instance=None):
     
     if access_token:
         try:
+            t = datetime.now()
             tracks_listing = get_data(
                 serv,
-                'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=%s&format=json&limit=200' \
-                    % (access_token.username, access_token.api_token,),
+                'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=%s&format=json&from=%s&to=%s&limit=250' \
+                    % (access_token.username, 
+                       access_token.api_token,
+                       str(int(mktime(since.timetuple()))),
+                       str(int(mktime(t.timetuple())))),
                 disable_oauth=True
             )
         except Exception, exception:
