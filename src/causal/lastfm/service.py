@@ -62,19 +62,25 @@ def get_artists(user, since, model_instance=None):
     """Get a users top artists."""
     
     serv = model_instance or get_model_instance(user, __name__)
-    items = []
-
     access_token = AccessToken.objects.get(service=serv)
-
-    fav_artists = get_data(
-        serv,
-        'http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=%s&api_key=%s&period=7day&format=json' \
-            % (access_token.username, access_token.api_token,),
-        disable_oauth=True
-    )
-
-    if fav_artists:
-        for artist in fav_artists['topartists']['artist']:
+    fav_artists = None
+    
+    if access_token:
+        fav_artists = get_data(
+            serv,
+            'http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=%s&api_key=%s&period=7day&format=json' \
+                % (access_token.username, access_token.api_token,),
+            disable_oauth=True
+        )
+    
+    return _convert_top_artists_json(user, serv, fav_artists)
+    
+def _convert_top_artists_json(user, serv, json):
+    """Convert json to ServiceItem list."""
+    items = []
+    
+    if json['topartists'].hasattr('artist'):
+        for artist in json['topartists']['artist']:
             item = ServiceItem()
             item.name = artist['name']
             item.rank = artist['@attr']['rank']
@@ -84,7 +90,7 @@ def get_artists(user, since, model_instance=None):
             items.append(item)
 
     return items
-
+    
 def get_upcoming_gigs(user, since, model_instance=None, artist=None):
     """Return a list of up coming gigs for the user."""
     

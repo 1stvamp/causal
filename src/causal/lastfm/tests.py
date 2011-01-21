@@ -1,6 +1,6 @@
 """Tests for last.fm app."""
 
-from causal.lastfm.service import _convert_recent_tracks_json
+from causal.lastfm.service import _convert_recent_tracks_json, _convert_top_artists_json
 from django.test import TestCase
 from django.utils import simplejson
 import os
@@ -49,5 +49,16 @@ class TestLastfmService(TestCase):
         json_file.close()
         
         service_items = _convert_recent_tracks_json('username', 'lastfm', simplejson.loads(recent_tracks))
+        
+        self.assertEqual(len(service_items), 0)
+        
+    def test_convert_top_artists(self):
+        """Check we can convert the top_artists json without issue."""
+        
+        json_file = open(self.path + '/test_data/top_artists.json', 'r')
+        recent_tracks = json_file.read()
+        json_file.close()
+        
+        service_items = _convert_top_artists_json('username', 'lastfm', simplejson.loads(recent_tracks))
         
         self.assertEqual(len(service_items), 0)
