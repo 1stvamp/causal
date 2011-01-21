@@ -32,7 +32,7 @@ def auth(request):
         http_requester = httplib2.Http()
         resp, content = http_requester.request(url, "GET")
         
-        if resp['status'] != '200':
+        if resp['status'] == '200':
             json = simplejson.loads(content)
             
             # parse the request and check we have got back flickr id
