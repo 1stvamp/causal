@@ -5,7 +5,7 @@ feed from flickr.com.
 from causal.main.models import ServiceItem, AccessToken
 from causal.main.service_utils import get_model_instance
 from causal.main.exceptions import LoggedServiceError
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils import simplejson
 import flickrapi
 
@@ -39,9 +39,8 @@ def get_items(user, since, model_instance):
     try:
         photos = simplejson.loads(photos_json)
     except:
-        return []
+        items
 
-    # FIXME filter based on date/since
     if photos['photos'].has_key('photo'):
         for photo in photos['photos']['photo']:
             # flickr.photos.getInfo
@@ -50,32 +49,36 @@ def get_items(user, since, model_instance):
             pic = pic.rstrip(')')
             pic_json = simplejson.loads(pic)
             epoch = pic_json['photo']['dateuploaded']
-    
-            item = ServiceItem()
-            item.location = {}
-            item.title = pic_json['photo']['title']['_content']
-            item.body = pic_json['photo']['urls']['url'][0]['_content']
-            item.created = datetime.fromtimestamp(float(epoch))
-            item.service = serv
+            created = datetime.fromtimestamp(float(epoch))
             
-            item.link_back = pic_json['photo']['urls']['url'][0]['_content']
-            item.tags = pic_json['photo']['tags']['tag']
-            item.favorite = pic_json['photo']['isfavorite']
-            item.number_of_comments = pic_json['photo']['comments']['_content']
-            item.url = "http://farm%s.static.flickr.com/%s/%s_%s_m_d.jpg" % \
-                         (pic_json['photo']['farm'], 
-                          pic_json['photo']['server'], 
-                          pic_json['photo']['id'], 
-                          pic_json['photo']['secret'])
-            
-            # add location
-            if pic_json['photo'].has_key('location'):
-                item.location['lat'] = pic_json['photo']['location']['latitude']
-                item.location['long'] = pic_json['photo']['location']['longitude']
+            # test if the pic is in our date range
+            if created.date() > since - timedelta(days=1):
+                item = ServiceItem()
+                item.location = {}
+                item.title = pic_json['photo']['title']['_content']
+                item.body = pic_json['photo']['urls']['url'][0]['_content']
+                item.created = created
+                item.service = serv
                 
-            item.user = user
-            items.append(item)
-    else:
-        return []
+                item.link_back = pic_json['photo']['urls']['url'][0]['_content']
+                item.tags = pic_json['photo']['tags']['tag']
+                item.favorite = pic_json['photo']['isfavorite']
+                if pic_json['photo']['comments']['_content'] == 0:
+                    item.number_of_comments = "No comments"
+                else:
+                    item.number_of_comments = pic_json['photo']['comments']['_content']
+                item.url = "http://farm%s.static.flickr.com/%s/%s_%s_m_d.jpg" % \
+                             (pic_json['photo']['farm'], 
+                              pic_json['photo']['server'], 
+                              pic_json['photo']['id'], 
+                              pic_json['photo']['secret'])
+                
+                # add location
+                if pic_json['photo'].has_key('location'):
+                    item.location['lat'] = pic_json['photo']['location']['latitude']
+                    item.location['long'] = pic_json['photo']['location']['longitude']
+                    
+                item.user = user
+                items.append(item)
     
     return items

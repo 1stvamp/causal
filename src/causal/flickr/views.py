@@ -92,9 +92,12 @@ def stats(request, service_id):
                 comments = pic.number_of_comments
                 template_values['most_commented_picture'] = pic
         
-        template_values['pictures'] = pictures
-        template_values['number_of_pictures_uploaded'] = len(pictures)
+    template_values['pictures'] = pictures
+    template_values['number_of_pictures_uploaded'] = len(pictures)
     
+    if template_values['number_of_pictures_favorites'] == 0:
+        template_values['number_of_pictures_favorites'] = "No favourite pictures this week."
+        
     return render_to_response(
         service.template_name + '/stats.html',
         template_values,
