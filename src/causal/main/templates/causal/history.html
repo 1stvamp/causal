@@ -63,7 +63,7 @@
             $('#service-tabs').tabs({
                 load: function(event, ui) {
                     $(ui.panel).removeClass('tab-loading');
-                    $('a', ui.panel).click(function() {
+                    $('a.tab-link', ui.panel).click(function() {
                         $(ui.panel).load(this.href);
                         return false;
                     });
@@ -86,7 +86,7 @@
             {% for service in services %}
                 {% if service|stats_url %}
                     <li>
-                        <a href="{{ service|stats_url }}" class="{{ service.class_name }}" title="{{ service.app.module.DISPLAY_NAME }} stats">
+                        <a href="{{ service|stats_url }}" class="{{ service.class_name }} tab-link" title="{{ service.app.module.DISPLAY_NAME }} stats">
                             <span>{{ service.app.module.DISPLAY_NAME }} stats</span>
                         </a>
                     </li>
