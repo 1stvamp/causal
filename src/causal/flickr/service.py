@@ -63,6 +63,13 @@ def get_items(user, since, model_instance):
                 item.link_back = pic_json['photo']['urls']['url'][0]['_content']
                 item.tags = pic_json['photo']['tags']['tag']
                 item.favorite = pic_json['photo']['isfavorite']
+                
+                # add views
+                item.views = pic_json['photo']['views']
+                
+                # add tags
+                item.tags = pic_json['photo']['tags']['tag']
+                
                 if pic_json['photo']['comments']['_content'] == 0:
                     item.number_of_comments = "No comments"
                 else:
