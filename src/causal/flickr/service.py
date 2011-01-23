@@ -39,7 +39,7 @@ def get_items(user, since, model_instance):
     try:
         photos = simplejson.loads(photos_json)
     except:
-        items
+        return items
 
     if photos['photos'].has_key('photo'):
         for photo in photos['photos']['photo']:

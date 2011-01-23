@@ -79,7 +79,7 @@ def _convert_top_artists_json(user, serv, json):
     """Convert json to ServiceItem list."""
     items = []
     
-    if json['topartists'].hasattr('artist'):
+    if json['topartists'].has_key('artist'):
         for artist in json['topartists']['artist']:
             item = ServiceItem()
             item.name = artist['name']

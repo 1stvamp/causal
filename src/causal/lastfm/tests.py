@@ -61,4 +61,26 @@ class TestLastfmService(TestCase):
         
         service_items = _convert_top_artists_json('username', 'lastfm', simplejson.loads(recent_tracks))
         
+        self.assertEqual(len(service_items), 50)
+        
+    def test_convert_top_artists_unknown_user(self):
+        """Check we deal with an unknown user without issue."""
+        
+        json_file = open(self.path + '/test_data/top_artists_unknown_user.json', 'r')
+        recent_tracks = json_file.read()
+        json_file.close()
+        
+        service_items = _convert_top_artists_json('username', 'lastfm', simplejson.loads(recent_tracks))
+        
+        self.assertEqual(len(service_items), 0)
+        
+    def test_convert_top_artists_none(self):
+        """Check we deal with a user without any top artists."""
+        
+        json_file = open(self.path + '/test_data/top_artists_none.json', 'r')
+        recent_tracks = json_file.read()
+        json_file.close()
+        
+        service_items = _convert_top_artists_json('username', 'lastfm', simplejson.loads(recent_tracks))
+        
         self.assertEqual(len(service_items), 0)
