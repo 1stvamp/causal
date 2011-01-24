@@ -41,15 +41,28 @@
 <ul>
 <li>Total uploads this week: {{number_of_pictures_uploaded}}</li>
 {% if most_commented_picture.body %}
-<li>Most commented picture: <a href="{{most_commented_picture.body}}">{{most_commented_picture.body}} </a> </li>
+<li>Most commented picture: </br><a href="{{most_commented_picture.link_back}}"><img src="{{most_commented_picture.url_small}}"/> </a> </li>
 {% endif %}
 <li>Number of pictures made favourites: {{number_of_pictures_favorites}}</li>
 
+<li>
+<h3>Camera Usage</h3>
+<ul>
+{% for cam, count in cameras_used.items %}
+<li>{{cam}} : {{count}} {%if count == 1 %} pic {%else%}pics{%endif%}</li>
+{% endfor %}
+</ul>
+</li>
+
 {% for pic in pictures %}
-<li><a href="{{pic.url}}"><img src="{{pic.url}}"/></a> Tags: 
+<li><a href="{{pic.link_back}}"><img src="{{pic.url_small}}"/></a> </br>
+Tags: 
 {% for tag in pic.tags %}
     {{tag.raw}}{% if not forloop.last %},{% endif%}
-{% endfor %}</li>
+{% endfor %}
+</br>
+Camera: {{pic.camera_make}}
+</li>
 {% endfor %}
 
 </ul>

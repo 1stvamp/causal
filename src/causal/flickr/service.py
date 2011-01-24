@@ -26,15 +26,12 @@ def get_items(user, since, model_instance):
         photos_json = flickr.photos_search(
             user_id = access_token.userid,
             per_page = '10',
-            format = 'json'
+            format = 'json',
+            nojsoncallback ='1'
         )
         
     except Exception, exception:
         raise LoggedServiceError(original_exception = exception)
-
-    # strip the jsonp leader and tail
-    photos_json = photos_json.replace('jsonFlickrApi(', '')
-    photos_json = photos_json.rstrip(')')
     
     try:
         photos = simplejson.loads(photos_json)
@@ -43,20 +40,26 @@ def get_items(user, since, model_instance):
 
     if photos['photos'].has_key('photo'):
         for photo in photos['photos']['photo']:
-            # flickr.photos.getInfo
-            pic = flickr.photos_getInfo(photo_id=photo['id'], format='json')
-            pic = pic.replace('jsonFlickrApi(', '')
-            pic = pic.rstrip(')')
+
+            # info about the pic
+            pic = flickr.photos_getInfo(photo_id=photo['id'], format='json', nojsoncallback='1')
             pic_json = simplejson.loads(pic)
+            
             epoch = pic_json['photo']['dateuploaded']
             created = datetime.fromtimestamp(float(epoch))
             
             # test if the pic is in our date range
             if created.date() > since - timedelta(days=1):
                 item = ServiceItem()
+
+                # info about how the pic was taken
+                exif = flickr.photos_getExif(photo_id=photo['id'], format='json', nojsoncallback ='1')
+                exif_json = simplejson.loads(exif)
+                item.camera_make = _extract_camera_type(exif_json)
+                
                 item.location = {}
                 item.title = pic_json['photo']['title']['_content']
-                item.body = pic_json['photo']['urls']['url'][0]['_content']
+                
                 item.created = created
                 item.service = serv
                 
@@ -74,12 +77,20 @@ def get_items(user, since, model_instance):
                     item.number_of_comments = "No comments"
                 else:
                     item.number_of_comments = pic_json['photo']['comments']['_content']
-                item.url = "http://farm%s.static.flickr.com/%s/%s_%s_m_d.jpg" % \
+                    
+                item.url_thumb = "http://farm%s.static.flickr.com/%s/%s_%s_t.jpg" % \
                              (pic_json['photo']['farm'], 
                               pic_json['photo']['server'], 
                               pic_json['photo']['id'], 
                               pic_json['photo']['secret'])
                 
+                item.url_small = "http://farm%s.static.flickr.com/%s/%s_%s_m.jpg" % \
+                             (pic_json['photo']['farm'], 
+                              pic_json['photo']['server'], 
+                              pic_json['photo']['id'], 
+                              pic_json['photo']['secret'])
+                
+                item.body = "<br/><img src='" + item.url_thumb +"'/>"
                 # add location
                 if pic_json['photo'].has_key('location'):
                     item.location['lat'] = pic_json['photo']['location']['latitude']
@@ -89,3 +100,24 @@ def get_items(user, since, model_instance):
                 items.append(item)
     
     return items
+
+def _extract_camera_type(json):
+    """Return the make and model of a photo."""
+
+    make_model = None
+    
+    # first attempt using the "model"
+    # second using "make"
+    try:
+        make_model = json['photo']['exif'][1]['raw']['_content']
+        return make_model
+    except:
+        pass
+    try:
+        make_model =  json['photo']['exif'][0]['raw']['_content']
+        return make_model
+    except:
+        pass
+    return make_model
+    
+    

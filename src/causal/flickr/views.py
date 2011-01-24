@@ -78,6 +78,7 @@ def stats(request, service_id):
     comments = 0
     template_values['most_commented_picture'] = None
     template_values['number_of_pictures_favorites'] = 0
+    template_values['cameras_used'] = {}
     number_of_pictures_favorites = 0
     for pic in pictures:
 
@@ -91,6 +92,13 @@ def stats(request, service_id):
             if pic.number_of_comments > comments:
                 comments = pic.number_of_comments
                 template_values['most_commented_picture'] = pic
+                
+        # get camera used count
+        if template_values['cameras_used'].has_key(pic.camera_make):
+            template_values['cameras_used'][pic.camera_make] = \
+                           template_values['cameras_used'][pic.camera_make] + 1
+        else:
+            template_values['cameras_used'][pic.camera_make] = 1
         
     template_values['pictures'] = pictures
     template_values['number_of_pictures_uploaded'] = len(pictures)
