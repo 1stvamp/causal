@@ -40,6 +40,17 @@
 
 <ul>
 <li>Total uploads this week: {{number_of_pictures_uploaded}}</li>
+{% if most_commented_picture.body %}
 <li>Most commented picture: <a href="{{most_commented_picture.body}}">{{most_commented_picture.body}} </a> </li>
+{% endif %}
 <li>Number of pictures made favourites: {{number_of_pictures_favorites}}</li>
+
+{% for pic in pictures %}
+<li><a href="{{pic.url}}"><img src="{{pic.url}}"/></a> Tags: 
+{% for tag in pic.tags %}
+    {{tag.raw}}{% if not forloop.last %},{% endif%}
+{% endfor %}</li>
+{% endfor %}
+
 </ul>
+

@@ -8,7 +8,6 @@ from causal.main.service_utils import settings_redirect, \
 from datetime import datetime, date, timedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.utils import simplejson
@@ -33,7 +32,7 @@ def auth(request):
         http_requester = httplib2.Http()
         resp, content = http_requester.request(url, "GET")
         
-        if resp['status'] != '200':
+        if resp['status'] == '200':
             json = simplejson.loads(content)
             
             # parse the request and check we have got back flickr id
@@ -93,9 +92,12 @@ def stats(request, service_id):
                 comments = pic.number_of_comments
                 template_values['most_commented_picture'] = pic
         
-        template_values['pictures'] = pictures
-        template_values['number_of_pictures_uploaded'] = len(pictures)
+    template_values['pictures'] = pictures
+    template_values['number_of_pictures_uploaded'] = len(pictures)
     
+    if template_values['number_of_pictures_favorites'] == 0:
+        template_values['number_of_pictures_favorites'] = "No favourite pictures this week."
+        
     return render_to_response(
         service.template_name + '/stats.html',
         template_values,

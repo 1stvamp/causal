@@ -1,3 +1,5 @@
+
+
 <h1> Most played artists for the last 7 days</h1>
 <ul>
 {% for artist in favourite_artists %}
@@ -27,7 +29,7 @@
     }
 
     $(function() {
-        var latlng = new google.maps.LatLng('{{gig_centre.location.lat }}', '{{ gig_centre.location.long }}');
+        var latlng = new google.maps.LatLng({{gig_centre.location.lat }}, {{ gig_centre.location.long }});
         var myOptions = {
             zoom: 10,
             center: latlng,

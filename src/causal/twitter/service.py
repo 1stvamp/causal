@@ -1,14 +1,15 @@
+"""Does all the fetching from twitter using a oauth token."""
 __version__ = '0.1.1'
 
-from jogging import logging
-from tweepy import TweepError
-from twitter_text import TwitterText
+from causal.main.exceptions import LoggedServiceError
+from causal.main.models import ServiceItem
+from causal.main.service_utils import get_model_instance
+from causal.twitter.utils import get_api, user_login
 from datetime import timedelta
 from django.shortcuts import render_to_response, redirect
-from causal.main.models import ServiceItem
-from causal.twitter.utils import get_api, user_login
-from causal.main.service_utils import get_model_instance
-from causal.main.exceptions import LoggedServiceError
+from jogging import logging
+from twitter_text import TwitterText
+from tweepy import TweepError
 import re
 
 DISPLAY_NAME = 'Twitter'
@@ -20,10 +21,12 @@ def enable():
     return redirect('causal-twitter-auth')
 
 def get_items(user, since, model_instance=None):
+    """Use of oauth token to fetch the users updates."""
+    
     items = []
     serv = model_instance or get_model_instance(user, __name__)
-
     api = get_api(serv)
+    
     if not api:
         return False
     
@@ -37,7 +40,6 @@ def get_items(user, since, model_instance=None):
         screen_name = api.me().screen_name
         
         for status in timeline:
-            
             # we are interested in tweets since
             if status.created_at.date() > since - timedelta(days=1):
                 item = ServiceItem()
@@ -61,3 +63,7 @@ def get_items(user, since, model_instance=None):
                 items.append(item)
         
     return items
+
+def _expand_picture_link(text):
+    """Expand and convert picture links."""
+    pass
