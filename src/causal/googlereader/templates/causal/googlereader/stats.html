@@ -1,13 +1,3 @@
-
 <img src="http://chart.apis.google.com/chart?chs=800x370&cht=p3&chd=t:{% for a, t in sources.iteritems %}{{t}}{% if not forloop.last %},{% endif%}{%endfor%}&chdl={% for source in sources %}{{source}}{% if not forloop.last %}|{% endif%}{%endfor%}&chco=3072F3" width="800" height="300" alt="" />
 </br>
-
-
 <img src="http://chart.apis.google.com/chart?&chxl=1:|{% for source in sources_reversed %}{{source}}{% if not forloop.last %}|{% endif%}{%endfor%}&chxt=x,y&chbh=a&chs=440x220&cht=bhs&chco=4D89F9,C6D9FD&chds=0,10&chxr=0,0,10&chd=t:{% for a, t in sources.iteritems %}{{t}}{% if not forloop.last %},{% endif%}{%endfor%}&chtt=Horizontal+bar+chart" alt="Horizontal bar chart" />
-
-<ul>
-    Sources from where you shared:
-    {% for a, t in sources.iteritems %}
-        <li>{{ a }} : {{ t }} time{%if t > 1 %}s {%endif%}</li>
-    {% endfor %}
-</ul>
