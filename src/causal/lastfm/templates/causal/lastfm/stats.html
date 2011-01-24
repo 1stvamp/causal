@@ -1,9 +1,25 @@
 
-
+{% if favourite_artists %}
 <h1> Most played artists for the last 7 days</h1>
 <ul>
 {% for artist in favourite_artists %}
 <li>{{ forloop.counter }}. {{artist.name }}</li>
+{% endfor %}
+</ul>
+
+
+<ul>
+{% for artist in favourite_artists %}
+{% if artist.gigs %}
+<li>
+<h2>{{artist.name}}</h2>
+{% for gig in artist.gigs %}
+<ul>
+    <li>{{gig.date}} at <a href="{{gig.event_url}}">{{gig.venue_name}}</a></li>
+</ul>
+{% endfor %}
+</li>
+{% endif %}
 {% endfor %}
 </ul>
 
@@ -52,16 +68,7 @@
 
 <div id="map_canvas" style="width:600px; height:600px"></div>
 {% endif %}
-
-<ul>
-{% for artist in favourite_artists %}
-<li><h2>{{ forloop.counter }}. {{artist.name}}</h2>
-{% for gig in artist.gigs %}
-<ul>
-    <li>{{gig.date}} at <a href="{{gig.event_url}}">{{gig.venue_name}}</a></li>
-</ul>
-{% endfor %}
-</li>
-{% endfor %}
-</ul>
-
+{% else %}
+<h1>No plays this week!</h1>
+<p>Kick back and listen to some tunes.</p>
+{% endif %}
