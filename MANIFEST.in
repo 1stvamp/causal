@@ -1,4 +1,4 @@
-include virtualenv_build/*.txt
+include *.txt
 include LICENSE
 global-exclude pip-log.txt
 graft src/causal/static
