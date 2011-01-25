@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client
+import feedparser
 import os
 
 try:
@@ -29,6 +30,12 @@ class TestGithubViews(TestCase):
         atom_file = open(self.path + '/test_data/user.atom', 'r')
         atom_feed = atom_file.read()
         atom_file.close()
+        atom_feed = feedparser.parse(atom_feed)
+        items = _convert_feed('user', 'github', atom_feed)
+        self.assertEqual(35, len(items))
         
-        items = _convert_feed(atom_feed)
-        pass
+    def test_convert_broken_feed(self):
+        """Test we deal with broken atom feeds."""
+        items = _convert_feed('user', 'github', '')
+        self.assertEqual(0, len(items))
+       
