@@ -31,15 +31,20 @@ def _convert_feed(serv, user, json):
     items = []
 
     for entry in json:
-        item = ServiceItem()
-        item.title = entry['d']
-        item.body = entry['n']
-        item.created = datetime.strptime(entry['dt'], '%Y-%m-%dT%H:%M:%SZ') #'2010-11-23T22:03:29Z'
-        item.link_back = entry['u']
-        item.notes = entry['n']
-        item.tags = entry['t']
-        item.service = serv
-        item.user = user
-        items.append(item)
+        # check we have a valid feed
+        if entry != '404 Not Found':
+            item = ServiceItem()
+            try:
+                item.title = entry['d']
+                item.body = entry['n']
+                item.created = datetime.strptime(entry['dt'], '%Y-%m-%dT%H:%M:%SZ') #'2010-11-23T22:03:29Z'
+                item.link_back = entry['u']
+                item.notes = entry['n']
+                item.tags = entry['t']
+                item.service = serv
+                item.user = user
+                items.append(item)
+            except:
+                pass
     
     return items

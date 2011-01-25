@@ -28,3 +28,21 @@ class TestDeliciousService(TestCase):
         service_items = _convert_feed('username', 'delicious', simplejson.loads(json_feed))
         
         self.assertEqual(len(service_items), 4)
+        
+    def test_convert_feed(self):
+        """Check we get back a correctly formed list of ServiceItems"""
+        json_file = open(self.path + '/test_data/user_feed.json', 'r')
+        json_feed = json_file.read()
+        json_file.close()
+        service_items = _convert_feed('username', 'delicious', simplejson.loads(json_feed))
+        
+        self.assertEqual(len(service_items), 4)
+        
+    def test_convert_feed_unknown_user(self):
+        """Check we get back a correctly formed list of ServiceItems"""
+        json_file = open(self.path + '/test_data/unknown_user.json', 'r')
+        json_feed = json_file.read()
+        json_file.close()
+        service_items = _convert_feed('username', 'delicious', simplejson.loads(json_feed))
+        
+        self.assertEqual(len(service_items), 0)
