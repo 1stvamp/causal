@@ -107,8 +107,7 @@ def get_upcoming_gigs(user, since, model_instance=None, artist=None):
     )
 
     items = []
-    
-    # FIXME filter on date
+
     if gigs and gigs.has_key('events') and gigs['events'].has_key('event') :
         for gig in gigs['events']['event']:
             item = ServiceItem()

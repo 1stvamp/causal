@@ -1,0 +1,1074 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xml:lang="en-US">
+  <id>tag:github.com,2008:/test_username</id>
+  <link type="text/html" rel="alternate" href="https://github.com/test_username"/>
+  <link type="application/atom+xml" rel="self" href="https://github.com/test_username.atom"/>
+  <title>test_username's Activity</title>
+  <updated>2011-01-24T07:30:56-08:00</updated>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1095325034</id>
+    <published>2011-01-24T07:30:56-08:00</published>
+    <updated>2011-01-24T07:30:56-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/isotoma/isotoma.recipe.cluster/compare/73386b6614...a008fe6afa"/>
+    <title>test_username pushed to master at isotoma/isotoma.recipe.cluster</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/isotoma/isotoma.recipe.cluster/commit/a008fe6afa6772a39e2d2f0363c90c79fc922d8f&quot;&gt;a008fe6&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;fixed typo displaying name&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1095317285</id>
+    <published>2011-01-24T07:24:35-08:00</published>
+    <updated>2011-01-24T07:24:35-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/isotoma/isotoma.recipe.cluster/compare/cd617e9b40...73386b6614"/>
+    <title>test_username pushed to master at isotoma/isotoma.recipe.cluster</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/isotoma/isotoma.recipe.cluster/commit/73386b6614c78d66378942ef01028d0b105b8ffe&quot;&gt;73386b6&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;added missing s to new value from last commit&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1095313417</id>
+    <published>2011-01-24T07:21:12-08:00</published>
+    <updated>2011-01-24T07:21:12-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/isotoma/isotoma.recipe.cluster/compare/2660571578...cd617e9b40"/>
+    <title>test_username pushed to master at isotoma/isotoma.recipe.cluster</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/isotoma/isotoma.recipe.cluster/commit/cd617e9b406308a5610416d38cc4b526fe4bb389&quot;&gt;cd617e9&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Added missing name of service&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1095303579</id>
+    <published>2011-01-24T07:16:41-08:00</published>
+    <updated>2011-01-24T07:16:41-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/isotoma/isotoma.recipe.cluster/compare/767a3ea52a...2660571578"/>
+    <title>test_username pushed to master at isotoma/isotoma.recipe.cluster</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/isotoma/isotoma.recipe.cluster/commit/26605715783505f4d1c604f328cbc330361c4a57&quot;&gt;2660571&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Removes stray bin and ver additions to the path&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1095294229</id>
+    <published>2011-01-24T07:06:38-08:00</published>
+    <updated>2011-01-24T07:06:38-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/isotoma/isotoma.recipe.cluster/compare/74029bb8a5...767a3ea52a"/>
+    <title>test_username pushed to master at isotoma/isotoma.recipe.cluster</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/isotoma/isotoma.recipe.cluster/commit/767a3ea52a75b396d5f5ca0b8c658226ed084b81&quot;&gt;767a3ea&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;added cluster recipe access&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1095199848</id>
+    <published>2011-01-24T05:33:11-08:00</published>
+    <updated>2011-01-24T05:33:11-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/causality/causal/issues/75/find"/>
+    <title>test_username opened issue 75 on causality/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+
+&lt;div class=&quot;details&quot;&gt;
+  
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      Make markers on last.fm coloured by band
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1095199336</id>
+    <published>2011-01-24T05:32:19-08:00</published>
+    <updated>2011-01-24T05:32:19-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/causality/causal/issues/66/find"/>
+    <title>test_username closed issue 66 on causality/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+
+&lt;div class=&quot;details&quot;&gt;
+  
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      last.fm stats
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1095199293</id>
+    <published>2011-01-24T05:32:11-08:00</published>
+    <updated>2011-01-24T05:32:11-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/causality/causal/compare/1ba2596951...244d297fef"/>
+    <title>test_username pushed to master at causality/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/causality/causal/commit/244d297fef57e286d069f82d9f4235009454b914&quot;&gt;244d297&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Merge branch 'master' of git@github.com:causality/causal&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/causality/causal/commit/5e3d2822ec66d28df2c93e24918f7e9121124953&quot;&gt;5e3d282&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Fixed minor template issues with no results&lt;br&gt;
+Fixed missing gigs&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1095130937</id>
+    <published>2011-01-24T04:41:05-08:00</published>
+    <updated>2011-01-24T04:41:05-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/5c1c679db2...5e3d2822ec"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/5e3d2822ec66d28df2c93e24918f7e9121124953&quot;&gt;5e3d282&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Fixed minor template issues with no results&lt;br&gt;
+Fixed missing gigs&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1095102436</id>
+    <published>2011-01-24T04:15:45-08:00</published>
+    <updated>2011-01-24T04:15:45-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/causality/causal/issues/73/find"/>
+    <title>test_username closed issue 73 on causality/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+
+&lt;div class=&quot;details&quot;&gt;
+  
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      Replace atom feed with json for github
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1094596248</id>
+    <published>2011-01-23T16:58:44-08:00</published>
+    <updated>2011-01-23T16:58:44-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/causality/causal/issues/73/find"/>
+    <title>test_username opened issue 73 on causality/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+
+&lt;div class=&quot;details&quot;&gt;
+  
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      Replace atom feed with json for github
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1094588141</id>
+    <published>2011-01-23T16:45:29-08:00</published>
+    <updated>2011-01-23T16:45:29-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/causality/causal/issues/65/find"/>
+    <title>test_username closed issue 65 on causality/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+
+&lt;div class=&quot;details&quot;&gt;
+  
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      google reader stats
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1094588103</id>
+    <published>2011-01-23T16:45:24-08:00</published>
+    <updated>2011-01-23T16:45:24-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/619adb9540...5c1c679db2"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/5c1c679db2a04ec33e830cf39608fe194f4e35df&quot;&gt;5c1c679&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Removed table as its just the same data repeated&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1094547361</id>
+    <published>2011-01-23T16:12:41-08:00</published>
+    <updated>2011-01-23T16:12:41-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/causality/causal/issues/62/find"/>
+    <title>test_username closed issue 62 on causality/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+
+&lt;div class=&quot;details&quot;&gt;
+  
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      flickr stats report wrong number of pics and suck
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1094547072</id>
+    <published>2011-01-23T16:11:08-08:00</published>
+    <updated>2011-01-23T16:11:08-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/07e9396cae...619adb9540"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/619adb9540ad1141b421fe2baa2ba139f84a0b3d&quot;&gt;619adb9&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Added more break down for flickr app.&lt;br&gt;
+Including camera make&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1094397252</id>
+    <published>2011-01-23T13:59:20-08:00</published>
+    <updated>2011-01-23T13:59:20-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/causality/causal/compare/a4c04369a2...07e9396cae"/>
+    <title>test_username pushed to master at causality/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/causality/causal/commit/07e9396cae9e7651f10fbd5297ea98bf8f6c4050&quot;&gt;07e9396&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;added display of tags on the page for flickr app&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1094397226</id>
+    <published>2011-01-23T13:59:14-08:00</published>
+    <updated>2011-01-23T13:59:14-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/5ce7bd6c6e...07e9396cae"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/07e9396cae9e7651f10fbd5297ea98bf8f6c4050&quot;&gt;07e9396&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;added display of tags on the page for flickr app&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/a4c04369a210828a8368751643833a4a2d0d0ed0&quot;&gt;a4c0436&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Merge branch 'master' of github.com:causality/causal&lt;br&gt;
+&lt;br&gt;
+Conflicts:&lt;br&gt;
+	src/causal/flickr/service.py&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/9d898d18e5daac6b50b8fb9aa91a333d63958d83&quot;&gt;9d898d1&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Minor refactor&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li class=&quot;more&quot;&gt;&lt;a href=&quot;/test_username/causal/compare/5ce7bd6c6e...07e9396cae&quot;&gt;3 more commits &amp;raquo;&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1093820441</id>
+    <published>2011-01-23T00:04:31-08:00</published>
+    <updated>2011-01-23T00:04:31-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/causality/causal/compare/9d898d18e5...a4c04369a2"/>
+    <title>test_username pushed to master at causality/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/causality/causal/commit/a4c04369a210828a8368751643833a4a2d0d0ed0&quot;&gt;a4c0436&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Merge branch 'master' of github.com:causality/causal&lt;br&gt;
+&lt;br&gt;
+Conflicts:&lt;br&gt;
+	src/causal/flickr/service.py&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:ForkApplyEvent/1093819639</id>
+    <published>2011-01-23T00:00:01-08:00</published>
+    <updated>2011-01-23T00:00:01-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/causality/causal/compare/97e9a90...9d898d1"/>
+    <title>test_username applied fork commits to causality/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;span title=&quot;test_username&quot;&gt;&lt;img src=&quot;https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=140&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png&quot; alt=&quot;&quot; width=&quot;16&quot; height=&quot;16&quot;  /&gt;&lt;/span&gt;
+        &lt;code&gt;&lt;a href=&quot;/causality/causal/commit/dd3dd1708d7ee209f71f3dd0c79a9079477e1b42&quot;&gt;dd3dd17&lt;/a&gt;&lt;/code&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote title=&quot;Minor refactor and clean up according to pylint&quot;&gt;
+            Minor refactor and clean up according to pylint
+          &lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;span title=&quot;test_username&quot;&gt;&lt;img src=&quot;https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=140&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png&quot; alt=&quot;&quot; width=&quot;16&quot; height=&quot;16&quot;  /&gt;&lt;/span&gt;
+        &lt;code&gt;&lt;a href=&quot;/causality/causal/commit/9d898d18e5daac6b50b8fb9aa91a333d63958d83&quot;&gt;9d898d1&lt;/a&gt;&lt;/code&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote title=&quot;Minor refactor&quot;&gt;
+            Minor refactor
+          &lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1092253727</id>
+    <published>2011-01-21T16:35:06-08:00</published>
+    <updated>2011-01-21T16:35:06-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/f4ceae6984...5ce7bd6c6e"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/5ce7bd6c6e1ebd83786fa94cad8f6b6fe1fad569&quot;&gt;5ce7bd6&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Improved stats and closed #62&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/7728cc59462cd0776b397dc1ebbe4e9484c1f633&quot;&gt;7728cc5&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Fix to typo in status check&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1092167050</id>
+    <published>2011-01-21T15:16:54-08:00</published>
+    <updated>2011-01-21T15:16:54-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/causality/causal/issues/71/find"/>
+    <title>test_username opened issue 71 on causality/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+
+&lt;div class=&quot;details&quot;&gt;
+  
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      last.fm stats links fail
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1092166677</id>
+    <published>2011-01-21T15:15:54-08:00</published>
+    <updated>2011-01-21T15:15:54-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/causality/causal/issues/14/find"/>
+    <title>test_username closed issue 14 on causality/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+
+&lt;div class=&quot;details&quot;&gt;
+  
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      Add Latitude Support
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1091884489</id>
+    <published>2011-01-21T12:34:50-08:00</published>
+    <updated>2011-01-21T12:34:50-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/4620449b35...f4ceae6984"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/f4ceae6984eb9ca16604c2396c0aac54970de95f&quot;&gt;f4ceae6&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;refactor and added test&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1091272166</id>
+    <published>2011-01-21T07:54:54-08:00</published>
+    <updated>2011-01-21T07:54:54-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/60702563aa...4620449b35"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/4620449b359eb299cb80eb501bebb3db3104e5ff&quot;&gt;4620449&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;fix to js loading&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1091166159</id>
+    <published>2011-01-21T06:40:25-08:00</published>
+    <updated>2011-01-21T06:40:25-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/isotoma/isotoma.recipe.buildbot/compare/3cc04e21b7...21f1c70a7d"/>
+    <title>test_username pushed to master at isotoma/isotoma.recipe.buildbot</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/isotoma/isotoma.recipe.buildbot/commit/21f1c70a7dcbb25f9c11a1737a2a007b558d66fe&quot;&gt;21f1c70&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Fix to missing dir when running buildout from scratch&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1089387147</id>
+    <published>2011-01-20T08:06:54-08:00</published>
+    <updated>2011-01-20T08:06:54-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/bf5f4d13f4...60702563aa"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/60702563aaebdcd2bd1b77696f2d9e72e73c1661&quot;&gt;6070256&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Added missed json file&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1089063226</id>
+    <published>2011-01-20T02:27:11-08:00</published>
+    <updated>2011-01-20T02:27:11-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/551cf797cd...bf5f4d13f4"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/bf5f4d13f485d85d66877b9c53ce3b6a1b981fb1&quot;&gt;bf5f4d1&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Merge branch 'master' of git@github.com:test_username/causal&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/1ab3ae1a87a6288af468b9f012ad927d87161644&quot;&gt;1ab3ae1&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Merge branch 'master' of git@github.com:causality/causal&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/ad00b54f6faafe6faffde18c8c15aff62d574d3b&quot;&gt;ad00b54&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Added tests and fixed code for them to work&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1088078949</id>
+    <published>2011-01-19T13:19:17-08:00</published>
+    <updated>2011-01-19T13:19:17-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/9d9cf101a4...551cf797cd"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/551cf797cd7691e1732d947b47e882feb8ac1f18&quot;&gt;551cf79&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Minor refactor&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/e9f52b23f05839c8cf3031ad631ef47714961cda&quot;&gt;e9f52b2&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Merge branch 'master' of github.com:test_username/causal&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1087113603</id>
+    <published>2011-01-19T04:17:05-08:00</published>
+    <updated>2011-01-19T04:17:05-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/4db426645d...9d9cf101a4"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/9d9cf101a43ec887c0bdae4f5110675e8ce01a81&quot;&gt;9d9cf10&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Added tests for fetching recent tracks to last.fm app&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/1stvamp&quot; class=&quot;committer&quot;&gt;1stvamp&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/b37e73acf8af31ad83da82f647769c2bf6ba49d5&quot;&gt;b37e73a&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Moved requirements files to base dir&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1084872505</id>
+    <published>2011-01-18T00:20:27-08:00</published>
+    <updated>2011-01-18T00:20:27-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/69b7bbe266...4db426645d"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/4db426645d65ce74e7c8aecb181e2313936a06b3&quot;&gt;4db4266&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Refactor and updated to use global settings redirect&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/789670e96f8304e9cb161b9200cced569eec63e8&quot;&gt;789670e&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Refectored a bit and added global settings redirect&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/00146a7031bf8e45ee33722938977b6c19b78e2f&quot;&gt;00146a7&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Minor refactor and fixed to use global redirect&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li class=&quot;more&quot;&gt;&lt;a href=&quot;/test_username/causal/compare/69b7bbe266...4db426645d&quot;&gt;4 more commits &amp;raquo;&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:IssuesEvent/1083264508</id>
+    <published>2011-01-17T05:23:32-08:00</published>
+    <updated>2011-01-17T05:23:32-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/causality/causal/issues/70/find"/>
+    <title>test_username opened issue 70 on causality/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+
+&lt;div class=&quot;details&quot;&gt;
+  
+  &lt;div class=&quot;message&quot;&gt;
+    &lt;blockquote&gt;
+      Add youtube.com fav videos
+    &lt;/blockquote&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1083260646</id>
+    <published>2011-01-17T05:15:15-08:00</published>
+    <updated>2011-01-17T05:15:15-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/3e58e60c37...69b7bbe266"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/69b7bbe2666be57604c09909fd10ed452a252c6b&quot;&gt;69b7bbe&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Minor refactor and made settings redirect use global method&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1083242458</id>
+    <published>2011-01-17T04:51:54-08:00</published>
+    <updated>2011-01-17T04:51:54-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/f2945e601c...3e58e60c37"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/3e58e60c37ff58b8cb428e3ac0c3b46320aed9c3&quot;&gt;3e58e60&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Minor refactor and changed to use global settings redirect&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1083226813</id>
+    <published>2011-01-17T04:25:06-08:00</published>
+    <updated>2011-01-17T04:25:06-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/0acc48e86d...f2945e601c"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/f2945e601c84f8a6add653fe27f31141ef17a78b&quot;&gt;f2945e6&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Updated to use global method for redirecting user after&lt;br&gt;
+adding a user name&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:PushEvent/1083218992</id>
+    <published>2011-01-17T04:10:37-08:00</published>
+    <updated>2011-01-17T04:10:37-08:00</updated>
+    <link type="text/html" rel="alternate" href="https://github.com/test_username/causal/compare/e452c66f2d...0acc48e86d"/>
+    <title>test_username pushed to master at test_username/causal</title>
+    <author>
+      <name>test_username</name>
+          <email>test_username@example.com</email>
+          <uri>https://github.com/test_username</uri>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://secure.gravatar.com/avatar/34tdfg5gwefdghsdfg?s=30&amp;d=https%3A%2F%2Fgithub.com%2Fimages%2Fgravatars%2Fgravatar-140.png"/>
+    <content type="html">
+&lt;div class=&quot;details&quot;&gt;
+  
+
+  &lt;div class=&quot;commits&quot;&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+      &lt;a href=&quot;/test_username&quot; class=&quot;committer&quot;&gt;test_username&lt;/a&gt; committed &lt;a href=&quot;/test_username/causal/commit/0acc48e86d98a87f7c05373a48e34906bb553bff&quot;&gt;0acc48e&lt;/a&gt;
+
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;blockquote&gt;Fixed redirect after successfully saving a username.&lt;br&gt;
+Redirects using a global method back to the settings page&lt;/blockquote&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+</feed>
+
