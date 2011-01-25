@@ -299,3 +299,11 @@ def current_status(request, username):
         },
         context_instance=RequestContext(request)
     )
+
+def about(request):
+    """About the project, maybe add service status?"""
+    
+    return render_to_response(
+        'causal/about.html',{},
+        context_instance=RequestContext(request)
+    )

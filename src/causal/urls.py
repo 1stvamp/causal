@@ -73,7 +73,7 @@ urlpatterns += patterns('',
         name='auth_logout'
     ),
     url(r'^accounts/', include('registration.urls')),
-
+    url(r'^about$', about, name='about'),
     url(r'^$', index, name='home'),
     url(r'^(?P<username>\w+)\.json$', user_feed, name='user-feed'),
     url(r'^(?P<username>\w+)/now$', current_status, name='current-status'),
