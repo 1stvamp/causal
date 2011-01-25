@@ -106,8 +106,14 @@
                 </ul>
             {% endfor %}
             {% else %}
-            <h3> No configured services yet!</h3>
-            <p>Why not head over to <a href="/accounts/settings/">your settings page</a> to set some up?</p>
+                {% if request.user.is_authenticated %}
+                <h3> No configured services yet!</h3>
+                <p>Why not head over to <a href="/accounts/settings/">your settings page</a> to set some up?</p>
+                {% else %}
+                <h3>No Shared Services</h3>
+                This user is feeling a little shy and isn't sharing anything, move along.
+                {% endif %}
+            
             {% endif %}
         </div>
         {% for service in services %}
