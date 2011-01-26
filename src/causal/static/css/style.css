@@ -248,6 +248,12 @@ LI.causal-flickr {
 LI.causal-googlereader {
     list-style-image: url(../images/googlereader.jpg);
 }
+LI.causal-delicious {
+    list-style-image: url(../images/delicious.jpg);
+}
+LI.causal-tumblr {
+    list-style-image: url(../images/tumblr.jpg);
+}
 A.causal-twitter {
     background: transparent url(../images/twitter.jpg) no-repeat 50% 50%;
 }

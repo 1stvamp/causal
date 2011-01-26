@@ -54,6 +54,41 @@ def history(request, username):
         context_instance=RequestContext(request)
     )
 
+def _get_last_service_update(service):
+    """Return the latest update for a service."""
+    day_one = date.today() - timedelta(days=1)
+    updates = []
+    response = {
+        'class': service.class_name,
+        'error': False,
+        'items': [],
+    }
+        
+    try:
+        items = service.app.module.get_items(service.user, day_one, service)
+        if items:
+            item = items[0]
+            if hasattr(item, 'pic_link'):
+                item.body = _add_image_html(item.body)
+
+            item_dict = {
+                'title': item.title,
+                'body': urlize(item.body),
+                'created': mktime(item.created_local.timetuple()),
+                'created_date': item.created_local.strftime("%I:%M%p").lower(),
+                'location': item.location,
+                'class_name' : item.class_name,
+                'has_location': item.has_location(),
+                'link_back' : item.link_back,
+            }
+            updates.append(item_dict)
+    except ServiceError:
+        response['error'] = True
+        
+    response['items'] = [updates]
+
+    return response
+
 def _get_service_history(service):
     days = []
     days_to_i = {}
@@ -268,7 +303,7 @@ def current_status(request, username):
 
     data = {}
     for service in services:
-        data[service.app.module.DISPLAY_NAME] = _get_service_history(service)
+        data[service.app.module.DISPLAY_NAME] = _get_last_service_update(service)
 
     last_entries = {}
 

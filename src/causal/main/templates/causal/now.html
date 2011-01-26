@@ -15,7 +15,7 @@
     <ul>
     {% for connection in connections %}
     
-       <li class="{{connection.clazz_name}}"><a href="{{connection.link_back}}">{{connection.created_date}}</a>{% if connection.title %} {{connection.title}} {% endif %} {{connection.body|safe }}</li>
+       <li class="{{connection.clazz_name}}"><a href="{{connection.link_back}}">{{connection.created_date|date:"D H:ma"}}</a>{% if connection.title %} {{connection.title}} {% endif %} {{connection.body|safe }}</li>
     
     {% endfor %}
     <ul>
