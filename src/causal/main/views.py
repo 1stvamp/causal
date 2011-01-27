@@ -283,9 +283,19 @@ def user_feed(request, username):
     services = UserService.objects.filter(**filters).order_by('app__module_name')
 
     data = {}
+    
+    # split the request url to check for /user/lastest.json
+    requested_url = request.path.rsplit('/')
+    latest = False
+    if len(requested_url) == 3 and requested_url[2] == 'latest.json':
+        latest = True
+        
     for service in services:
         if service.share:
-            data[service.app.module.DISPLAY_NAME] = _get_service_history(service)
+            if latest:
+                data[service.app.module.DISPLAY_NAME] = _get_last_service_update(service)
+            else:
+                data[service.app.module.DISPLAY_NAME] = _get_service_history(service)
 
     return HttpResponse(simplejson.dumps(data))
 

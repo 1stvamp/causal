@@ -77,6 +77,7 @@ urlpatterns += patterns('',
     url(r'^$', index, name='home'),
     url(r'^(?P<username>\w+)\.json$', user_feed, name='user-feed'),
     url(r'^(?P<username>\w+)/latest$', current_status, name='current-status'),
+    url(r'^(?P<username>\w+)/latest\.json$', user_feed, name='user_feed'),
     url(r'^(?P<username>\w+)/service/(?P<service_id>\d+)\.json$', cache_page(history_callback, cache_time), name='history-callback'),
     url(r'^(?P<username>\w+)[/]?$', history, name='user-history'),
 )
