@@ -3,6 +3,7 @@
 {% load media_loaders %}
 
 {% block head %}
+    <title>Latest</title>
     {% load_css "cupertino/jquery-ui.css" %}
     {% load_css "tabs.css" %}
     {% load_js "jquery-ui.min.js" %}
@@ -13,11 +14,13 @@
     <div id="all-services" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
     <div id="connections">        
     <ul>
+    {% if connections %}
     {% for connection in connections %}
-    
-       <li class="{{connection.clazz_name}}"><a href="{{connection.link_back}}">{{connection.created_date}}</a>{% if connection.title %} {{connection.title}} {% endif %} {{connection.body|safe }}</li>
-    
+       <li class="{{connection.clazz_name}}"><a href="{{connection.link_back}}">{{connection.created_date|date:"D H:ma"}}</a>{% if connection.title %} {{connection.title}} {% endif %} {{connection.body|safe }}</li>
     {% endfor %}
+    {% else %}
+       This user is feeling a little shy and isn't sharing anything, move along.
+    {% endif %}
     <ul>
     </div>
     </div>
