@@ -284,7 +284,8 @@ def user_feed(request, username):
 
     data = {}
     for service in services:
-        data[service.app.module.DISPLAY_NAME] = _get_service_history(service)
+        if service.share:
+            data[service.app.module.DISPLAY_NAME] = _get_service_history(service)
 
     return HttpResponse(simplejson.dumps(data))
 
