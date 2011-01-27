@@ -20,28 +20,30 @@ def get_items(user, since, model_instance=None):
     try:
         feed = feedparser.parse('http://www.google.com/reader/public/atom/user/%s/state/com.google/broadcast' % (at.userid,))
         for entry in feed.entries:
-            item = ServiceItem()
-            item.title = entry.title
-            # we dont take the summary as its huge
-            #if entry.has_key('summary'):
-            item.body = ''
-            if entry.has_key('links'):
-                item.link_back = entry['links']
-            if entry.has_key('link'):
-                item.link_back = entry['link']
             updated = parser.parse(entry.updated)
             updated = (updated - updated.utcoffset()).replace(tzinfo=None)
-            item.created = updated
-            item.service = serv
-            item.user = user
-
-            # for stats
-            o = urlparse(entry.source.link)
-            item.source = o.netloc
-
-            item.author = entry.author # person making comment
-            # entry.content[0].value == coment
-            items.append(item)
+            if updated.date() >= since:
+                item = ServiceItem()
+                item.title = entry.title
+                # we dont take the summary as its huge
+                #if entry.has_key('summary'):
+                item.body = ''
+                if entry.has_key('links'):
+                    item.link_back = entry['links']
+                if entry.has_key('link'):
+                    item.link_back = entry['link']
+    
+                item.created = updated
+                item.service = serv
+                item.user = user
+    
+                # for stats
+                o = urlparse(entry.source.link)
+                item.source = o.netloc
+    
+                item.author = entry.author # person making comment
+                # entry.content[0].value == coment
+                items.append(item)
     except Exception, e:
         raise LoggedServiceError(original_exception=e)
 
