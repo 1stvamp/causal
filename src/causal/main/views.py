@@ -303,7 +303,8 @@ def current_status(request, username):
 
     data = {}
     for service in services:
-        data[service.app.module.DISPLAY_NAME] = _get_last_service_update(service)
+        if service.share:
+            data[service.app.module.DISPLAY_NAME] = _get_last_service_update(service)
 
     last_entries = {}
 
