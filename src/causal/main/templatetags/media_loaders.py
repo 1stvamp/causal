@@ -23,7 +23,7 @@ else:
 
 def _load(metiatype, path):
     ret_path = None
-    if '://' not in path:
+    if '//' not in path:
         if USE_GOOGLE_CDN:
             ret_path = GOOGLE_FILES[metiatype].get(path, None)
         if not ret_path:
