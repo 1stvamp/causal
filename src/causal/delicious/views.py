@@ -41,10 +41,22 @@ def auth(request):
 @can_view_service
 def stats(request, service_id):
     """Create up some stats."""
+    
     service = get_object_or_404(UserService, pk=service_id)
-    commits = get_items(request.user, date.today() - timedelta(days=7), service)
+    bookmarks = get_items(request.user, date.today() - timedelta(days=7), service)
+
+    tags = {}
+    
+    for bookmark in bookmarks:
+        for tag in bookmark.tags:
+            if tags.has_key(tag):
+                tags[tag] = tags[tag] + 1
+            else:
+                tags[tag] = 1
+    
     return render_to_response(
         service.template_name + '/stats.html',
-        {'commits': commits},
+        {'bookmarks': bookmarks,
+         'tags' : tags},
         context_instance=RequestContext(request)
     )
