@@ -132,7 +132,6 @@ INSTALLED_SERVICES = (
     #'causal.lastfm',
     #'causal.googlereader',
 )
-INSTALLED_APPS += INSTALLED_SERVICES
 
 TEMPLATE_CONTEXT_PROCESSORS =(
     'django.core.context_processors.request',
@@ -168,5 +167,13 @@ if SECRET_KEY is None:
     raise Exception('SECRET_KEY needs to be changed to a unique, sekrit, random string')
 
 TEMPLATE_DEBUG = DEBUG
+
+try:
+    if _INSTALLED_SERVICES:
+        INSTALLED_SERVICES += _INSTALLED_SERVICES
+    if _INSTALLED_APPS:
+        INSTALLED_APPS += _INSTALLED_APPS
+except NameError:
+    pass
 
 INSTALLED_APPS += INSTALLED_SERVICES
