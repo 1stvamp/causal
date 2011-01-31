@@ -49,12 +49,12 @@
              * closeBox - {Boolean} Should popup have a close box?
              * overflow - {Boolean} Let the popup overflow scrollbars?
              */
-            function add_marker(ll, popupClass, popupContentHTML, closeBox, overflow) {
+            function add_marker(ll, popupClass, popupContentHTML, closeBox) {
                 var feature = new OpenLayers.Feature(markers, ll); 
                 feature.closeBox = closeBox;
                 feature.popupClass = popupClass;
                 feature.data.popupContentHTML = popupContentHTML;
-                feature.data.overflow = (overflow) ? "auto" : "hidden";
+                feature.data.overflow = "auto";
 
                 var marker = feature.createMarker();
 
