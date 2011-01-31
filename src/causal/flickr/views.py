@@ -4,7 +4,7 @@ from causal.flickr.service import get_items
 from causal.main.decorators import can_view_service
 from causal.main.models import UserService, AccessToken
 from causal.main.service_utils import settings_redirect, \
-     get_model_instance, get_module_name
+     get_model_instance, get_module_name, check_is_service_id
 from datetime import datetime, date, timedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -69,45 +69,48 @@ def auth(request):
 def stats(request, service_id):
     """Create up some stats."""
     
-    service = get_object_or_404(UserService, pk=service_id)
-    pictures = get_items(request.user, 
-                         date.today() - timedelta(days=7), 
-                         service)
-    template_values = {}
-    # most commented
-    comments = 0
-    template_values['most_commented_picture'] = None
-    template_values['number_of_pictures_favorites'] = 0
-    template_values['cameras_used'] = {}
-    number_of_pictures_favorites = 0
-    for pic in pictures:
-
-        if pic.has_location():
-            template_values['pic_centre'] = pic
-        
-        if pic.favorite:
-            template_values['number_of_pictures_favorites'] = \
-                           number_of_pictures_favorites + 1
-        if int(pic.number_of_comments) > 0:
-            if pic.number_of_comments > comments:
-                comments = pic.number_of_comments
-                template_values['most_commented_picture'] = pic
-                
-        # get camera used count
-        if template_values['cameras_used'].has_key(pic.camera_make):
-            template_values['cameras_used'][pic.camera_make] = \
-                           template_values['cameras_used'][pic.camera_make] + 1
-        else:
-            template_values['cameras_used'][pic.camera_make] = 1
-        
-    template_values['pictures'] = pictures
-    template_values['number_of_pictures_uploaded'] = len(pictures)
+    if check_is_service_id(service, MODULE_NAME):
+        service = get_object_or_404(UserService, pk=service_id)
+        pictures = get_items(request.user, 
+                             date.today() - timedelta(days=7), 
+                             service)
+        template_values = {}
+        # most commented
+        comments = 0
+        template_values['most_commented_picture'] = None
+        template_values['number_of_pictures_favorites'] = 0
+        template_values['cameras_used'] = {}
+        number_of_pictures_favorites = 0
+        for pic in pictures:
     
-    if template_values['number_of_pictures_favorites'] == 0:
-        template_values['number_of_pictures_favorites'] = "No favourite pictures this week."
+            if pic.has_location():
+                template_values['pic_centre'] = pic
+            
+            if pic.favorite:
+                template_values['number_of_pictures_favorites'] = \
+                               number_of_pictures_favorites + 1
+            if int(pic.number_of_comments) > 0:
+                if pic.number_of_comments > comments:
+                    comments = pic.number_of_comments
+                    template_values['most_commented_picture'] = pic
+                    
+            # get camera used count
+            if template_values['cameras_used'].has_key(pic.camera_make):
+                template_values['cameras_used'][pic.camera_make] = \
+                               template_values['cameras_used'][pic.camera_make] + 1
+            else:
+                template_values['cameras_used'][pic.camera_make] = 1
+            
+        template_values['pictures'] = pictures
+        template_values['number_of_pictures_uploaded'] = len(pictures)
         
-    return render_to_response(
-        service.template_name + '/stats.html',
-        template_values,
-        context_instance=RequestContext(request)
-    )
+        if template_values['number_of_pictures_favorites'] == 0:
+            template_values['number_of_pictures_favorites'] = "No favourite pictures this week."
+            
+        return render_to_response(
+            service.template_name + '/stats.html',
+            template_values,
+            context_instance=RequestContext(request)
+        )
+    else:
+        return redirect('/%s' %(request.user.username))

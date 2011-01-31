@@ -7,7 +7,7 @@ from causal.facebook.service import get_items
 from causal.main.decorators import can_view_service
 from causal.main.models import AccessToken, ServiceApp, UserService
 from causal.main.service_utils import get_model_instance, get_module_name, \
-     settings_redirect
+     settings_redirect, check_is_service_id
 from datetime import datetime, date, timedelta
 from django.shortcuts import redirect
 from django.contrib import messages
@@ -85,11 +85,14 @@ def auth(request):
 def stats(request, service_id):
     """Display stats based on checkins."""
     
-    service = get_object_or_404(UserService, pk=service_id)
-    
-    return render_to_response(
-        service.template_name + '/stats.html',
-        {'statuses' : get_items(request.user, date.today() - timedelta(days=7), 
-                                service, True)},
-        context_instance=RequestContext(request)
-    )
+    if check_is_service_id(service, MODULE_NAME):
+        service = get_object_or_404(UserService, pk=service_id)
+        
+        return render_to_response(
+            service.template_name + '/stats.html',
+            {'statuses' : get_items(request.user, date.today() - timedelta(days=7), 
+                                    service, True)},
+            context_instance=RequestContext(request)
+        )
+    else:
+        return redirect('/%s' %(request.user.username))

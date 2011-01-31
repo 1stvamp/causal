@@ -8,7 +8,7 @@ from causal.lastfm.service import get_items, get_artists, get_upcoming_gigs
 from causal.main.decorators import can_view_service
 from causal.main.models import UserService, AccessToken
 from causal.main.service_utils import get_model_instance, \
-     get_module_name, settings_redirect
+     get_module_name, settings_redirect, check_is_service_id
 from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404, redirect
@@ -43,37 +43,41 @@ def auth(request):
 @can_view_service
 def stats(request, service_id):
     """Display stats based on checkins."""
-    service = get_object_or_404(UserService, pk=service_id)
-    template_values = {}
-
-    date_offset = date.today() - timedelta(days=7)
+    service = get_object_or_404(UserScheck_is_service_idervice, pk=service_id)
     
-    template_values['favourite_artists'] = get_artists(request.user, 
-                                                       date_offset, 
-                                                       service)
-    template_values['recent_tracks'] = get_items(request.user, 
-                                                 date_offset, 
-                                                 service)
-
-    gig_index = 0
+    if check_is_service_id(service, MODULE_NAME):
+        template_values = {}
     
-    for artist in template_values['favourite_artists']:
-        artist.gigs = get_upcoming_gigs(request.user, 
-                                        date.today() - timedelta(days=7), 
-                                        service, 
-                                        artist.name)
-        if artist.gigs:
-            if not template_values.has_key('gig_centre') and \
-               artist.gigs[gig_index].location.has_key('lat') and \
-               artist.gigs[gig_index].location.has_key('long') and \
-               artist.gigs[gig_index].location['lat'] and \
-               artist.gigs[gig_index].location['long']:
-                template_values['gig_centre'] = artist.gigs[0]
-            else:
-                gig_index = gig_index + 1
-            
-    return render_to_response(
-        service.template_name + '/stats.html',
-        template_values,
-        context_instance=RequestContext(request)
-    )
+        date_offset = date.today() - timedelta(days=7)
+        
+        template_values['favourite_artists'] = get_artists(request.user, 
+                                                           date_offset, 
+                                                           service)
+        template_values['recent_tracks'] = get_items(request.user, 
+                                                     date_offset, 
+                                                     service)
+    
+        gig_index = 0
+        
+        for artist in template_values['favourite_artists']:
+            artist.gigs = get_upcoming_gigs(request.user, 
+                                            date.today() - timedelta(days=7), 
+                                            service, 
+                                            artist.name)
+            if artist.gigs:
+                if not template_values.has_key('gig_centre') and \
+                   artist.gigs[gig_index].location.has_key('lat') and \
+                   artist.gigs[gig_index].location.has_key('long') and \
+                   artist.gigs[gig_index].location['lat'] and \
+                   artist.gigs[gig_index].location['long']:
+                    template_values['gig_centre'] = artist.gigs[0]
+                else:
+                    gig_index = gig_index + 1
+                
+        return render_to_response(
+            service.template_name + '/stats.html',
+            template_values,
+            context_instance=RequestContext(request)
+        )
+    else:
+        return redirect('/%s' %(request.user.username))

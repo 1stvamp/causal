@@ -4,7 +4,7 @@ publicly rss feeds from the user's account."""
 
 from causal.main.models import UserService, AccessToken
 from causal.main.service_utils import get_model_instance, \
-get_module_name, settings_redirect
+     get_module_name, settings_redirect, check_is_service_id
 from causal.main.decorators import can_view_service
 from causal.delicious.service import get_items
 from datetime import datetime, date, timedelta
@@ -43,20 +43,25 @@ def stats(request, service_id):
     """Create up some stats."""
     
     service = get_object_or_404(UserService, pk=service_id)
-    bookmarks = get_items(request.user, date.today() - timedelta(days=7), service)
 
-    tags = {}
+    if check_is_service_id(service, MODULE_NAME):
     
-    for bookmark in bookmarks:
-        for tag in bookmark.tags:
-            if tags.has_key(tag):
-                tags[tag] = tags[tag] + 1
-            else:
-                tags[tag] = 1
+        bookmarks = get_items(request.user, date.today() - timedelta(days=7), service)
     
-    return render_to_response(
-        service.template_name + '/stats.html',
-        {'bookmarks': bookmarks,
-         'tags' : tags},
-        context_instance=RequestContext(request)
-    )
+        tags = {}
+        
+        for bookmark in bookmarks:
+            for tag in bookmark.tags:
+                if tags.has_key(tag):
+                    tags[tag] = tags[tag] + 1
+                else:
+                    tags[tag] = 1
+                    
+        return render_to_response(
+            service.template_name + '/stats.html',
+            {'bookmarks': bookmarks,
+             'tags' : tags},
+            context_instance=RequestContext(request)
+        )
+    else:
+        return redirect('/%s' %(request.user.username))

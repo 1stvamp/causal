@@ -7,7 +7,8 @@ from BeautifulSoup import Tag, BeautifulSoup as soup
 from BeautifulSoup import SoupStrainer
 from causal.googlereader.service import get_items
 from causal.main.models import UserService, AccessToken
-from causal.main.service_utils import get_model_instance, get_module_name, settings_redirect
+from causal.main.service_utils import get_model_instance, get_module_name, \
+     settings_redirect, check_is_service_id
 from causal.main.decorators import can_view_service
 from datetime import datetime, date, timedelta
 from django.core.urlresolvers import reverse
@@ -55,26 +56,30 @@ def auth(request):
 @can_view_service
 def stats(request, service_id):
     """Create up some stats."""
-    service = get_object_or_404(UserService, pk=service_id)
-    shares = get_items(request.user, date.today() - timedelta(days=7), service)
-    sources = {}
-
-    # count source websites
-    for share in shares:
-        if sources.has_key(share.source):
-            sources[share.source] = sources[share.source] + 1
-        else:
-            sources[share.source] = 1
-
-    sources = SortedDict(sorted(sources.items(), 
-                                reverse=True, key=lambda x: x[1]))
-    sources_reversed = SortedDict(sorted(sources.items(), 
-                                reverse=False, key=lambda x: x[1]))
     
-    return render_to_response(
-        service.template_name + '/stats.html',
-        {'shares' : shares,
-         'sources' : sources,
-         'sources_reversed' : sources_reversed},
-        context_instance=RequestContext(request)
-    )
+    if check_is_service_id(service, MODULE_NAME):
+        service = get_object_or_404(UserService, pk=service_id)
+        shares = get_items(request.user, date.today() - timedelta(days=7), service)
+        sources = {}
+    
+        # count source websites
+        for share in shares:
+            if sources.has_key(share.source):
+                sources[share.source] = sources[share.source] + 1
+            else:
+                sources[share.source] = 1
+    
+        sources = SortedDict(sorted(sources.items(), 
+                                    reverse=True, key=lambda x: x[1]))
+        sources_reversed = SortedDict(sorted(sources.items(), 
+                                    reverse=False, key=lambda x: x[1]))
+        
+        return render_to_response(
+            service.template_name + '/stats.html',
+            {'shares' : shares,
+             'sources' : sources,
+             'sources_reversed' : sources_reversed},
+            context_instance=RequestContext(request)
+        )
+    else:
+        return redirect('/%s' %(request.user.username))
