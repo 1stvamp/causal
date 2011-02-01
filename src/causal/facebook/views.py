@@ -3,7 +3,7 @@ This service requires we use a facegraph python lib. Most of
 the stats work is done using FQL."""
 
 import cgi
-from causal.facebook.service import get_items
+from causal.facebook.service import get_items, get_stats_items
 from causal.main.decorators import can_view_service
 from causal.main.models import AccessToken, ServiceApp, UserService
 from causal.main.service_utils import get_model_instance, get_module_name, \
@@ -90,7 +90,7 @@ def stats(request, service_id):
     if check_is_service_id(service, MODULE_NAME):
         return render_to_response(
             service.template_name + '/stats.html',
-            {'statuses' : get_items(request.user, date.today() - timedelta(days=7), 
+            {'statuses' : get_stats_items(request.user, date.today() - timedelta(days=7), 
                                     service)},
             context_instance=RequestContext(request)
         )

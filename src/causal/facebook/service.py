@@ -16,11 +16,8 @@ OAUTH_FORM = True
 
 STATUS_FQL = """SELECT uid,status_id,message,time FROM status WHERE uid = me() AND time > %s"""
 #TAGGED_FQL = """SELECT post_id,actor_id FROM stream_tag WHERE target_id=me()""" # currently unable to spec time
-LINKED_FQL = """SELECT owner_comment,created_time,title,summary,url 
-FROM link WHERE owner=me() AND created_time > %s"""
-STREAM_FQL = """SELECT likes,message,created_time,comments,permalink,privacy,source_id
-FROM stream WHERE filter_key IN 
-(SELECT filter_key FROM stream_filter WHERE uid = me()) AND created_time > %s"""
+LINKED_FQL = """SELECT owner_comment,created_time,title,summary,url FROM link WHERE owner=me() AND created_time > %s"""
+STREAM_FQL = """SELECT likes,message,created_time,comments,permalink,privacy,source_id FROM stream WHERE filter_key IN (SELECT filter_key FROM stream_filter WHERE uid = me()) AND created_time > %s"""
 USER_NAME_FETCH = """SELECT name, pic_small FROM user WHERE uid=%s"""
 USER_ID = """SELECT uid FROM user WHERE uid = me()"""
 
@@ -55,6 +52,8 @@ def get_items(user, since, model_instance=None):
 
 def get_stats_items(user, since, model_instance=None):
     """Return more detailed ServiceItems for the stats page."""
+
+    items = []
     
     serv = model_instance or get_model_instance(user, __name__)
     access_token = AccessToken.objects.get(service=serv)
@@ -62,34 +61,62 @@ def get_stats_items(user, since, model_instance=None):
     
     # get links posted
     try:
-        link_stream = _fetch_feed(serv, access_token, since, LINKED_FQL % int(week_ago_epoch))
+        link_stream = _fetch_feed(serv, access_token, LINKED_FQL % int(week_ago_epoch))
     except Exception, exception:
         return LoggedServiceError(original_exception=exception)
     
     if link_stream:
-        for link in links:
-                if link.has_key('message'):
-                    item = ServiceItem()
-                    item.created = datetime.fromtimestamp(link.created_time)
-                    item.link = True
-                    item.body = link.message
-                    item.service = serv
-                    item.user = user
-                    items.append(item)
-                
+        for link in link_stream:
+            if link.has_key('url'):
+                item = ServiceItem()
+                item.created = datetime.fromtimestamp(link.created_time)
+                item.title = link.title
+                item.body = link.summary
+                item.url = link.url
+                item.service = serv
+                item.user = user
+                items.append(item)
+    
+    try:
+        stream = _fetch_feed(serv, access_token, STREAM_FQL % (int(week_ago_epoch)))
+    except Exception, exception:
+        return LoggedServiceError(original_exception=exception)
+    
+    if stream:
+        items.append(_convert_link_feed(serv, user, stream, since))
     # get posts and replies
     
     # get pics posted
     
     # get places visited
 
-def _fetch_feed(serv, access_token, since, fql):
+def _fetch_feed(serv, access_token, fql):
     """Generic method to fetch FQL from Facebook."""
     
     query = FQL(access_token.oauth_token)
-    status_stream = query(fql % int(since))
+    status_stream = query(fql)
         
     return status_stream
+
+def _convert_link_feed(serv, user, stream, since):
+    """Convert link feed."""
+    
+    items = []
+    
+    for entry in stream:
+        if entry.has_key('created_time'):
+            created = datetime.fromtimestamp(entry['created_time'])
+            if created.date() >= since:
+                item = ServiceItem()
+                item.created = datetime.fromtimestamp(entry.created_time)
+                item.title = entry.title
+                item.body = entry.summary
+                item.url = entry.url
+                item.service = serv
+                item.user = user
+                items.append(item)
+    
+    return items
 
 def _convert_status_feed(serv, user, user_stream, uid, since):
     """Take the feed of status updates from facebook and convert it to 
