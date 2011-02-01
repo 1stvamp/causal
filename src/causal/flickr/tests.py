@@ -11,7 +11,7 @@ try:
 except ImportError:
     pass
 
-class TestflickrViews(TestCase):
+class TestFlickrViews(TestCase):
     """Test the module with fixtures."""
     
     fixtures = ['auth_data.json']

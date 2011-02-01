@@ -53,6 +53,44 @@ def get_items(user, since, model_instance=None):
     
     return _convert_status_feed(serv, user, status_stream, uid, since)
 
+def get_stats_items(user, since, model_instance=None):
+    """Return more detailed ServiceItems for the stats page."""
+    
+    serv = model_instance or get_model_instance(user, __name__)
+    access_token = AccessToken.objects.get(service=serv)
+    week_ago_epoch = time.mktime(since.timetuple())
+    
+    # get links posted
+    try:
+        link_stream = _fetch_feed(serv, access_token, since, LINKED_FQL % int(week_ago_epoch))
+    except Exception, exception:
+        return LoggedServiceError(original_exception=exception)
+    
+    if link_stream:
+        for link in links:
+                if link.has_key('message'):
+                    item = ServiceItem()
+                    item.created = datetime.fromtimestamp(link.created_time)
+                    item.link = True
+                    item.body = link.message
+                    item.service = serv
+                    item.user = user
+                    items.append(item)
+                
+    # get posts and replies
+    
+    # get pics posted
+    
+    # get places visited
+
+def _fetch_feed(serv, access_token, since, fql):
+    """Generic method to fetch FQL from Facebook."""
+    
+    query = FQL(access_token.oauth_token)
+    status_stream = query(fql % int(since))
+        
+    return status_stream
+
 def _convert_status_feed(serv, user, user_stream, uid, since):
     """Take the feed of status updates from facebook and convert it to 
     ServiceItems."""
