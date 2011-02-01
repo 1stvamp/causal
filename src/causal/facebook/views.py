@@ -88,7 +88,6 @@ def stats(request, service_id):
     service = get_object_or_404(UserService, pk=service_id)
     
     if check_is_service_id(service, MODULE_NAME):
-        
         return render_to_response(
             service.template_name + '/stats.html',
             {'statuses' : get_items(request.user, date.today() - timedelta(days=7), 
