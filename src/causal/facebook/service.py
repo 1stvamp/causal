@@ -14,11 +14,19 @@ DISPLAY_NAME = 'Facebook'
 CUSTOM_FORM = False
 OAUTH_FORM = True
 
+# fetch all statuses for a user
 STATUS_FQL = """SELECT uid,status_id,message,time FROM status WHERE uid = me() AND time > %s"""
-#TAGGED_FQL = """SELECT post_id,actor_id FROM stream_tag WHERE target_id=me()""" # currently unable to spec time
+
+# links posted
 LINKED_FQL = """SELECT owner_comment,created_time,title,summary,url FROM link WHERE owner=me() AND created_time > %s"""
-STREAM_FQL = """SELECT likes,message,created_time,comments,permalink,privacy,source_id FROM stream WHERE filter_key IN (SELECT filter_key FROM stream_filter WHERE uid = me()) AND created_time > %s"""
+
+# users stream needs fixing
+STREAM_FQL = """SELECT likes,message,created_time,comments,permalink,privacy,source_id FROM stream WHERE filter_key IN (SELECT filter_key FROM stream_filter WHERE uid = me() AND type="newsfeed") AND created_time > %s"""
+
+# fetch username
 USER_NAME_FETCH = """SELECT name, pic_small FROM user WHERE uid=%s"""
+
+# fetch uid
 USER_ID = """SELECT uid FROM user WHERE uid = me()"""
 
 def enable():
@@ -65,6 +73,12 @@ def get_stats_items(user, since, model_instance=None):
     except Exception, exception:
         return LoggedServiceError(original_exception=exception)
     
+    # get statuses
+    try:
+        statuses = _convert_status_feed(serv, access_token, STATUS_FQL % int(week_ago_epoch))
+    except Exception, exception:
+        return LoggedServiceError(original_exception=exception)
+            
     if link_stream:
         for link in link_stream:
             if link.has_key('url'):
@@ -77,18 +91,13 @@ def get_stats_items(user, since, model_instance=None):
                 item.user = user
                 items.append(item)
     
-    try:
-        stream = _fetch_feed(serv, access_token, STREAM_FQL % (int(week_ago_epoch)))
-    except Exception, exception:
-        return LoggedServiceError(original_exception=exception)
-    
-    if stream:
-        items.append(_convert_link_feed(serv, user, stream, since))
-    # get posts and replies
+    # get pics in which they are tagged
     
     # get pics posted
     
     # get places visited
+    
+    return items
 
 def _fetch_feed(serv, access_token, fql):
     """Generic method to fetch FQL from Facebook."""
@@ -106,16 +115,18 @@ def _convert_link_feed(serv, user, stream, since):
     for entry in stream:
         if entry.has_key('created_time'):
             created = datetime.fromtimestamp(entry['created_time'])
-            if created.date() >= since:
-                item = ServiceItem()
-                item.created = datetime.fromtimestamp(entry.created_time)
-                item.title = entry.title
-                item.body = entry.summary
-                item.url = entry.url
-                item.service = serv
-                item.user = user
-                items.append(item)
-    
+            
+            if entry.comments.can_post:
+                if created.date() >= since:
+                    item = ServiceItem()
+                    item.created = datetime.fromtimestamp(entry.created_time)
+                    item.title = entry.title
+                    item.body = entry.summary
+                    item.url = entry.url
+                    item.service = serv
+                    item.user = user
+                    items.append(item)
+        
     return items
 
 def _convert_status_feed(serv, user, user_stream, uid, since):
