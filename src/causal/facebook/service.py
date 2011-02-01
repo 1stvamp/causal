@@ -59,7 +59,8 @@ def _convert_status_feed(serv, user, user_stream, since):
         if entry.has_key('message'):
             item = ServiceItem()
             item.created = datetime.fromtimestamp(entry['time'])
-            item.title = entry['message']
+            item.title = ''
+            item.body = entry['message']
             item.link_back = \
                 "http://www.facebook.com/chris.hannam/posts/%s?notif_t=feed_comment" % (entry['status_id'])
             item.service = serv
