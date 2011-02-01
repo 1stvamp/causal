@@ -1,23 +1,31 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
+"""Test suite for delicious services."""
 
-Replace these with more appropriate tests for your application.
-"""
-
+from bunch import Bunch
+from causal.facebook.service import _convert_feed
+from django.utils import simplejson
 from django.test import TestCase
+import os
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
+try:
+    import wingdbstub
+except ImportError:
+    pass
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
+class TestFacebookService(TestCase):
+    """Test the module with fixtures."""
 
->>> 1 + 1 == 2
-True
-"""}
+    def setUp(self):
+        self.path = os.path.dirname(os.path.realpath(__file__))
+        
+    def tearDown(self):
+        pass
 
+    def _convert_status_feed(self):
+        """Test we can convert statuses from facebook."""
+         
+        test_statuses = []
+        
+        for i in range(0,5):
+            b = Bunch(message='Syn %s' %(str(i)), status_id=i, time=1296544805, uid=i)
+            test_statuses.append(b)
+            
