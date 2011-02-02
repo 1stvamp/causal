@@ -76,7 +76,7 @@ def auth(request):
     return redirect("%s&redirect_uri=%s&scope=%s&client_id=%s" % (
             service.app.oauth.request_token_url,
             callback,
-            'read_stream,offline_access,user_photos,user_photo_video_tags',
+            'read_stream,offline_access,user_photos,user_photo_video_tags,user_checkins',
             service.app.oauth.consumer_key
         )
     )
