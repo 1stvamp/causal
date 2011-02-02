@@ -52,3 +52,9 @@
 {% endfor %}
 {% endfor %}
 </ul>
+
+<h3>Checkins</h3>
+{%for checkin in checkins %}
+{% if checkin.link_back %}<a href="{{checkin.link_back}}">{{checkin.created|date:"D H:ma"}}
+        {%endif%} </a> {{checkin.title}} : {{checkin.body}}
+{% endfor %}

@@ -87,7 +87,7 @@ def stats(request, service_id):
     
     service = get_object_or_404(UserService, pk=service_id)
     
-    links, statuses, details, photos = get_stats_items(request.user, date.today() - timedelta(days=7), service)
+    links, statuses, details, photos, checkins = get_stats_items(request.user, date.today() - timedelta(days=7), service)
     
     if check_is_service_id(service, MODULE_NAME):
         return render_to_response(
@@ -96,6 +96,7 @@ def stats(request, service_id):
              'statuses' : statuses,
              'details' : details,
              'photos': photos,
+             'checkins' : checkins,
              },
                                     
             context_instance=RequestContext(request)

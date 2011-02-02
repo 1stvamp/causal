@@ -148,8 +148,22 @@ def get_stats_items(user, since, model_instance=None):
                 photos.append(item)
     
     # get places visited
-    
-    return links, statuses, items, photos
+    checkin_feed = _fetch_checkins_json(serv, access_token.oauth_token)
+    checkins = []
+    if checkin_feed:
+        for entry in checkin_feed['data']:
+            created = datetime.strptime(entry['created_time'].split('+')[0], '%Y-%m-%dT%H:%M:%S') #'2007-06-26T17:55:03+0000'
+            if created.date() >= since:
+                item = ServiceItem()
+                item.created = created
+                item.link_back = 'http://www.facebook.com/pages/%s/%s' % (entry['place']['name'].replace(' ','-'), entry['place']['id']) 
+                item.title = entry['place']['name']
+                item.body = entry['message']
+                item.service = serv
+                item.user = user
+                checkins.append(item)
+                
+    return links, statuses, items, photos, checkins
 
 def _fetch_photos_json(serv, oauth_token):
     """Use graph api to fetch photo information."""
@@ -161,6 +175,17 @@ def _fetch_photos_json(serv, oauth_token):
             )
     
     return photo_feed_json
+
+def _fetch_checkins_json(serv, oauth_token):
+    """Use graph api to fetch photo information."""
+    checkins_feed_json = get_data(
+                serv,
+                'https://graph.facebook.com/me/checkins?access_token=%s' \
+                    % (oauth_token),
+                disable_oauth=True
+            )
+    
+    return checkins_feed_json
 
 def _fetch_feed(serv, access_token, fql):
     """Generic method to fetch FQL from Facebook."""
