@@ -133,6 +133,12 @@ INSTALLED_SERVICES = (
     #'causal.googlereader',
 )
 
+# Override INSTALLED_APPS_EXTEND or INSTALLED_SERVICES_EXTEND to add onto the default
+# set of apps or services, rather than overriding them, in your
+# local_settings.py
+INSTALLED_APPS_EXTEND = list()
+INSTALLED_SERVICES_EXTEND = list()
+
 TEMPLATE_CONTEXT_PROCESSORS =(
     'django.core.context_processors.request',
     'django.contrib.auth.context_processors.auth',
@@ -168,12 +174,9 @@ if SECRET_KEY is None:
 
 TEMPLATE_DEBUG = DEBUG
 
-try:
-    if _INSTALLED_SERVICES:
-        INSTALLED_SERVICES += _INSTALLED_SERVICES
-    if _INSTALLED_APPS:
-        INSTALLED_APPS += _INSTALLED_APPS
-except NameError:
-    pass
+if INSTALLED_SERVICES_EXTEND:
+    INSTALLED_SERVICES += INSTALLED_SERVICES_EXTEND
+if INSTALLED_APPS_EXTEND:
+    INSTALLED_APPS += INSTALLED_APPS_EXTEND
 
 INSTALLED_APPS += INSTALLED_SERVICES

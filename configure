@@ -38,6 +38,8 @@ parser = OptionParser(usage=usage)
 
 parser.add_option("-b", "--base", dest="base", action="store_true",
 	help="only install base requirements")
+parser.add_option("-m", "--modules", dest="extra_modules",
+	help="comma seperated list of extra python modules to bake in")
 
 def main():
 	file_path = os.path.dirname(__file__)
@@ -49,6 +51,9 @@ def main():
 		print "Reading extras_requirements.txt"
 		requirements += open('extras_requirements.txt', 'r').readlines()
 
+	extra_modules = [m.strip() for m in options.extra_modules.split(',')]
+	if len(extra_modules) > 0:
+		requirements.extend(extra_modules)
 	eggs = []
 	special_eggs = []
 	versions = []
@@ -61,7 +66,8 @@ def main():
 			find_links.append("find-links = %s" % (url,))
 		if "==" in req:
 			(name, version) = req.split('==')
-			versions.append("%s = %s" % (name, version,))
+			if name != "Django":
+				versions.append("%s = %s" % (name, version,))
 		else:
 			name = req
 		if name != "Django":
