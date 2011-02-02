@@ -45,7 +45,7 @@ def get_items(user, since, model_instance=None):
         if uid_result:
             uid = uid_result[0]['uid']
         week_ago_epoch = time.mktime(since.timetuple())
-        status_stream = _fetch_feed(STATUS_FQL % int(week_ago_epoch))
+        status_stream = _fetch_feed(serv, access_token, STATUS_FQL % int(week_ago_epoch))
             
     except Exception, exception:
         raise LoggedServiceError(original_exception=exception)
