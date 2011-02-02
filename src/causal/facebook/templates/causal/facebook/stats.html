@@ -5,8 +5,8 @@
     <li> {% if status.link_back %} 
             <a href="{{status.link_back}}">
         {%endif%}
-        {{status.created}}
-        {% if status.link_back %} </a> {{ status.body}}*{%endif%}
+        {{status.created|date:"D H:ma"}}
+        {% if status.link_back %} </a> {{ status.body}}{%endif%}
         
     </li>
     
@@ -18,7 +18,7 @@
 {% for link in links %}
 <li>
 {% if link.link_back %}<a href="{{status.link_back}}">
-        {%endif%}{{link.created}} </a>{{link.body}}
+        {%endif%}{{link.created|date:"D H:ma"}} </a>{{link.body}}
 </li>
 {% endfor %}
 </ul>
@@ -27,7 +27,7 @@
 <ul>
 {% for status in details %}
 <li>
-{%if status.link_back %} <a href="{{status.link_back}}"> {{status.created}}</a>{% endif%} 
+{%if status.link_back %} <a href="{{status.link_back}}"> {{status.created|date:"D H:ma"}}</a>{% endif%} 
 {%if status.liked %} Liked {% endif%} 
     - {{status.body}}
     <a href="{{status.who_else_liked }}">people who liked this</a>
@@ -46,7 +46,7 @@
 <ul>
 {%for photo in photos %}
 {% if photo.link_back %}<a href="{{status.link_back}}"><img src="{{photo.body}}"/>
-        {%endif%}{{photo.created}} </a>
+        {%endif%}{{photo.created|date:"D H:ma"}} </a>
 {% for comment in photo.comments %}
     <li>"{{comment.body}}" - {{comment.from_user}}</li>
 {% endfor %}
