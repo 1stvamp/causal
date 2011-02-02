@@ -45,8 +45,8 @@
 <h3> Photos </h3>
 <ul>
 {%for photo in photos %}
-{% if photo.link_back %}<a href="{{status.link_back}}"><img src="{{photo.body}}"/>
-        {%endif%}{{photo.created|date:"D H:ma"}} </a>
+{% if photo.link_back %}<a href="{{status.link_back}}">{{photo.created|date:"D H:ma"}}<img src="{{photo.body}}"/>
+        {%endif%} </a>
 {% for comment in photo.comments %}
     <li>"{{comment.body}}" - {{comment.from_user}}</li>
 {% endfor %}
