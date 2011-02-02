@@ -76,7 +76,7 @@ def auth(request):
     return redirect("%s&redirect_uri=%s&scope=%s&client_id=%s" % (
             service.app.oauth.request_token_url,
             callback,
-            'read_stream,offline_access',
+            'read_stream,offline_access,user_photos,user_photo_video_tags',
             service.app.oauth.consumer_key
         )
     )
@@ -87,7 +87,7 @@ def stats(request, service_id):
     
     service = get_object_or_404(UserService, pk=service_id)
     
-    links, statuses, details = get_stats_items(request.user, date.today() - timedelta(days=7), service)
+    links, statuses, details, photos = get_stats_items(request.user, date.today() - timedelta(days=7), service)
     
     if check_is_service_id(service, MODULE_NAME):
         return render_to_response(
@@ -95,6 +95,7 @@ def stats(request, service_id):
             {'links' : links,
              'statuses' : statuses,
              'details' : details,
+             'photos': photos,
              },
                                     
             context_instance=RequestContext(request)

@@ -4,7 +4,7 @@ We use FQL to fetch results from Facebook.
 
 from causal.main.exceptions import LoggedServiceError
 from causal.main.models import ServiceItem, AccessToken
-from causal.main.service_utils import get_model_instance
+from causal.main.service_utils import get_model_instance, get_data
 from datetime import datetime
 from django.shortcuts import redirect
 from facegraph.fql import FQL
@@ -123,10 +123,44 @@ def get_stats_items(user, since, model_instance=None):
     # get pics in which they are tagged
     
     # get pics posted
+
+    photo_feed = _fetch_photos_json(serv, access_token.oauth_token)
+    
+    photos = []
+    if photo_feed:
+        for entry in photo_feed['data']:
+            created = datetime.strptime(entry['created_time'].split('+')[0], '%Y-%m-%dT%H:%M:%S') #'2007-06-26T17:55:03+0000'
+            if created.date() >= since and int(entry['from']['id']) == uid:
+                item = ServiceItem()
+                item.created = created
+                item.link_back = entry['link']
+                item.title = entry['name']
+                item.body = entry['picture']
+                item.comments = []
+                for comment in entry['comments']['data']:
+                    comment_item = ServiceItem()
+                    comment_item.created = datetime.strptime(comment['created_time'].split('+')[0], '%Y-%m-%dT%H:%M:%S')
+                    comment_item.body = comment['message']
+                    comment_item.from_user = comment['from']['name']
+                    item.comments.append(comment_item)
+                item.service = serv
+                item.user = user
+                photos.append(item)
     
     # get places visited
     
-    return links, statuses, items
+    return links, statuses, items, photos
+
+def _fetch_photos_json(serv, oauth_token):
+    """Use graph api to fetch photo information."""
+    photo_feed_json = get_data(
+                serv,
+                'https://graph.facebook.com/me/photos?access_token=%s' \
+                    % (oauth_token),
+                disable_oauth=True
+            )
+    
+    return photo_feed_json
 
 def _fetch_feed(serv, access_token, fql):
     """Generic method to fetch FQL from Facebook."""
