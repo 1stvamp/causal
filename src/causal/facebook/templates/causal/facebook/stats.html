@@ -1,22 +1,41 @@
 <ul>
 {% for status in statuses %}
-{%if status.body %}
+
     <li> {% if status.link_back %} 
             <a href="{{status.link_back}}">
-        {%endif%}{{status.created}}{% if status.link_back %} </a> {%endif%}
-        {%if status.liked %} Liked {% endif%} 
-        {%if status.linked %} Linked {% endif%} 
+        {%endif%}
+        {{status.created}}
+        {% if status.link_back %} </a> {%endif%}
+        
+    </li>
+    
+{% endfor %}
+</ul>
+
+<ul>
+{% for link in links %}
+<li>
+{% if link.link_back %}<a href="{{status.link_back}}">
+        {%endif%}{{link.created}} </a>
+</li>
+{% endfor %}
+</ul>
+
+<ul>
+{% for status in details %}
+<li>
+{%if status.liked %} Liked {% endif%} 
+
+{%if status.linked %} Linked {% endif%} 
     - {{status.body}}
 
     {% if status.other_peoples_comments %}
         People who also liked this status:
         <ul>
         {% for comment in status.other_peoples_comments%} 
-        <li>{{comment.name}} </li> 
+        <li>{{status.name}} </li> 
         {% endfor %}
         </ul>
-    {% endif%}
-    </li>
-{% endif%}
+    {% endif%}</li>
 {% endfor %}
 </ul>
