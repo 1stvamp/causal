@@ -1,9 +1,4 @@
-{% extends "causal/base.html" %}
 {% load media_loaders %}
-{% block primary %}
-    {% load_js "OpenLayers/OpenLayers-2.10.min.js" %}
-    {% load_css "OpenLayers/theme/default/style.css" %}
-    {% load_js "//ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2" %}
 {% if favourite_artists %}
     <h1> Most played artists for the last 7 days</h1>
     <ul>
@@ -115,5 +110,4 @@
 {% else %}
     <h1>No plays this week!</h1>
     <p>Kick back and listen to some tunes.</p>
-    {% endif %}
-{% endblock %}
+{% endif %}
