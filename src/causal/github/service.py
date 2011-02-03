@@ -30,21 +30,20 @@ def get_items(user, since, model_instance=None):
     
     for entry in user_feed:
         if entry['public']:
-            item = ServiceItem()
-            item.title = "%s for %s" % (entry['type'], entry['payload']['repo'])
-            
-            item.body = ''
-            for commit in entry['payload']['shas']:
-                item.body = item.body + commit[2] + ' '
-            
-            item.link_back = entry['url']
-
             date, time, offset = entry['created_at'].rsplit(' ')
-            item.created = datetime.strptime(date + ' ' + time, '%Y/%m/%d %H:%M:%S')
-            
-            item.service = serv
-            item.user = user
-            items.append(item)
+            created = datetime.strptime(date + ' ' + time, '%Y/%m/%d %H:%M:%S')
+            if created.date() > since:
+                item = ServiceItem()
+                item.title = "%s for %s" % (entry['type'], entry['payload']['repo'])
+                
+                item.body = ''
+                for commit in entry['payload']['shas']:
+                    item.body = item.body + commit[2] + ' '
+                item.created
+                item.link_back = entry['url']            
+                item.service = serv
+                item.user = user
+                items.append(item)
     
     try:
         feed = feedparser.parse(url)
