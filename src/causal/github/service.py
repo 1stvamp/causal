@@ -5,7 +5,7 @@ from datetime import datetime
 from BeautifulSoup import Tag, BeautifulSoup as soup
 from BeautifulSoup import SoupStrainer
 from causal.main.models import AccessToken, ServiceItem
-from causal.main.service_utils import get_model_instance
+from causal.main.service_utils import get_model_instance, get_data
 from causal.main.exceptions import LoggedServiceError
 
 DISPLAY_NAME = 'Github'
@@ -21,6 +21,31 @@ def get_items(user, since, model_instance=None):
 
     url = 'https://github.com/%s.atom' % (at.username,)
 
+    items = []
+    
+    user_feed = get_data(
+                serv,
+                'http://github.com/%s.json' % (user),
+                disable_oauth=True)
+    
+    for entry in user_feed:
+        if entry['public']:
+            item = ServiceItem()
+            item.title = "%s for %s" % (entry['type'], entry['payload']['repo'])
+            
+            item.body = ''
+            for commit in entry['payload']['shas']:
+                item.body = item.body + commit[2] + ' '
+            
+            item.link_back = entry['url']
+
+            date, time, offset = entry['created_at'].rsplit(' ')
+            item.created = datetime.strptime(date + ' ' + time, '%Y/%m/%d %H:%M:%S')
+            
+            item.service = serv
+            item.user = user
+            items.append(item)
+    
     try:
         feed = feedparser.parse(url)
     except Exception, e:
