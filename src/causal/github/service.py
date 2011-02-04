@@ -22,10 +22,10 @@ def get_items(user, since, model_instance=None):
     
     user_feed = get_data(
                 serv,
-                'http://github.com/%s.json' % (serv.user.username),
+                'http://github.com/%s.json' % (at.username),
                 disable_oauth=True)
 
-    return _convert_feed(serv.user.username, serv, user_feed, since)
+    return _convert_feed(at.username, serv, user_feed, since)
 
 def _convert_feed(user, serv, feed, since):
     """Take the user's atom feed."""
@@ -58,10 +58,10 @@ def get_stats_items(user, since, model_instance=None):
     
     user_feed = get_data(
                 serv,
-                'http://github.com/%s.json' % (serv.user.username),
+                'http://github.com/%s.json' % (at.username),
                 disable_oauth=True)
 
-    return _convert_stats_feed(serv.user.username, serv, user_feed, since)
+    return _convert_stats_feed(at.username, serv, user_feed, since)
 
 def _convert_stats_feed(user, serv, feed, since):
     """Take the user's atom feed."""
