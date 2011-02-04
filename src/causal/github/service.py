@@ -1,12 +1,13 @@
 import time
 import feedparser
 from dateutil import parser
-from datetime import datetime
+from datetime import datetime, timedelta
 from BeautifulSoup import Tag, BeautifulSoup as soup
 from BeautifulSoup import SoupStrainer
 from causal.main.models import AccessToken, ServiceItem
 from causal.main.service_utils import get_model_instance, get_data
 from causal.main.exceptions import LoggedServiceError
+from django.utils.datastructures import SortedDict
 
 DISPLAY_NAME = 'Github'
 CUSTOM_FORM = False
@@ -18,17 +19,20 @@ def get_items(user, since, model_instance=None):
     serv = model_instance or get_model_instance(user, __name__)
     items = []
     at = AccessToken.objects.get(service=serv)
-
-    url = 'https://github.com/%s.atom' % (at.username,)
-
-    items = []
     
     user_feed = get_data(
                 serv,
-                'http://github.com/%s.json' % (user),
+                'http://github.com/%s.json' % (serv.user.username),
                 disable_oauth=True)
+
+    return _convert_feed(serv.user.username, serv, user_feed, since)
+
+def _convert_feed(user, serv, feed, since):
+    """Take the user's atom feed."""
     
-    for entry in user_feed:
+    items = []
+    
+    for entry in feed:
         if entry['public']:
             date, time, offset = entry['created_at'].rsplit(' ')
             created = datetime.strptime(date + ' ' + time, '%Y/%m/%d %H:%M:%S')
@@ -39,51 +43,65 @@ def get_items(user, since, model_instance=None):
                 item.body = ''
                 for commit in entry['payload']['shas']:
                     item.body = item.body + commit[2] + ' '
-                item.created
+                item.created = created
                 item.link_back = entry['url']            
                 item.service = serv
                 item.user = user
                 items.append(item)
+            
+    return items
+
+def get_stats_items(user, since, model_instance=None):
+    serv = model_instance or get_model_instance(user, __name__)
+    items = []
+    at = AccessToken.objects.get(service=serv)
     
-    try:
-        feed = feedparser.parse(url)
-    except Exception, e:
-        raise LoggedServiceError(original_exception=e)
+    user_feed = get_data(
+                serv,
+                'http://github.com/%s.json' % (serv.user.username),
+                disable_oauth=True)
 
-    return _convert_feed(user, serv, feed)
+    return _convert_stats_feed(serv.user.username, serv, user_feed, since)
 
-def _convert_feed(user, serv, feed):
+def _convert_stats_feed(user, serv, feed, since):
     """Take the user's atom feed."""
     
     items = []
+    avatar = ""
     
-    links = SoupStrainer('a')
-    if hasattr(feed, 'entries'):
-        for entry in feed.entries:
-            item = ServiceItem()
-            item.title = entry.title
-            content = soup(entry.content[0].value)
-            for tag in content.findAll(True):
-                if tag.name not in KEEP_TAGS:
-                    tag.hidden = True
-            item.body = content
-            # Extract the links
-            # this is link to github page with everything e.g.:
-            # u'http://github.com/bassdread/causal/compare/a76727c436...b1722a6e46'            
-            item.link_back = entry['link']
+    if feed[0]['actor_attributes'].has_key('gravatar_id'):
+        avatar = 'http://www.gravatar.com/avatar/%s' % feed[0]['actor_attributes']['gravatar_id']        
     
-            # These are the links contained within the body of the entry e.g.:
-            # <a href="http://github.com/bassdread/causal/commit/b1722a6e46b77941f75d34d46125522ed535e842">b1722a6</a>
-            parsed_links = [tag for tag in soup(str(content), parseOnlyThese=links)]
-            if parsed_links:
-                item.links = []
-                for link in parsed_links:
-                    item.links.append(str(link).split('"')[1])
-            updated = parser.parse(entry.updated)
-            updated = (updated - updated.utcoffset()).replace(tzinfo=None)
-            item.created = updated
-            item.service = serv
-            item.user = user
-            items.append(item)
+    commit_times = {}
+        
+    for entry in feed:
+        if entry['public']:
+            date, time, offset = entry['created_at'].rsplit(' ')
             
-    return items
+            offset = offset[1:]
+            offset = offset[:2]
+            time_offset = timedelta(hours=int(offset))
+            
+            created = datetime.strptime(date + ' ' + time, '%Y/%m/%d %H:%M:%S') + time_offset
+            if created.date() > since:
+                hour = created.strftime('%H')
+                if commit_times.has_key(hour+' ish'):
+                    commit_times[hour+' ish'] = commit_times[hour+' ish'] + 1
+                else:
+                    commit_times[hour+' ish'] = 1
+                    
+                item = ServiceItem()
+                item.title = "%s for %s" % (entry['type'], entry['payload']['repo'])
+                item.body = ''
+                for commit in entry['payload']['shas']:
+                    item.body = item.body + commit[2] + ' '
+                item.created = created
+                item.link_back = entry['url']            
+                item.service = serv
+                item.user = user
+                items.append(item)
+                
+    commit_times = SortedDict(sorted(commit_times.items(), 
+                                    reverse=True, key=lambda x: x[1]))
+           
+    return items, avatar, commit_times

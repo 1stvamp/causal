@@ -1,3 +1,4 @@
+<img src="{{avatar}}"/>
 <ul>
 {% for commit in commits %}
 <li> {{commit.created }} - {{ commit.title }} <a href="{{commit.link_back}}">details</a></li>
@@ -8,5 +9,12 @@
 {% endfor %}
 </ul>
 {%endif%}
+{% endfor %}
+</ul>
+
+<h3>Hours for commit code</h3>
+<ul>
+{% for hour, count in commit_times.iteritems %}
+<li>{{hour}} - {{count}}</li>
 {% endfor %}
 </ul>

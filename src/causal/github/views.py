@@ -4,7 +4,7 @@ are hitting public rss feeds and processing those.
 """
 
 from datetime import datetime
-from causal.github.service import get_items
+from causal.github.service import get_items, get_stats_items
 from causal.main.decorators import can_view_service
 from causal.main.models import UserService, AccessToken
 from causal.main.service_utils import get_model_instance,  \
@@ -49,11 +49,13 @@ def stats(request, service_id):
     service = get_object_or_404(UserService, pk=service_id)
     
     if check_is_service_id(service, MODULE_NAME):
-        commits = get_items(request.user, date.today() - timedelta(days=7), service)
+        commits, avatar, commit_times = get_stats_items(request.user, date.today() - timedelta(days=7), service)
     
         return render_to_response(
             service.template_name + '/stats.html',
-            {'commits': commits},
+            {'commits': commits,
+             'avatar' : avatar,
+             'commit_times' : commit_times},
             context_instance=RequestContext(request)
         )
     else:
