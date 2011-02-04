@@ -7,8 +7,9 @@ from datetime import datetime
 from causal.lastfm.service import get_items, get_artists, get_upcoming_gigs
 from causal.main.decorators import can_view_service
 from causal.main.models import UserService, AccessToken
-from causal.main.service_utils import get_model_instance, \
-     get_module_name, settings_redirect
+from causal.main.utils import get_module_name
+from causal.main.utils.services import get_model_instance, settings_redirect
+from causal.main.utils.views import render
 from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404, redirect
@@ -72,8 +73,8 @@ def stats(request, service_id):
             else:
                 gig_index = gig_index + 1
 
-    return render_to_response(
-        service.template_name + '/stats.html',
+    return render(
+        request,
         template_values,
-        context_instance=RequestContext(request)
+        service.template_name + '/stats.html'
     )

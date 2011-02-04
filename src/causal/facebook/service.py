@@ -2,7 +2,7 @@ import httplib2
 import oauth2 as oauth
 from datetime import datetime
 from causal.main.models import ServiceItem, AccessToken
-from causal.main.service_utils import get_model_instance
+from causal.main.utils.services import get_model_instance
 from facegraph.fql import FQL
 from causal.main.exceptions import LoggedServiceError
 from django.shortcuts import render_to_response, redirect
@@ -76,13 +76,13 @@ def get_items(user, since, model_instance=None, stats=None):
                     item.service = serv
                     item.user = user
                     items.append(item)
-        
+
         if getattr(stream, 'error_code', False):
             raise LoggedServiceError(
             'Facebook service failed to fetch items for causal-user %s, error: %s' % \
                 (user.username, results['error_msg'])
             )
-        else:    
+        else
             for strm in stream:
                 # do we have permission from the user to post entry?
                 # ignore if the post is entry
@@ -94,7 +94,7 @@ def get_items(user, since, model_instance=None, stats=None):
                             item.who_else_liked = strm['likes']['href']
                             item.created = datetime.fromtimestamp(strm.created_time)
                             item.body = strm.message
-                            
+
                             # go off and fetch details about a user
                             item.other_peoples_comments = []
                             for comment in strm['comments']['comment_list']:
@@ -109,5 +109,5 @@ def get_items(user, since, model_instance=None, stats=None):
                             item.user = user
                             item.link_back = strm['permalink']
                             items.append(item)
-    
+
     return items

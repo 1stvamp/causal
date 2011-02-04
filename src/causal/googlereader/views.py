@@ -7,7 +7,8 @@ from BeautifulSoup import Tag, BeautifulSoup as soup
 from BeautifulSoup import SoupStrainer
 from causal.googlereader.service import get_items
 from causal.main.models import UserService, AccessToken
-from causal.main.service_utils import get_model_instance, get_module_name, settings_redirect
+from causal.main.utils import get_module_name
+from causal.main.utils.services import get_model_instance, settings_redirect
 from causal.main.decorators import can_view_service
 from datetime import datetime, date, timedelta
 from django.core.urlresolvers import reverse

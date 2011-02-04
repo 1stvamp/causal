@@ -3,7 +3,7 @@ feed from flickr.com.
 """
 
 from causal.main.models import ServiceItem, AccessToken
-from causal.main.service_utils import get_model_instance
+from causal.main.utils.services import get_model_instance
 from causal.main.exceptions import LoggedServiceError
 from datetime import datetime, timedelta
 from django.utils import simplejson
@@ -15,7 +15,7 @@ OAUTH_FORM = False
 
 def get_items(user, since, model_instance):
     """Fetch and normalise the updates from the service."""
-    
+
     serv = model_instance or get_model_instance(user, __name__)
     items = []
 
@@ -29,10 +29,10 @@ def get_items(user, since, model_instance):
             format = 'json',
             nojsoncallback ='1'
         )
-        
+
     except Exception, exception:
         raise LoggedServiceError(original_exception = exception)
-    
+
     try:
         photos = simplejson.loads(photos_json)
     except:
@@ -44,10 +44,10 @@ def get_items(user, since, model_instance):
             # info about the pic
             pic = flickr.photos_getInfo(photo_id=photo['id'], format='json', nojsoncallback='1')
             pic_json = simplejson.loads(pic)
-            
+
             epoch = pic_json['photo']['dateuploaded']
             created = datetime.fromtimestamp(float(epoch))
-            
+
             # test if the pic is in our date range
             if created.date() > since - timedelta(days=1):
                 item = ServiceItem()
@@ -56,56 +56,56 @@ def get_items(user, since, model_instance):
                 exif = flickr.photos_getExif(photo_id=photo['id'], format='json', nojsoncallback ='1')
                 exif_json = simplejson.loads(exif)
                 item.camera_make = _extract_camera_type(exif_json)
-                
+
                 item.location = {}
                 item.title = pic_json['photo']['title']['_content']
-                
+
                 item.created = created
                 item.service = serv
-                
+
                 item.link_back = pic_json['photo']['urls']['url'][0]['_content']
                 item.tags = pic_json['photo']['tags']['tag']
                 item.favorite = pic_json['photo']['isfavorite']
-                
+
                 # add views
                 item.views = pic_json['photo']['views']
-                
+
                 # add tags
                 item.tags = pic_json['photo']['tags']['tag']
-                
+
                 if pic_json['photo']['comments']['_content'] == 0:
                     item.number_of_comments = "No comments"
                 else:
                     item.number_of_comments = pic_json['photo']['comments']['_content']
-                    
+
                 item.url_thumb = "http://farm%s.static.flickr.com/%s/%s_%s_t.jpg" % \
-                             (pic_json['photo']['farm'], 
-                              pic_json['photo']['server'], 
-                              pic_json['photo']['id'], 
+                             (pic_json['photo']['farm'],
+                              pic_json['photo']['server'],
+                              pic_json['photo']['id'],
                               pic_json['photo']['secret'])
-                
+
                 item.url_small = "http://farm%s.static.flickr.com/%s/%s_%s_m.jpg" % \
-                             (pic_json['photo']['farm'], 
-                              pic_json['photo']['server'], 
-                              pic_json['photo']['id'], 
+                             (pic_json['photo']['farm'],
+                              pic_json['photo']['server'],
+                              pic_json['photo']['id'],
                               pic_json['photo']['secret'])
-                
+
                 item.body = "<br/><img src='" + item.url_thumb +"'/>"
                 # add location
                 if pic_json['photo'].has_key('location'):
                     item.location['lat'] = pic_json['photo']['location']['latitude']
                     item.location['long'] = pic_json['photo']['location']['longitude']
-                    
+
                 item.user = user
                 items.append(item)
-    
+
     return items
 
 def _extract_camera_type(json):
     """Return the make and model of a photo."""
 
     make_model = None
-    
+
     # first attempt using the "model"
     # second using "make"
     try:
@@ -119,5 +119,5 @@ def _extract_camera_type(json):
     except:
         pass
     return make_model
-    
-    
+
+

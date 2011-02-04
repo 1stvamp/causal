@@ -4,8 +4,9 @@ We ask for read only permissions using full blown oauth2.
 
 from causal.main.decorators import can_view_service
 from causal.main.models import UserService, RequestToken, ServiceApp
-from causal.main.service_utils import get_model_instance, \
-     generate_access_token, get_module_name, settings_redirect
+from causal.main.utils import get_module_name
+from causal.main.utils.services import get_model_instance, \
+     generate_access_token, settings_redirect
 from causal.twitter.service import get_items
 from causal.twitter.utils import _auth, user_login
 from datetime import date, timedelta
