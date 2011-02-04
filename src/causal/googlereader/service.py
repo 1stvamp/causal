@@ -3,7 +3,7 @@ import feedparser
 from dateutil import parser
 from datetime import datetime
 from causal.main.models import AccessToken, ServiceItem
-from causal.main.service_utils import get_model_instance
+from causal.main.utils.services import get_model_instance
 from causal.main.exceptions import LoggedServiceError
 from urlparse import urlparse
 

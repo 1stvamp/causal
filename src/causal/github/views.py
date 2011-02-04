@@ -1,5 +1,5 @@
 """ Handler for URLs for the http://github.com service.
-GitHub doesn't really have a decent oauth service so again we 
+GitHub doesn't really have a decent oauth service so again we
 are hitting public rss feeds and processing those.
 """
 
@@ -7,8 +7,9 @@ from datetime import datetime
 from causal.github.service import get_items, get_stats_items
 from causal.main.decorators import can_view_service
 from causal.main.models import UserService, AccessToken
-from causal.main.service_utils import get_model_instance,  \
-     get_module_name, settings_redirect, check_is_service_id
+from causal.main.utils import get_module_name
+from causal.main.utils.services import get_model_instance, \
+        settings_redirect, check_is_service_id
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
@@ -27,7 +28,7 @@ def auth(request):
 
         # Delete existing token
         AccessToken.objects.filter(service=service).delete()
-        
+
         # Before creating a new one
         AccessToken.objects.create(
             service=service,
@@ -39,7 +40,7 @@ def auth(request):
         service.setup = True
         service.public = True
         service.save()
-    
+
     return redirect(settings_redirect(request))
 
 @can_view_service
@@ -47,10 +48,10 @@ def stats(request, service_id):
     """Create up some stats."""
 
     service = get_object_or_404(UserService, pk=service_id)
-    
+
     if check_is_service_id(service, MODULE_NAME):
         commits, avatar, commit_times = get_stats_items(request.user, date.today() - timedelta(days=7), service)
-    
+
         return render_to_response(
             service.template_name + '/stats.html',
             {'commits': commits,

@@ -25,7 +25,7 @@ def user_login(service, cust_callback_url=None):
             return False
 
         request_token_params = dict((token.split('=') for token in content.split('&')))
-        
+
         # Remove any old tokens, so we can start from a fresh token
         RequestToken.objects.filter(service=service).delete()
         RequestToken.objects.create(
@@ -53,7 +53,7 @@ def generate_access_token(service, request_token):
     resp, content = client.request(service.app.oauth.access_token_url, "POST")
 
     access_token_params = dict((token.split('=') for token in content.split('&')))
-    
+
     # Delete any previous tokens
     AccessToken.objects.filter(service=service).delete()
     # Before creating a new one
@@ -64,7 +64,7 @@ def generate_access_token(service, request_token):
         created=datetime.now(),
         oauth_verify=request_token.oauth_verify
     )
-    
+
 def get_data(service, url, disable_oauth=False):
     if disable_oauth:
         h = httplib2.Http()
@@ -87,20 +87,15 @@ def get_model_instance(user, module_name):
     except:
         return False
 
-def get_module_name(name):
-    return name.rpartition('.')[0]
-
 def settings_redirect(request):
     """Where the user is redirected to after configuring a service.
     This can be overridden in the app itself."""
-    
+
     # return the user back to the settings page
     return reverse('user-settings') or '/' + request.user.username
 
 def check_is_service_id(service, module_name):
     """Check we have the correct service for the url:
     /delicious/stats/8 where 8 is the correct id otherwise redirect."""
-    
+
     return service.template_name.replace('/','.') == module_name
-    
-    

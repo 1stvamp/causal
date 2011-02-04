@@ -1,5 +1,5 @@
 from causal.main.models import ServiceItem
-from causal.main.service_utils import get_model_instance, get_data
+from causal.main.utils.services import get_model_instance, get_data
 from causal.main.exceptions import LoggedServiceError
 from django.shortcuts import render_to_response, redirect
 from django.utils import simplejson

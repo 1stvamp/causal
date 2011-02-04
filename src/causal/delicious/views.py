@@ -3,8 +3,9 @@ There isn't an easy to user API for this service so we work on
 publicly rss feeds from the user's account."""
 
 from causal.main.models import UserService, AccessToken
-from causal.main.service_utils import get_model_instance, \
-     get_module_name, settings_redirect, check_is_service_id
+from causal.main.utils import get_module_name
+from causal.main.utils.services import get_model_instance, \
+        settings_redirect, check_is_service_id
 from causal.main.decorators import can_view_service
 from causal.delicious.service import get_items
 from datetime import datetime, date, timedelta

@@ -4,7 +4,7 @@ We use FQL to fetch results from Facebook.
 
 from causal.main.exceptions import LoggedServiceError
 from causal.main.models import ServiceItem, AccessToken
-from causal.main.service_utils import get_model_instance, get_data
+from causal.main.utils.services import get_model_instance, get_data
 from datetime import datetime
 from django.shortcuts import redirect
 from facegraph.fql import FQL
@@ -35,7 +35,7 @@ def enable():
 
 def get_items(user, since, model_instance=None):
     """Fetch main stats for history page."""
-    
+
     serv = model_instance or get_model_instance(user, __name__)
     access_token = AccessToken.objects.get(service=serv)
 
@@ -46,7 +46,7 @@ def get_items(user, since, model_instance=None):
             uid = uid_result[0]['uid']
         week_ago_epoch = time.mktime(since.timetuple())
         status_stream = _fetch_feed(serv, access_token, STATUS_FQL % int(week_ago_epoch))
-            
+
     except Exception, exception:
         raise LoggedServiceError(original_exception=exception)
 
@@ -55,21 +55,21 @@ def get_items(user, since, model_instance=None):
         'Facebook service failed to fetch items for causal-user %s, error: %s' % \
             (user.username, status_stream['error_msg'])
         )
-    
+
     return _convert_status_feed(serv, user, status_stream, uid, since)
 
 def get_stats_items(user, since, model_instance=None):
     """Return more detailed ServiceItems for the stats page."""
-    
+
     serv = model_instance or get_model_instance(user, __name__)
     access_token = AccessToken.objects.get(service=serv)
     week_ago_epoch = time.mktime(since.timetuple())
-    
+
     query = FQL(access_token.oauth_token)
     uid_result = query(USER_ID)
     if uid_result:
-        uid = uid_result[0]['uid']    
-    
+        uid = uid_result[0]['uid']
+
     # get links posted
     try:
         link_stream = _fetch_feed(serv, access_token, LINKED_FQL % int(week_ago_epoch))
@@ -78,16 +78,16 @@ def get_stats_items(user, since, model_instance=None):
 
     if link_stream:
         links = _convert_link_feed(serv, user, link_stream, since)
-    
+
     # get statuses
     try:
         status_stream = _fetch_feed(serv, access_token, STATUS_FQL % int(week_ago_epoch))
     except Exception, exception:
         return LoggedServiceError(original_exception=exception)
-            
+
     if status_stream:
         statuses = _convert_status_feed(serv, user, status_stream, uid, since)
-    
+
     # details stats:
     try:
         stream_stream = _fetch_feed(serv, access_token, STREAM_FQL % int(week_ago_epoch))
@@ -105,7 +105,7 @@ def get_stats_items(user, since, model_instance=None):
                     item.who_else_liked = strm['likes']['href']
                     item.created = datetime.fromtimestamp(strm.created_time)
                     item.body = strm.message
-                    
+
                     # go off and fetch details about a user
                     item.other_peoples_comments = []
                     for comment in strm['comments']['comment_list']:
@@ -121,11 +121,11 @@ def get_stats_items(user, since, model_instance=None):
                     item.link_back = strm['permalink']
                     items.append(item)
     # get pics in which they are tagged
-    
+
     # get pics posted
 
     photo_feed = _fetch_photos_json(serv, access_token.oauth_token)
-    
+
     photos = []
     if photo_feed:
         for entry in photo_feed['data']:
@@ -146,7 +146,7 @@ def get_stats_items(user, since, model_instance=None):
                 item.service = serv
                 item.user = user
                 photos.append(item)
-    
+
     # get places visited
     checkin_feed = _fetch_checkins_json(serv, access_token.oauth_token)
     checkins = []
@@ -156,13 +156,13 @@ def get_stats_items(user, since, model_instance=None):
             if created.date() >= since:
                 item = ServiceItem()
                 item.created = created
-                item.link_back = 'http://www.facebook.com/pages/%s/%s' % (entry['place']['name'].replace(' ','-'), entry['place']['id']) 
+                item.link_back = 'http://www.facebook.com/pages/%s/%s' % (entry['place']['name'].replace(' ','-'), entry['place']['id'])
                 item.title = entry['place']['name']
                 item.body = entry['message']
                 item.service = serv
                 item.user = user
                 checkins.append(item)
-                
+
     return links, statuses, items, photos, checkins
 
 def _fetch_photos_json(serv, oauth_token):
@@ -173,7 +173,7 @@ def _fetch_photos_json(serv, oauth_token):
                     % (oauth_token),
                 disable_oauth=True
             )
-    
+
     return photo_feed_json
 
 def _fetch_checkins_json(serv, oauth_token):
@@ -184,26 +184,26 @@ def _fetch_checkins_json(serv, oauth_token):
                     % (oauth_token),
                 disable_oauth=True
             )
-    
+
     return checkins_feed_json
 
 def _fetch_feed(serv, access_token, fql):
     """Generic method to fetch FQL from Facebook."""
-    
+
     query = FQL(access_token.oauth_token)
     status_stream = query(fql)
-        
+
     return status_stream
 
 def _convert_link_feed(serv, user, stream, since):
     """Convert link feed."""
-    
+
     items = []
-    
+
     for entry in stream:
         if entry.has_key('created_time'):
             created = datetime.fromtimestamp(entry['created_time'])
-            
+
             if created.date() >= since:
                 item = ServiceItem()
                 item.created = datetime.fromtimestamp(entry.created_time)
@@ -214,19 +214,19 @@ def _convert_link_feed(serv, user, stream, since):
                 item.service = serv
                 item.user = user
                 items.append(item)
-    
+
     return items
 
 def _convert_status_feed(serv, user, user_stream, uid, since):
-    """Take the feed of status updates from facebook and convert it to 
+    """Take the feed of status updates from facebook and convert it to
     ServiceItems."""
 
     items = []
-    
+
     for entry in user_stream:
         if entry.has_key('message'):
             created = datetime.fromtimestamp(entry['time'])
-            
+
             if created.date() >= since:
                 item = ServiceItem()
                 item.created = datetime.fromtimestamp(entry['time'])
