@@ -73,7 +73,9 @@
         });
         //]]>
     </script>
-    <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false"></script>
+    {% load_js "OpenLayers/OpenLayers-2.10.min.js" %}
+    {% load_css "OpenLayers/theme/default/style.css" %}
+    {% load_js "//ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2" %}
 {% endblock head %}
 
 {% block primary %}

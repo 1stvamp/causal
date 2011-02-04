@@ -20,10 +20,15 @@ function add_message(item) {
 
 $(function() {
     $('#messages').ajaxComplete(function(e, xhr, settings) {
-        var json = jQuery.parseJSON(xhr.responseText);
-        $.each(json.django_messages, function(i, item){
-            add_message(item);
-        });
+	if (xhr && xhr.responseText !== undefined &&
+	  (xhr.responseText.charAt(0) == '[' || xhr.responseText.charAt(0) == '{')) {
+	    var json = jQuery.parseJSON(xhr.responseText);
+	    if (json.django_messages !== undefined) {
+	        $.each(json.django_messages, function(i, item){
+		    add_message(item);
+		});
+	    }
+	}
     }).ajaxError(function(e, xhr, settings, exception) {
         add_message({
             message: "There was an error processing your request, please try again.",

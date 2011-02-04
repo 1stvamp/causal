@@ -132,7 +132,12 @@ INSTALLED_SERVICES = (
     #'causal.lastfm',
     #'causal.googlereader',
 )
-INSTALLED_APPS += INSTALLED_SERVICES
+
+# Override INSTALLED_APPS_EXTEND or INSTALLED_SERVICES_EXTEND to add onto the default
+# set of apps or services, rather than overriding them, in your
+# local_settings.py
+INSTALLED_APPS_EXTEND = list()
+INSTALLED_SERVICES_EXTEND = list()
 
 TEMPLATE_CONTEXT_PROCESSORS =(
     'django.core.context_processors.request',
@@ -168,5 +173,10 @@ if SECRET_KEY is None:
     raise Exception('SECRET_KEY needs to be changed to a unique, sekrit, random string')
 
 TEMPLATE_DEBUG = DEBUG
+
+if INSTALLED_SERVICES_EXTEND:
+    INSTALLED_SERVICES += INSTALLED_SERVICES_EXTEND
+if INSTALLED_APPS_EXTEND:
+    INSTALLED_APPS += INSTALLED_APPS_EXTEND
 
 INSTALLED_APPS += INSTALLED_SERVICES
