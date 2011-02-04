@@ -3,6 +3,7 @@ This service requires we use a facegraph python lib. Most of
 the stats work is done using FQL."""
 
 import cgi
+import urllib
 from causal.facebook.service import get_items, get_stats_items
 from causal.main.decorators import can_view_service
 from causal.main.models import AccessToken, ServiceApp, UserService
@@ -14,9 +15,7 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
-import urllib
+from django.shortcuts import get_object_or_404
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
@@ -91,16 +90,15 @@ def stats(request, service_id):
     links, statuses, details, photos, checkins = get_stats_items(request.user, date.today() - timedelta(days=7), service)
 
     if check_is_service_id(service, MODULE_NAME):
-        return render_to_response(
-            service.template_name + '/stats.html',
+        return render(
+            request,
             {'links' : links,
              'statuses' : statuses,
              'details' : details,
              'photos': photos,
              'checkins' : checkins,
              },
-
-            context_instance=RequestContext(request)
+            service.template_name + '/stats.html'
         )
     else:
         return redirect('/%s' %(request.user.username))

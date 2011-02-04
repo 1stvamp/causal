@@ -10,9 +10,8 @@ from causal.main.utils.services import get_model_instance, user_login, \
      generate_access_toke settings_redirect, check_is_service_id
 from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
-from django.template import RequestContext
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
@@ -62,10 +61,10 @@ def stats(request, service_id):
         # get venue details ?
         # for example http://api.foursquare.com/v1/venue?vid=940763
 
-        return render_to_response(
-            service.template_name + '/stats.html',
+        return render(
+            request,
             template_values,
-            context_instance=RequestContext(request)
+            service.template_name + '/stats.html'
         )
     else:
         return redirect('/%s' %(request.user.username))
