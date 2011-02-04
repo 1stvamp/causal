@@ -1,4 +1,4 @@
-""" Handles utrls foir the http://last.fm service.
+""" Handles requests for the http://last.fm service.
 We only access public feeds for the user. There is a full blown "oauth"
 interface but we don't need to use it.
 """
@@ -37,7 +37,7 @@ def auth(request):
         service.setup = True
         service.public = True
         service.save()
-        
+
     return redirect(settings_redirect(request))
 
 @can_view_service
@@ -47,20 +47,20 @@ def stats(request, service_id):
     template_values = {}
 
     date_offset = date.today() - timedelta(days=7)
-    
-    template_values['favourite_artists'] = get_artists(request.user, 
-                                                       date_offset, 
+
+    template_values['favourite_artists'] = get_artists(request.user,
+                                                       date_offset,
                                                        service)
-    template_values['recent_tracks'] = get_items(request.user, 
-                                                 date_offset, 
+    template_values['recent_tracks'] = get_items(request.user,
+                                                 date_offset,
                                                  service)
 
     gig_index = 0
-    
+
     for artist in template_values['favourite_artists']:
-        artist.gigs = get_upcoming_gigs(request.user, 
-                                        date.today() - timedelta(days=7), 
-                                        service, 
+        artist.gigs = get_upcoming_gigs(request.user,
+                                        date.today() - timedelta(days=7),
+                                        service,
                                         artist.name)
         if artist.gigs:
             if not template_values.has_key('gig_centre') and \
@@ -71,7 +71,7 @@ def stats(request, service_id):
                 template_values['gig_centre'] = artist.gigs[0]
             else:
                 gig_index = gig_index + 1
-            
+
     return render_to_response(
         service.template_name + '/stats.html',
         template_values,
