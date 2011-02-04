@@ -1,8 +1,16 @@
-Bookmarks
+<h3>Bookmarks</h3>
 <ul>
 {% for bookmark in bookmarks %}
 
 <li>{{bookmark.created}} - <a href="{{bookmark.link_back}}">{{bookmark.title}}</a></li>
 
+{% endfor %}
+</ul>
+
+<h3> Tags </h3>
+
+<ul>
+{% for tag, number in tags.iteritems %}
+<li><a href="http://www.delicious.com/tag/{{tag}}">{{tag}}</a> used {{number}}</li>
 {% endfor %}
 </ul>

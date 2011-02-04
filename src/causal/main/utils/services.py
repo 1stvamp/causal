@@ -93,3 +93,9 @@ def settings_redirect(request):
 
     # return the user back to the settings page
     return reverse('user-settings') or '/' + request.user.username
+
+def check_is_service_id(service, module_name):
+    """Check we have the correct service for the url:
+    /delicious/stats/8 where 8 is the correct id otherwise redirect."""
+
+    return service.template_name.replace('/','.') == module_name

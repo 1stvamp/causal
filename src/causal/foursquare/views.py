@@ -7,7 +7,7 @@ from causal.main.decorators import can_view_service
 from causal.main.models import UserService, RequestToken, ServiceApp
 from causal.main.utils import get_module_name
 from causal.main.utils.services import get_model_instance, user_login, \
-     generate_access_toke settings_redirect
+     generate_access_toke settings_redirect, check_is_service_id
 from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404
@@ -50,18 +50,22 @@ def auth(request):
 def stats(request, service_id):
     """Display stats based on checkins."""
     service = get_object_or_404(UserService, pk=service_id)
-    template_values = {}
-    # get checkins
-    checkins = get_items(request.user,
-                         date.today() - timedelta(days=7), service)
-    template_values['checkins'] = checkins
-    template_values['checkin_centre'] = checkins[-1]
 
-    # get venue details ?
-    # for example http://api.foursquare.com/v1/venue?vid=940763
+    if check_is_service_id(service, MODULE_NAME):
+        template_values = {}
+        # get checkins
+        checkins = get_items(request.user,
+                             date.today() - timedelta(days=7), service)
+        template_values['checkins'] = checkins
+        template_values['checkin_centre'] = checkins[-1]
 
-    return render_to_response(
-        service.template_name + '/stats.html',
-        template_values,
-        context_instance=RequestContext(request)
-    )
+        # get venue details ?
+        # for example http://api.foursquare.com/v1/venue?vid=940763
+
+        return render_to_response(
+            service.template_name + '/stats.html',
+            template_values,
+            context_instance=RequestContext(request)
+        )
+    else:
+        return redirect('/%s' %(request.user.username))

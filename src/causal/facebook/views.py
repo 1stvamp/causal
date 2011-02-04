@@ -3,11 +3,12 @@ This service requires we use a facegraph python lib. Most of
 the stats work is done using FQL."""
 
 import cgi
-from causal.facebook.service import get_items
+from causal.facebook.service import get_items, get_stats_items
 from causal.main.decorators import can_view_service
 from causal.main.models import AccessToken, ServiceApp, UserService
 from causal.main.utils import get_module_name
-from causal.main.utils.services import get_model_instance, settings_redirect
+from causal.main.utils.services import get_model_instance, settings_redirect, \
+        check_is_service_id
 from datetime import datetime, date, timedelta
 from django.shortcuts import redirect
 from django.contrib import messages
@@ -76,7 +77,7 @@ def auth(request):
     return redirect("%s&redirect_uri=%s&scope=%s&client_id=%s" % (
             service.app.oauth.request_token_url,
             callback,
-            'read_stream,offline_access',
+            'read_stream,offline_access,user_photos,user_photo_video_tags,user_checkins',
             service.app.oauth.consumer_key
         )
     )
@@ -87,9 +88,19 @@ def stats(request, service_id):
 
     service = get_object_or_404(UserService, pk=service_id)
 
-    return render_to_response(
-        service.template_name + '/stats.html',
-        {'statuses' : get_items(request.user, date.today() - timedelta(days=7),
-                                service, True)},
-        context_instance=RequestContext(request)
-    )
+    links, statuses, details, photos, checkins = get_stats_items(request.user, date.today() - timedelta(days=7), service)
+
+    if check_is_service_id(service, MODULE_NAME):
+        return render_to_response(
+            service.template_name + '/stats.html',
+            {'links' : links,
+             'statuses' : statuses,
+             'details' : details,
+             'photos': photos,
+             'checkins' : checkins,
+             },
+
+            context_instance=RequestContext(request)
+        )
+    else:
+        return redirect('/%s' %(request.user.username))

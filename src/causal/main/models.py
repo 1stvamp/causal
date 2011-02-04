@@ -153,7 +153,12 @@ class ServiceItem(object):
 
     @property
     def created_local(self):
-        if hasattr(self.user, 'get_profile'):
-            return adjust_datetime_to_timezone(self.created, 'UTC', unicode(self.user.get_profile().timezone))
+        """Calculate the created time using timexone to give a datetime
+        in the users time zone."""
+        if hasattr(self, 'created'):
+            if hasattr(self.user, 'get_profile'):
+                return adjust_datetime_to_timezone(self.created, 'UTC', unicode(self.user.get_profile().timezone))
+            else:
+                return adjust_datetime_to_timezone(self.created, 'UTC', TIME_ZONE)
         else:
-            return adjust_datetime_to_timezone(self.created, 'UTC', TIME_ZONE)
+            return None
