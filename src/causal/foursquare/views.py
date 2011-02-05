@@ -7,7 +7,7 @@ from causal.main.decorators import can_view_service
 from causal.main.models import UserService, RequestToken, ServiceApp
 from causal.main.utils import get_module_name
 from causal.main.utils.services import get_model_instance, user_login, \
-     generate_access_toke settings_redirect, check_is_service_id
+     generate_access_token, settings_redirect, check_is_service_id
 from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
