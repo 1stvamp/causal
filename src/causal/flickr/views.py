@@ -4,7 +4,7 @@ import httplib2
 from causal.flickr.service import get_items
 from causal.main.decorators import can_view_service
 from causal.main.models import UserService, AccessToken
-frooom causal.main.utils import get_module_name
+from causal.main.utils import get_module_name
 from causal.main.utils.services import settings_redirect, \
      get_model_instance, check_is_service_id
 from datetime import datetime, date, timedelta
