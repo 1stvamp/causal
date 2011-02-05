@@ -1,11 +1,11 @@
 """Test class for github app."""
 
-from causal.github.service import _convert_feed
+from causal.github.service import _convert_feed, _convert_date
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client
-import feedparser
+from django.utils import simplejson
 import os
 
 try:
@@ -13,29 +13,45 @@ try:
 except ImportError:
     pass
 
-class TestGithubViews(TestCase):
+class TestGithubService(TestCase):
     """Test the module with fixtures."""
 
     def setUp(self):
-        #self.client = Client()
-        #user = User.objects.create_user('user', 'user@example.com', 'password')
-        #user.save()
         self.path = os.path.dirname(os.path.realpath(__file__))
+        
+        json_file = open(self.path + '/test_data/user_feed.json', 'r')
+        json_feed = json_file.read()
+        json_file.close()
+        
+        self.feed = simplejson.loads(json_feed)
         
     def tearDown(self):
         pass
 
     def test_convert_feed(self):
         """Test processing of raw atom feed."""
-        atom_file = open(self.path + '/test_data/user.atom', 'r')
-        atom_feed = atom_file.read()
-        atom_file.close()
-        atom_feed = feedparser.parse(atom_feed)
-        items = _convert_feed('user', 'github', atom_feed)
-        self.assertEqual(35, len(items))
+        pass
+        
+    def test_convert_date(self):
+        """Test the method for adding the time diff to a date."""
+        
+        self.assertEqual(_convert_date(self.feed[0]).hour, 22)
+        
+    def test_convert_date_null_entry(self):
+        """Check a None object is handled correctly."""
+        
+        self.assertFalse(_convert_date(None))
+
+    def test_convert_date_missing_date(self):
+        """Check we handle a missing date key"""
+        
+        tmp_entry = self.feed[0]
+        del(tmp_entry['created_at'])
+        self.assertFalse(_convert_date(tmp_entry))
         
     def test_convert_broken_feed(self):
         """Test we deal with broken atom feeds."""
-        items = _convert_feed('user', 'github', '')
-        self.assertEqual(0, len(items))
+        #items = _convert_feed('user', 'github', '')
+        #self.assertEqual(0, len(items))
+        pass
        

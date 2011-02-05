@@ -34,8 +34,8 @@ def _convert_feed(user, serv, feed, since):
 
     for entry in feed:
         if entry['public']:
-            date, time, offset = entry['created_at'].rsplit(' ')
-            created = datetime.strptime(date + ' ' + time, '%Y/%m/%d %H:%M:%S')
+            created = _convert_date(entry)
+            
             if created.date() > since:
                 item = ServiceItem()
                 item.title = "%s for %s" % (entry['type'], entry['payload']['repo'])
@@ -67,6 +67,23 @@ def get_stats_items(user, since, model_instance=None):
 
     return _convert_stats_feed(at.username, serv, user_feed, since)
 
+def _convert_date(entry):
+    """Apply the offset from githuub timing to the date."""
+
+    converted_date = None
+    
+    if entry and entry.has_key('created_at'):
+    
+        date, time, offset = entry['created_at'].rsplit(' ')
+
+        offset = offset[1:]
+        offset = offset[:2]
+        time_offset = timedelta(hours=int(offset))
+
+        converted_date = datetime.strptime(date + ' ' + time, '%Y/%m/%d %H:%M:%S') + time_offset
+        
+    return converted_date
+
 def _convert_stats_feed(user, serv, feed, since):
     """Take the user's atom feed."""
 
@@ -81,12 +98,8 @@ def _convert_stats_feed(user, serv, feed, since):
     for entry in feed:
         if entry['public']:
             date, time, offset = entry['created_at'].rsplit(' ')
-
-            offset = offset[1:]
-            offset = offset[:2]
-            time_offset = timedelta(hours=int(offset))
-
-            created = datetime.strptime(date + ' ' + time, '%Y/%m/%d %H:%M:%S') + time_offset
+            created = _convert_date(entry)
+            
             if created.date() > since:
                 hour = created.strftime('%H')
                 if commit_times.has_key(hour+' ish'):
