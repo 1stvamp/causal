@@ -10,6 +10,7 @@ from time import time, mktime
 DISPLAY_NAME = 'Last.fm'
 CUSTOM_FORM = False
 OAUTH_FORM = False
+MAX_RESULTS = '200'
 
 def get_items(user, since, model_instance=None):
     """Fetch and filter the updates from Last.fm."""
@@ -23,11 +24,12 @@ def get_items(user, since, model_instance=None):
             t = datetime.now()
             tracks_listing = get_data(
                 serv,
-                'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=%s&format=json&from=%s&to=%s&limit=250' \
+                'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=%s&format=json&from=%s&to=%s&limit=%s' \
                     % (access_token.username,
                        access_token.api_token,
                        str(int(mktime(since.timetuple()))),
-                       str(int(mktime(t.timetuple())))),
+                       str(int(mktime(t.timetuple()))),
+                       MAX_RESULTS),
                 disable_oauth=True
             )
         except Exception, exception:
