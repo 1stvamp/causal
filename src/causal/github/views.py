@@ -11,8 +11,7 @@ from causal.main.utils import get_module_name
 from causal.main.utils.services import get_model_instance, \
         settings_redirect, check_is_service_id
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, get_object_or_404, redirect
-from django.template import RequestContext
+from django.shortcuts import get_object_or_404, redirect
 from datetime import date, timedelta
 
 # Yay, let's recreate __package__ for Python <2.6
@@ -52,12 +51,12 @@ def stats(request, service_id):
     if check_is_service_id(service, MODULE_NAME):
         commits, avatar, commit_times = get_stats_items(request.user, date.today() - timedelta(days=7), service)
 
-        return render_to_response(
-            service.template_name + '/stats.html',
+        return render(
+            request,
             {'commits': commits,
              'avatar' : avatar,
              'commit_times' : commit_times},
-            context_instance=RequestContext(request)
+            service.template_name + '/stats.html'
         )
     else:
         return redirect('/%s' %(request.user.username))

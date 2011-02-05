@@ -3,6 +3,7 @@ At present Google Reader (http://reader.google.com) lacks any API support.
 
 Everything done is from the publicly rss feeds from the users account."""
 
+import httplib2
 from BeautifulSoup import Tag, BeautifulSoup as soup
 from BeautifulSoup import SoupStrainer
 from causal.googlereader.service import get_items
@@ -13,12 +14,9 @@ from causal.main.utils.services import get_model_instance, \
 from causal.main.decorators import can_view_service
 from datetime import datetime, date, timedelta
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.template import RequestContext
-from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.datastructures import SortedDict
-import httplib2
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
@@ -75,12 +73,12 @@ def stats(request, service_id):
         sources_reversed = SortedDict(sorted(sources.items(),
                                     reverse=False, key=lambda x: x[1]))
 
-        return render_to_response(
-            service.template_name + '/stats.html',
+        return render(
+            request,
             {'shares' : shares,
              'sources' : sources,
              'sources_reversed' : sources_reversed},
-            context_instance=RequestContext(request)
+            service.template_name + '/stats.html'
         )
     else:
         return redirect('/%s' %(request.user.username))

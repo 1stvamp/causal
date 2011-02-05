@@ -6,12 +6,12 @@ from causal.main.models import UserService, AccessToken
 from causal.main.utils import get_module_name
 from causal.main.utils.services import get_model_instance, \
         settings_redirect, check_is_service_id
+from causal.main.utils.views import render
 from causal.main.decorators import can_view_service
 from causal.delicious.service import get_items
 from datetime import datetime, date, timedelta
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render_to_response, get_object_or_404
-from django.template import RequestContext
+from django.shortcuts import redirect, get_object_or_404
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
@@ -42,27 +42,26 @@ def auth(request):
 @can_view_service
 def stats(request, service_id):
     """Create up some stats."""
-    
+
     service = get_object_or_404(UserService, pk=service_id)
 
     if check_is_service_id(service, MODULE_NAME):
-    
+
         bookmarks = get_items(request.user, date.today() - timedelta(days=7), service)
-    
+
         tags = {}
-        
+
         for bookmark in bookmarks:
             for tag in bookmark.tags:
                 if tags.has_key(tag):
                     tags[tag] = tags[tag] + 1
                 else:
                     tags[tag] = 1
-                    
-        return render_to_response(
-            service.template_name + '/stats.html',
-            {'bookmarks': bookmarks,
-             'tags' : tags},
-            context_instance=RequestContext(request)
+
+        return render(
+            request,
+            {'bookmarks': bookmarks, 'tags' : tags},
+            service.template_name + '/stats.html'
         )
     else:
         return redirect('/%s' %(request.user.username))

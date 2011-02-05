@@ -13,8 +13,7 @@ from causal.main.utils.services import get_model_instance, \
 from causal.main.utils.views import render
 from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, get_object_or_404, redirect
-from django.template import RequestContext
+from django.shortcuts import get_object_or_404, redirect
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)

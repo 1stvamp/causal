@@ -13,9 +13,7 @@ from causal.tumblr.service import get_items
 from datetime import datetime, date, timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
+from django.shortcuts import redirect, get_object_or_404
 
 # Yay, let's recreate __package__ for Python <2.6
 MODULE_NAME = get_module_name(__name__)
@@ -57,10 +55,10 @@ def stats(request, service_id):
         except:
             messages.error(request, 'There was an error connnecting to Tumblr.')
 
-        return render_to_response(
-            service.template_name + '/stats.html',
+        return render(
+            request,
             {'posts': posts},
-            context_instance=RequestContext(request)
+            service.template_name + '/stats.html'
         )
     else:
         return redirect('/%s' %(request.user.username))
