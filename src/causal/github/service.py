@@ -41,8 +41,12 @@ def _convert_feed(user, serv, feed, since):
                 item.title = "%s for %s" % (entry['type'], entry['payload']['repo'])
 
                 item.body = ''
-                for commit in entry['payload']['shas']:
-                    item.body = item.body + commit[2] + ' '
+                if entry['payload'].has_key('shas'):
+                    for commit in entry['payload']['shas']:
+                        item.body = item.body + commit[2] + ' '
+                elif entry['payload'].has_key('issue'):
+                    item.body = "Issue #%s was %s" % (str(entry['payload']['number']), entry['payload']['action'])
+                    
                 item.created = created
                 item.link_back = entry['url']
                 item.service = serv
