@@ -25,22 +25,34 @@ def get_items(user, since, model_instance=None):
 
     if checkins and checkins.has_key('checkins'):
         for checkin in checkins['checkins']:
-            item = ServiceItem()
-            item.location = {}
-            item.link_back = 'http://foursquare.com/venue/%s' % checkin['venue']['id']
-            item.title = checkin['venue']['name']
-            if checkin.has_key('shout') and checkin['shout']:
-                item.body = checkin['shout']
-            else:
-                item.body = checkin['venue']['city']
-            if checkin['venue'].has_key('geolat') and checkin['venue']['geolat']:
-                item.location['lat'] = checkin['venue']['geolat']
-                item.location['long'] = checkin['venue']['geolong']
-            item.created = datetime.strptime(checkin['created'].replace(' +0000', ''), '%a, %d %b %y %H:%M:%S')
-            item.service = serv
-            if checkin['venue'].has_key('primarycategory'):
-                item.icon = checkin['venue']['primarycategory']['iconurl']
-            item.user = user
-            items.append(item)
-            del(item)
+
+            # grab the +0000 bit on the end of the date and use it make the time right
+            offset = checkin['created'].rsplit(' ')[-1]
+            offset = offset[1:]
+            offset = offset[:2]
+
+            time_offset = timedelta(hours=int(offset))
+            
+            created = datetime.strptime(checkin['created'].replace(' +0000', ''), '%a, %d %b %y %H:%M:%S') #'Fri, 04 Feb 11 12:42:38 +0000'
+            created = created + time_offset
+            
+            if created.date() >= since:
+                item = ServiceItem()
+                item.location = {}
+                item.link_back = 'http://foursquare.com/venue/%s' % checkin['venue']['id']
+                item.title = checkin['venue']['name']
+                if checkin.has_key('shout') and checkin['shout']:
+                    item.body = checkin['shout']
+                else:
+                    item.body = checkin['venue']['city']
+                if checkin['venue'].has_key('geolat') and checkin['venue']['geolat']:
+                    item.location['lat'] = checkin['venue']['geolat']
+                    item.location['long'] = checkin['venue']['geolong']
+                item.created = created
+                item.service = serv
+                if checkin['venue'].has_key('primarycategory'):
+                    item.icon = checkin['venue']['primarycategory']['iconurl']
+                item.user = user
+                items.append(item)
+                del(item)
     return items
