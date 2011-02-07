@@ -44,7 +44,7 @@ def auth(request):
 @can_view_service
 def stats(request, service_id):
     """Display stats based on checkins."""
-    service = get_object_or_404(UserScheck_is_service_idervice, pk=service_id)
+    service = get_object_or_404(UserService, pk=service_id)
 
     if check_is_service_id(service, MODULE_NAME):
         template_values = {}
