@@ -6,7 +6,7 @@
         <li>{{ forloop.counter }}. {{artist.name }}</li>
     {% endfor %}
     </ul>
-
+<h1>Upcoming Gigs</h1>
     <ul>
     {% for artist in favourite_artists %}
         {% if artist.gigs %}
@@ -22,7 +22,6 @@
     {% endfor %}
     </ul>
 
-    <h1>Upcoming Gigs</h1>
     {% if gig_centre %}
         <script type="text/javascript">
             //<![CDATA[
