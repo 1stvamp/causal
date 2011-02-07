@@ -1,44 +1,22 @@
+
+<script src="http://mapquestapi.com/sdk/js/v6.0.0/mqa.toolkit.js?key=Fmjtd%7Cluu2216t25%2C7x%3Do5-5f70g"></script>
+
 <script type="text/javascript">
-    //<![CDATA[
-function add_marker(map, lat, longg, contentString){
-    var myLatlng = new google.maps.LatLng(lat, longg);
-    var marker = new google.maps.Marker({
-      position: myLatlng,
-      map: map,
+
+  //An example of using the MQA.EventUtil to hook into the window load event and execute defined function 
+  //passed in as the last parameter .  You could alternatively create a plain function here and have it 
+  //executed when ever you like (e.g. <body onload="yourfunction">).
+  MQA.EventUtil.observe(window, 'load', function() { 
+
+    window.map = new MQA.TileMap(       // Constructs an instance of MQA.TileMap
+      document.getElementById('map_canvas'),   //the id of the element on the page you want the map to be added into 
+      7,                                //intial zoom level of the map
+      {lat:39.743943, lng:-105.020089}, //the lat/lng of the map to center on
+      'map');                           //map type (map, sat, hyb)
     });
-
-    var infowindow = new google.maps.InfoWindow({
-    content: contentString
-    });
-
-    google.maps.event.addListener(marker, 'click', function() {
-      infowindow.open(map,marker);
-    });
-}
-
-  function initialize() {
-    var latlng = new google.maps.LatLng({{checkin_centre.location.lat}}, {{checkin_centre.location.long}});
-    var myOptions = {
-      zoom: 16,
-      center: latlng,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    var map = new google.maps.Map(document.getElementById("map_canvas"),
-        myOptions);
-    {% for checkin in checkins %}{% if checkin.location %}
-        add_marker(map, {{checkin.location.lat}}, {{checkin.location.long}},
-        '{% if checkin.icon %}<img src="{{ checkin.icon }}" />{% endif %} {{checkin.created}} : <a href="{{checkin.link_back}}">{{checkin.title}}</a>');
-    {% endif %}{% endfor %}
-  }
-
-$(document).ready(function() {
-    initialize();
-});
-    //]]>
 </script>
 
-<div id="map_canvas" style="width:600px; height:600px"></div>
-
+<div id="map_canvas" style="width:600px; height:600px"/>
 Places checked into:
 <ul>
 {% for checkin in checkins %}
