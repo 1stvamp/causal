@@ -1,22 +1,53 @@
 
 <script src="http://mapquestapi.com/sdk/js/v6.0.0/mqa.toolkit.js?key=Fmjtd%7Cluu2216t25%2C7x%3Do5-5f70g"></script>
 
-<script type="text/javascript">
+<script type="text/javascript"> 
+  MQA.EventUtil.observe(window, 'load', function() {
+	
+  window.map = new MQA.TileMap(
+    document.getElementById('map'),
+    7,
+    {lat:39.743943, lng:-105.020089}, 
+    'map');
+ 
+  MQA.withModule('zoomcontrol3','viewcontrol3', function() {
+		
+  map.addControl(
+    new MQA.LargeZoomControl3(), 
+    new MQA.MapCornerPlacement(MQA.MapCorner.TOP_LEFT)
+  );
+ 
+				
+  map.addControl(
+    new MQA.ViewControl3(), 
+    new MQA.MapCornerPlacement(MQA.MapCorner.TOP_RIGHT)
+  );
+ 
+ 
+		map.setZoomLevel(13);
+		map.setMapType("hyb");
+				
+		var basic=new MQA.Poi({lat:39.743943, lng:-105.020089});
+		basic.setBias({x:-50,y:-50});		
+		map.addShape(basic);
+		
+		var custom=new MQA.Poi( {lat:39.743943, lng:-105.020089} );
+		custom.setBias({x:50,y:50});
+		var icon = new MQA.Icon("smiley.png",32,32);
+		custom.setIcon(icon);
+		map.addShape(custom);
+ 
+		var info=new MQA.Poi({lat:39.743943, lng:-105.020089});
+		info.setBias({x:50,y:-50});
+		info.setInfoTitleHTML('Invesco Field');
+		info.setInfoContentHTML('Home of the Denver Broncos');
+		map.addShape(info);
+		
+	});
+  });
+</script> 
 
-  //An example of using the MQA.EventUtil to hook into the window load event and execute defined function 
-  //passed in as the last parameter .  You could alternatively create a plain function here and have it 
-  //executed when ever you like (e.g. <body onload="yourfunction">).
-  MQA.EventUtil.observe(window, 'load', function() { 
-
-    window.map = new MQA.TileMap(       // Constructs an instance of MQA.TileMap
-      document.getElementById('map_canvas'),   //the id of the element on the page you want the map to be added into 
-      7,                                //intial zoom level of the map
-      {lat:39.743943, lng:-105.020089}, //the lat/lng of the map to center on
-      'map');                           //map type (map, sat, hyb)
-    });
-</script>
-
-<div id="map_canvas" style="width:600px; height:600px"/>
+<div id="map" style="width:600px; height:600px"/>
 Places checked into:
 <ul>
 {% for checkin in checkins %}
