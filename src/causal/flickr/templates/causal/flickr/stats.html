@@ -1,41 +1,48 @@
 {% if pic_centre %}
 <script type="text/javascript">
-    //<![CDATA[
-    function add_marker(map, lat, longg, contentString){
-        var myLatlng = new google.maps.LatLng(lat, longg);
-        var marker = new google.maps.Marker({
-            position: myLatlng,
-            map: map
-        });
 
-        var infowindow = new google.maps.InfoWindow({
-            content: contentString
-        });
+  function add_marker(map, lat, lng, title, content){
+    var info=new MQA.Poi({lat:lat, lng:lng});
+    info.setInfoTitleHTML(title);
+    info.setInfoContentHTML(content);
+    map.addShape(info);
+  }
 
-        google.maps.event.addListener(marker, 'click', function() {
-            infowindow.open(map,marker);
-        });
-    }
-
-    $(function() {
-        var latlng = new google.maps.LatLng({{pic_centre.location.lat }}, {{ pic_centre.location.long }});
-        var myOptions = {
-            zoom: 10,
-            center: latlng,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+  $( function() {
+	
+  window.map = new MQA.TileMap(
+    document.getElementById('map'),
+    7,
+    {lat:{{pic_centre.location.lat}}, lng:{{pic_centre.location.long}}},
+    'map');
+ 
+  MQA.withModule('zoomcontrol3','viewcontrol3', function() {
+		
+    map.addControl(
+      new MQA.LargeZoomControl3(), 
+      new MQA.MapCornerPlacement(MQA.MapCorner.TOP_LEFT)
+    );
+    
+                                  
+    map.addControl(
+      new MQA.ViewControl3(), 
+      new MQA.MapCornerPlacement(MQA.MapCorner.TOP_RIGHT)
+    );
+    
+    map.setZoomLevel(13);
+    map.setMapType("map");
         {% for pic in pictures %}
             {% if pic.location %}
             var content = '<a href="{{ pic.body }}"><img src="{{ pic.url  }}"/> </br>{{ pic.title }}</a>';
                 add_marker(map, {{ pic.location.lat }}, {{ pic.location.long }}, content);
             {% endif %}
-        {% endfor %}
-    });
-    //]]>
+        {% endfor %}	
+  });
+  });
+
 </script>
 
-<div id="map_canvas" style="width:600px; height:600px"></div>
+<div id="map" style="width:600px; height:600px"></div>
 {% endif %}
 
 <ul>

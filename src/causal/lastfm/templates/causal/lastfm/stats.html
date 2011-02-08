@@ -24,87 +24,67 @@
 
     {% if gig_centre %}
         <script type="text/javascript">
-            //<![CDATA[
-            var map;
-            var markers;
-            var icon;
+  
+  function add_marker(map, lat, lng, title, content, logo){
+    var info=new MQA.Poi({lat:lat, lng:lng});
+    info.setInfoTitleHTML(title);
+    info.setInfoContentHTML(content);
+    var icon = new MQA.Icon(logo,32,32);
+    info.setIcon(icon);
+    map.addShape(info);
+    
+    //info.toggleInfoWindow();
+    info.toggleInfoWindowRollover();
+    
+    
+  }
+  
+  MQA.EventUtil.observe(window, 'load', function() {
 
-            /**
-             * Function: addMarker
-             * Add a new marker to the markers layer given the following lonlat, 
-             *     popupClass, and popup contents HTML. Also allow specifying 
-             *     whether or not to give the popup a close box.
-             * 
-             * Parameters:
-             * ll - {<OpenLayers.LonLat>} Where to place the marker
-             * popupClass - {<OpenLayers.Class>} Which class of popup to bring up 
-             *     when the marker is clicked.
-             * popupContentHTML - {String} What to put in the popup
-             * closeBox - {Boolean} Should popup have a close box?
-             * overflow - {Boolean} Let the popup overflow scrollbars?
-             */
-            function add_marker(ll, popupClass, popupContentHTML, closeBox) {
-                var feature = new OpenLayers.Feature(markers, ll); 
-                feature.closeBox = closeBox;
-                feature.popupClass = popupClass;
-                feature.data.popupContentHTML = popupContentHTML;
-                feature.data.overflow = "auto";
-
-                var marker = feature.createMarker();
-
-                var markerClick = function (evt) {
-                    if (this.popup == null) {
-                        this.popup = this.createPopup(this.closeBox);
-                        map.addPopup(this.popup);
-                        this.popup.show();
-                    } else {
-                        this.popup.toggle();
-                    }
-                    currentPopup = this.popup;
-                    OpenLayers.Event.stop(evt);
-                };
-                marker.events.register("mousedown", feature, markerClick);
-
-                markers.addMarker(marker);
-            }
-
-            $(function() {
-                OpenLayers.ImgPath = "{% load_js_path 'OpenLayers/img/' %}";
-                map = new OpenLayers.Map('map_canvas', {theme: null});
-
-                var bing = new OpenLayers.Layer.VirtualEarth("VE Streets", { layers: "basic", type: VEMapStyle.Shaded });
-                map.addLayer(bing);
-                map.setCenter(new OpenLayers.LonLat({{ gig_centre.location.long }}, {{gig_centre.location.lat }}), 0);
-
-                markers = new OpenLayers.Layer.Markers("Markers");
-                map.addLayer(markers);
-
-                map.addControl(new OpenLayers.Control.LayerSwitcher());
-
-                var size = new OpenLayers.Size(21, 25);
-                var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-                icon = new OpenLayers.Icon("{% load_js_path 'OpenLayers/img/marker.png' %}", size, offset);
-
+  MQA.withModule('mousewheel', function() {
+		map.enableMouseWheelZoom();
+	});
+  
+	
+  window.map = new MQA.TileMap(
+    document.getElementById('map'),
+    7,
+    {lat:{{gig_centre.location.lat}}, lng:{{gig_centre.location.long}}},
+    'map');
+ 
+  MQA.withModule('zoomcontrol3','viewcontrol3', function() {
+		
+    map.addControl(
+      new MQA.LargeZoomControl3(), 
+      new MQA.MapCornerPlacement(MQA.MapCorner.TOP_LEFT)
+    );
+    
+                     map.bestFit();             
+    map.addControl(
+      new MQA.ViewControl3(), 
+      new MQA.MapCornerPlacement(MQA.MapCorner.TOP_RIGHT)
+    );
+    
+    map.setZoomLevel(7);
+    map.setMapType("map");
+    
                 {% for artist in favourite_artists %}
                     {% for gig in artist.gigs %}
                         {% if gig.location %}
                             {% if gig.location.lat and gig.location.long %}
-                                var content = '{{artist.name}} - {{gig.date}} at <a href="{{gig.event_url}}">{{gig.venue_name}}</a> </br> <img src="{{artist.image}}" />';
-                                add_marker(
-                                    new OpenLayers.LonLat({{ gig.location.long }}, {{ gig.location.lat }}, 0),
-                                    OpenLayers.Class(OpenLayers.Popup.AnchoredBubble, { 'autoSize': true }),
-                                    content,
-                                    true
-                                );
+        add_marker(map, {{gig.location.lat}}, {{gig.location.long}}, '{{checkin.title}}',
+        '<div id="content">{{artist.name}} - {{gig.date}} at <a href="{{gig.event_url}}">{{gig.venue_name}}</a> </br> <img src="{{artist.image}}" /></div>',
+	'{{artist.image}}');
                             {% endif %}
                         {% endif %}
                     {% endfor %}
                 {% endfor %}
-            });
-            //]]>
+		
+  });
+  });
         </script>
 
-        <div id="map_canvas" style="width:600px; height:600px"></div>
+        <div id="map" style="width:600px; height:600px"></div>
     {% endif %}
 {% else %}
     <h1>No plays this week!</h1>
