@@ -7,6 +7,7 @@ from causal.main.models import UserService, AccessToken
 from causal.main.utils import get_module_name
 from causal.main.utils.services import settings_redirect, \
      get_model_instance, check_is_service_id
+from causal.main.utils.views import render
 from datetime import datetime, date, timedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -69,8 +70,9 @@ def auth(request):
 def stats(request, service_id):
     """Create up some stats."""
 
+    service = get_object_or_404(UserService, pk=service_id)
+    
     if check_is_service_id(service, MODULE_NAME):
-        service = get_object_or_404(UserService, pk=service_id)
         pictures = get_items(request.user,
                              date.today() - timedelta(days=7),
                              service)
