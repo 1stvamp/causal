@@ -16,3 +16,4 @@ dist
 downloads
 src/*.egg-info
 buildout.cfg
+bootstrap.py
