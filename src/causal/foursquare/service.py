@@ -15,16 +15,25 @@ def enable():
     return redirect('causal-foursquare-auth')
 
 def get_items(user, since, model_instance=None):
+    """Fetch the history of checkins for the current user."""
+    
     serv = model_instance or get_model_instance(user, __name__)
-    items = []
 
     try:
         checkins = get_data(serv, 'http://api.foursquare.com/v1/history.json')
     except Exception, e:
         raise LoggedServiceError(original_exception=e)
 
-    if checkins and checkins.has_key('checkins'):
-        for checkin in checkins['checkins']:
+    return _convert_feed(serv, user, checkins, since)
+
+def _convert_feed(serv, user, json, since):
+    """Take the raw json from the feed and convert it to
+    ServiceItems."""
+    
+    items = []
+    
+    if json and json.has_key('checkins'):
+        for checkin in json['checkins']:
 
             # grab the +0000 bit on the end of the date and use it make the time right
             offset = checkin['created'].rsplit(' ')[-1]
@@ -55,4 +64,5 @@ def get_items(user, since, model_instance=None):
                 item.user = user
                 items.append(item)
                 del(item)
+    
     return items

@@ -1,44 +1,50 @@
-<script type="text/javascript">
-    //<![CDATA[
-function add_marker(map, lat, longg, contentString){
-    var myLatlng = new google.maps.LatLng(lat, longg);
-    var marker = new google.maps.Marker({
-      position: myLatlng,
-      map: map,
-    });
 
-    var infowindow = new google.maps.InfoWindow({
-    content: contentString
-    });
 
-    google.maps.event.addListener(marker, 'click', function() {
-      infowindow.open(map,marker);
-    });
-}
+<script type="text/javascript"> 
 
-  function initialize() {
-    var latlng = new google.maps.LatLng({{checkin_centre.location.lat}}, {{checkin_centre.location.long}});
-    var myOptions = {
-      zoom: 16,
-      center: latlng,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    var map = new google.maps.Map(document.getElementById("map_canvas"),
-        myOptions);
-    {% for checkin in checkins %}{% if checkin.location %}
-        add_marker(map, {{checkin.location.lat}}, {{checkin.location.long}},
-        '{% if checkin.icon %}<img src="{{ checkin.icon }}" />{% endif %} {{checkin.created}} : <a href="{{checkin.link_back}}">{{checkin.title}}</a>');
-    {% endif %}{% endfor %}
+  function add_marker(map, lat, lng, title, content){
+    var info=new MQA.Poi({lat:lat, lng:lng});
+    info.setInfoTitleHTML(title);
+    info.setInfoContentHTML(content);
+    map.addShape(info);
   }
 
-$(document).ready(function() {
-    initialize();
-});
-    //]]>
-</script>
+  MQA.EventUtil.observe(window, 'load', function() {
+	
+  window.map = new MQA.TileMap(
+    document.getElementById('map'),
+    7,
+    {lat:{{checkin_centre.location.lat}}, lng:{{checkin_centre.location.long}}},
+    'map');
+ 
+  MQA.withModule('zoomcontrol3','viewcontrol3', function() {
+		
+    map.addControl(
+      new MQA.LargeZoomControl3(), 
+      new MQA.MapCornerPlacement(MQA.MapCorner.TOP_LEFT)
+    );
+    
+                                  
+    map.addControl(
+      new MQA.ViewControl3(), 
+      new MQA.MapCornerPlacement(MQA.MapCorner.TOP_RIGHT)
+    );
+    
+    map.setZoomLevel(13);
+    map.setMapType("map");
+    
+    {% for checkin in checkins %}
+    {% if checkin.location %}
+        add_marker(map, {{checkin.location.lat}}, {{checkin.location.long}}, '{{checkin.title}}',
+        '{% if checkin.icon %}<img height="15" src="{{ checkin.icon }}" />{% endif %} {{checkin.created}} : <a href="{{checkin.link_back}}">{{checkin.title}}</a>');
+    {% endif %}
+    {% endfor %}
+		
+  });
+  });
+</script> 
 
-<div id="map_canvas" style="width:600px; height:600px"></div>
-
+<div id="map" style="width:600px; height:600px"/>
 Places checked into:
 <ul>
 {% for checkin in checkins %}
