@@ -51,9 +51,10 @@ def main():
 		print "Reading extras_requirements.txt"
 		requirements += open('extras_requirements.txt', 'r').readlines()
 
-	extra_modules = [m.strip() for m in options.extra_modules.split(',')]
-	if len(extra_modules) > 0:
-		requirements.extend(extra_modules)
+        if options.extra_modules:
+                extra_modules = [m.strip() for m in options.extra_modules.split(',')]
+                if len(extra_modules) > 0:
+                        requirements.extend(extra_modules)
 	eggs = []
 	special_eggs = []
 	versions = []
