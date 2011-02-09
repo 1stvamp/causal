@@ -5,7 +5,10 @@
     var info=new MQA.Poi({lat:lat, lng:lng});
     info.setInfoTitleHTML(title);
     info.setInfoContentHTML(content);
+    info.setRolloverContent(title);
     map.addShape(info);
+    info.toggleInfoWindowRollover();
+    
   }
 
   $( function() {
@@ -33,8 +36,8 @@
     map.setMapType("map");
         {% for pic in pictures %}
             {% if pic.location %}
-            var content = '<a href="{{ pic.body }}"><img src="{{ pic.url  }}"/> </br>{{ pic.title }}</a>';
-                add_marker(map, {{ pic.location.lat }}, {{ pic.location.long }}, content);
+            var content = '<a href="{{ pic.link_back }}"><img height= "75" src="{{ pic.url_thumb  }}"/> </br>{{ pic.title }}</a>';
+                add_marker(map, {{ pic.location.lat }}, {{ pic.location.long }}, '{{ pic.title }}', content);
             {% endif %}
         {% endfor %}	
   });
