@@ -64,11 +64,10 @@
             $('#service-tabs').tabs({
                 load: function(event, ui) {
                     $(ui.panel).removeClass('tab-loading');
-                    $('a.tab-link', ui.panel).click(function() {
-                        $(ui.panel).load(this.href);
-                        return false;
-                    });
                 }
+            });
+            $('a.tab-link').click(function() {
+                document.location = this.href;
             });
         });
         //]]>
