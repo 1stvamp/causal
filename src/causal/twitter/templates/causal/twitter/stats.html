@@ -1,5 +1,6 @@
 
 {% if tweet_centre %}
+{% comment %}
 <script type="text/javascript">
     //<![CDATA[
     function add_marker(map, lat, longg, contentString){
@@ -37,6 +38,7 @@
 </script>
 
 <div id="map_canvas" style="width:600px; height:600px"></div>
+{% endcomment %}
 {% endif %}
 <img src="http://chart.apis.google.com/chart?chs=300x225&cht=p3&chd=t:{{non_retweets}},{{retweets}}&chdl=tweets|retweets" width="300" height="225" alt="" /><br/>
 <img src="http://chart.apis.google.com/chart?chxr=0,0,{{max_tweets_per_day}}&chxt=y,x&chbh=a&chs=300x225&cht=bvg&chco=A2C180&chds=0,{{max_tweets_per_day}}&chd=t:{% for day in tweets_per_day %}{{day.1}}{% if not forloop.last %},{% endif%}{% endfor %}&chtt=Tweets+Per+Day" width="300" height="225" alt="" />
