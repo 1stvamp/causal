@@ -10,6 +10,7 @@ from causal.main.models import UserService, AccessToken
 from causal.main.utils import get_module_name
 from causal.main.utils.services import get_model_instance, \
         settings_redirect, check_is_service_id
+from causal.main.utils.views import render
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from datetime import date, timedelta
