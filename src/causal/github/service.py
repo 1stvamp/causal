@@ -38,15 +38,30 @@ def _convert_feed(user, serv, feed, since):
             
             if created.date() > since:
                 item = ServiceItem()
-                item.title = "%s for %s" % (entry['type'], entry['payload']['repo'])
-
-                item.body = ''
-                if entry['payload'].has_key('shas'):
-                    for commit in entry['payload']['shas']:
-                        item.body = item.body + commit[2] + ' '
-                elif entry['payload'].has_key('issue'):
-                    item.body = "Issue #%s was %s" % (str(entry['payload']['number']), entry['payload']['action'])
+                try:
+                    if entry['type'] == 'CreateEvent':
+                        item.title = "Created branch %s from %s" % (entry['payload']['object_name'],entry['payload']['name'])
+                    else:
+                        item.title = "%s for %s" % (entry['type'], entry['payload']['repo'])
+                    item.body = ''
                     
+                    if entry['type'] == 'IssuesEvent':
+                        item.body = "Issue #%s was %s." % (str(entry['payload']['number']), entry['payload']['action'])
+                    elif entry['type'] == 'ForkEvent':
+                        item.body = "Repo %s forked." % (entry['payload']['repo'])
+                    elif entry['type'] == 'PushEvent':
+                        item.body = "Pushed to repo %s with comment %s." % (entry['payload']['repo'], entry['payload']['shas'][0][2])
+                    elif entry['type'] == 'CreateEvent':
+                        item.body = "Branch %s for %s." % (entry['payload']['object_name'], entry['payload']['name'])
+                    elif entry['type'] == 'WatchEvent':
+                        item.body = "Started watching %s." % (entry['payload']['repo'])
+                    elif entry['type'] == 'FollowEvent':
+                        item.body = "Started following %s." % (entry['payload']['target']['login'])
+                    elif entry['type'] == 'GollumEvent':
+                        continue
+                except:
+                    print entry['type']
+                    print entry['url']
                 item.created = created
                 item.link_back = entry['url']
                 item.service = serv
