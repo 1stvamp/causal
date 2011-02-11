@@ -64,11 +64,12 @@
             $('#service-tabs').tabs({
                 load: function(event, ui) {
                     $(ui.panel).removeClass('tab-loading');
-                    $('a.tab-link', ui.panel).click(function() {
-                        $(ui.panel).load(this.href);
-                        return false;
-                    });
                 }
+            });
+            $('a.tab-link').click(function() {
+                var top = $(window).scrollTop();
+                document.location = this.href;
+                $(window).scrollTop(top);
             });
         });
         //]]>
@@ -80,7 +81,7 @@
     <div id="service-tabs">
         <ul>
             <li>
-                <a href="#all-services" class="causal-timeline" title="7 day timeline">
+                <a href="#all-services" class="causal-timeline tab-link" title="7 day timeline">
                     <span>7 day timeline</span>
                 </a>
             </li>
