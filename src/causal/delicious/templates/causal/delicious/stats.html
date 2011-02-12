@@ -1,3 +1,4 @@
+{% if bookmarks %}
 <h3>Bookmarks</h3>
 <ul>
 {% for bookmark in bookmarks %}
@@ -14,3 +15,7 @@
 <li><a href="http://www.delicious.com/tag/{{tag}}">{{tag}}</a> used {{number}}</li>
 {% endfor %}
 </ul>
+{% else %}
+<h1>Nothing Tagged!</h1>
+<p>Go read some more links!</p>
+{% endif %}
