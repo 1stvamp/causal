@@ -49,7 +49,7 @@
 <div id="map" style="width:600px; height:600px"></div>
 {% endcomment %}
 {% endif %}
-
+<h3>Uploads</h3>
 <ul>
 <li>Total uploads this week: {{number_of_pictures_uploaded}}</li>
 {% if most_commented_picture.body %}
@@ -57,13 +57,13 @@
 {% endif %}
 <li>Number of pictures made favourites: {{number_of_pictures_favorites}}</li>
 
-<li>
+</ul>
 <h3>Camera Usage</h3>
 <ul>
 {% for cam, count in cameras_used.items %}
 <li>{{cam}} : {{count}} {%if count == 1 %} pic {%else%}pics{%endif%}</li>
 {% endfor %}
-</ul>
+
 </li>
 
 {% for pic in pictures %}
