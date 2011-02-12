@@ -23,6 +23,7 @@
     </ul>
 
     {% if gig_centre %}
+    {% comment %}
         <script type="text/javascript">
   
   function add_marker(map, lat, lng, title, content, logo){
@@ -85,7 +86,8 @@
         </script>
 
         <div id="map" style="width:600px; height:600px"></div>
-    {% endif %}
+{% endcomment %}
+	{% endif %}
 {% else %}
     <h1>No plays this week!</h1>
     <p>Kick back and listen to some tunes.</p>
