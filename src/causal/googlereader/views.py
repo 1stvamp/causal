@@ -7,11 +7,12 @@ import httplib2
 from BeautifulSoup import Tag, BeautifulSoup as soup
 from BeautifulSoup import SoupStrainer
 from causal.googlereader.service import get_items
+from causal.main.decorators import can_view_service
 from causal.main.models import UserService, AccessToken
 from causal.main.utils import get_module_name
 from causal.main.utils.services import get_model_instance, \
         settings_redirect, check_is_service_id
-from causal.main.decorators import can_view_service
+from causal.main.utils.views import render
 from datetime import datetime, date, timedelta
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, get_object_or_404
@@ -56,8 +57,9 @@ def auth(request):
 def stats(request, service_id):
     """Create up some stats."""
 
+    service = get_object_or_404(UserService, pk=service_id)    
+    
     if check_is_service_id(service, MODULE_NAME):
-        service = get_object_or_404(UserService, pk=service_id)
         shares = get_items(request.user, date.today() - timedelta(days=7), service)
         sources = {}
 
