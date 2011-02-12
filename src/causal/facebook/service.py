@@ -124,28 +124,36 @@ def get_stats_items(user, since, model_instance=None):
 
     # get pics posted
 
-    photo_feed = _fetch_photos_json(serv, access_token.oauth_token)
-
+    # fetch albums
+    albums = _fetch_albums_json(serv, access_token.oauth_token)
     photos = []
-    if photo_feed:
-        for entry in photo_feed['data']:
-            created = datetime.strptime(entry['created_time'].split('+')[0], '%Y-%m-%dT%H:%M:%S') #'2007-06-26T17:55:03+0000'
-            if created.date() >= since and int(entry['from']['id']) == uid:
-                item = ServiceItem()
-                item.created = created
-                item.link_back = entry['link']
-                item.title = entry['name']
-                item.body = entry['picture']
-                item.comments = []
-                for comment in entry['comments']['data']:
-                    comment_item = ServiceItem()
-                    comment_item.created = datetime.strptime(comment['created_time'].split('+')[0], '%Y-%m-%dT%H:%M:%S')
-                    comment_item.body = comment['message']
-                    comment_item.from_user = comment['from']['name']
-                    item.comments.append(comment_item)
-                item.service = serv
-                item.user = user
-                photos.append(item)
+    
+    for album in albums['data']:
+        if album.has_key('updated_time'):
+            updated = datetime.strptime(album['updated_time'].split('+')[0], '%Y-%m-%dT%H:%M:%S') #'2007-06-26T17:55:03+0000'
+            if updated.date() > since:
+                photo_feed = _fetch_photos_from_album_json(album['id'], serv, access_token.oauth_token)
+                
+                # skim through each pic to find the new ones
+                for photo in photo_feed['data']:
+                    created = datetime.strptime(photo['created_time'].split('+')[0], '%Y-%m-%dT%H:%M:%S') #'2007-06-26T17:55:03+0000'
+                    if created.date() >= since:
+                        item = ServiceItem()
+                        item.created = created
+                        item.link_back = photo['link']
+                        if photo.has_key('name'):
+                            item.title = photo['name']
+                        item.body = photo['picture']
+                        item.comments = []
+                        for comment in photo['comments']['data']:
+                            comment_item = ServiceItem()
+                            comment_item.created = datetime.strptime(comment['created_time'].split('+')[0], '%Y-%m-%dT%H:%M:%S')
+                            comment_item.body = comment['message']
+                            comment_item.from_user = comment['from']['name']
+                            item.comments.append(comment_item)
+                        item.service = serv
+                        item.user = user
+                        photos.append(item)            
 
     # get places visited
     checkin_feed = _fetch_checkins_json(serv, access_token.oauth_token)
@@ -168,12 +176,22 @@ def get_stats_items(user, since, model_instance=None):
 
     return links, statuses, items, photos, checkins
 
-def _fetch_photos_json(serv, oauth_token):
+def _fetch_albums_json(serv, oauth_token):
+    """Use graph api to fetch photo information."""
+
+    return get_data(
+                serv,
+                'https://graph.facebook.com/me/albums?access_token=%s' \
+                    % (oauth_token),
+                disable_oauth=True
+            )
+
+def _fetch_photos_from_album_json(album_id, serv, oauth_token):
     """Use graph api to fetch photo information."""
     photo_feed_json = get_data(
                 serv,
-                'https://graph.facebook.com/me/photos?access_token=%s' \
-                    % (oauth_token),
+                'https://graph.facebook.com/%s/photos?access_token=%s' \
+                    % (album_id, oauth_token),
                 disable_oauth=True
             )
 
