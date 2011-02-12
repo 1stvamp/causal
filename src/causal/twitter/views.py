@@ -10,6 +10,7 @@ from causal.main.models import UserService, RequestToken, ServiceApp
 from causal.main.utils import get_module_name
 from causal.main.utils.services import get_model_instance, \
      generate_access_token, settings_redirect, check_is_service_id
+from causal.main.utils.views import render
 from causal.twitter.service import get_items
 from causal.twitter.utils import _auth, user_login
 from datetime import date, timedelta
