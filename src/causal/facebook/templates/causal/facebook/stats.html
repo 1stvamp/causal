@@ -17,7 +17,7 @@
 <ul>
 {% for link in links %}
 <li>
-{% if link.link_back %}<a href="{{status.link_back}}">
+{% if link.link_back %}<a href="{{link.link_back}}">
         {%endif%}{{link.created|date:"D H:ma"}} </a>{{link.body}}
 </li>
 {% endfor %}
@@ -56,5 +56,5 @@
 <h3>Checkins</h3>
 {%for checkin in checkins %}
 {% if checkin.link_back %}<a href="{{checkin.link_back}}">{{checkin.created|date:"D H:ma"}}
-        {%endif%} </a> {{checkin.title}} : {{checkin.body}}
+        {%endif%} </a> {{checkin.title}} {{checkin.body}}
 {% endfor %}

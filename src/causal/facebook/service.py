@@ -158,7 +158,10 @@ def get_stats_items(user, since, model_instance=None):
                 item.created = created
                 item.link_back = 'http://www.facebook.com/pages/%s/%s' % (entry['place']['name'].replace(' ','-'), entry['place']['id'])
                 item.title = entry['place']['name']
-                item.body = entry['message']
+                if entry.has_key('message'):
+                    item.body = entry['message']
+                else:
+                    item.body = ''
                 item.service = serv
                 item.user = user
                 checkins.append(item)
@@ -209,7 +212,10 @@ def _convert_link_feed(serv, user, stream, since):
                 item.created = datetime.fromtimestamp(entry.created_time)
                 item.link_back = entry.url
                 item.title = entry.title
-                item.body = entry.summary
+                if entry.summary:
+                    item.body = entry.summary
+                else:
+                    item.body = entry.owner_comment
                 item.url = entry.url
                 item.service = serv
                 item.user = user
