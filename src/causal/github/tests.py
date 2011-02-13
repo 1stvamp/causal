@@ -66,4 +66,5 @@ class TestGithubViews(TestCase):
         c = Client()
         c.login(username='bassdread', password='password')
         response = c.post('/github/auth', {'username' : 'username'})
+        self.assertEqual('http://testserver/accounts/settings/', response.items()[2][1])
        
