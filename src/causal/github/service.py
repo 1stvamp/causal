@@ -16,8 +16,9 @@ OAUTH_FORM = False
 KEEP_TAGS = ('a', 'span', 'code',)
 
 def get_items(user, since, model_instance=None):
+    """Fetch updates."""
+    
     serv = model_instance or get_model_instance(user, __name__)
-    items = []
     at = AccessToken.objects.get(service=serv)
 
     user_feed = get_data(
