@@ -67,4 +67,19 @@ class TestGithubViews(TestCase):
         c.login(username='bassdread', password='password')
         response = c.post('/github/auth', {'username' : 'username'})
         self.assertEqual('http://testserver/accounts/settings/', response.items()[2][1])
-       
+        
+    def test_auth_view_get(self):
+        """Test /github/auth handles a get request."""
+        
+        c = Client()
+        c.login(username='bassdread', password='password')
+        response = c.get('/github/auth')
+        self.assertEqual('http://testserver/accounts/settings/', response.items()[2][1])
+        
+    def test_auth_view_missing_service(self):
+        """Test /github/auth handles a get request."""
+        
+        c = Client()
+        c.login(username='admin', password='password')
+        response = c.get('/github/auth')
+        self.assertEqual('http://testserver/accounts/settings/', response.items()[2][1])       
