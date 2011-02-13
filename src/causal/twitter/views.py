@@ -92,14 +92,11 @@ def stats(request, service_id):
                         else:
                             ats[i] = 1
 
-            for tweet in tweets:
                 if days.has_key(tweet.created.strftime('%d')):
                     days[tweet.created.strftime('%d')] = \
                         days[tweet.created.strftime('%d')] + 1
                 else:
                     days[tweet.created.strftime('%d')] = 1
-
-
 
             template_values['retweets'] = retweets
             template_values['non_retweets'] = len(tweets) - retweets

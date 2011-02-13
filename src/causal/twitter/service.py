@@ -24,23 +24,25 @@ def get_items(user, since, model_instance=None):
     serv = model_instance or get_model_instance(user, __name__)
     api = get_api(serv)
 
-    timeline = []    
+    timeline = []
     
+    # get the api and bail if we fail
     if not api:
         return timeline
-
+    
     try:
         # fetch 200 tweets, should be enough for a week...
         timeline = _convert_feed(user, 
                                  serv, 
-                                 api.user_timeline(count=200, include_rts='true'), 
+                                 api.user_timeline(count=200, 
+                                                   include_rts='true'), 
                                  since, api.me().screen_name)
 
     except TweepError, exception:
         raise LoggedServiceError(original_exception=exception)
 
     return timeline
-    
+
 def _convert_feed(user, serv, feed, since, screen_name):
     """Take the json and convert to ServiceItems"""
 
@@ -71,3 +73,4 @@ def _convert_feed(user, serv, feed, since, screen_name):
             items.append(item)
             
     return items
+
