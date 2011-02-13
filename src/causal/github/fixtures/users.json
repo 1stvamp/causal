@@ -1,0 +1,38 @@
+[
+  {
+    "pk": 2, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "admin", 
+      "first_name": "", 
+      "last_name": "", 
+      "is_active": true, 
+      "is_superuser": true, 
+      "is_staff": true, 
+      "last_login": "2011-02-12 13:31:00", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "sha1$30900$f5f36286c33e6fa4c47238d6faf24cd126eef55e", 
+      "email": "ch@chrishannam.co.uk", 
+      "date_joined": "2011-02-01 20:37:29"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "bassdread", 
+      "first_name": "", 
+      "last_name": "", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2011-02-07 20:44:06", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "sha1$b0cd4$8b0d2a96b76b3d292ca9cfc2f47027d245c78ff2", 
+      "email": "bassdread@gmail.com", 
+      "date_joined": "2011-02-01 20:36:34"
+    }
+  }
+]

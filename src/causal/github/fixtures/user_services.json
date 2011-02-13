@@ -1,0 +1,90 @@
+[
+  {
+    "pk": 8, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 2, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 5, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 3, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 4, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 7, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 8, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 6, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 1, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }
+]

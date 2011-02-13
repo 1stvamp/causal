@@ -1,0 +1,434 @@
+[
+  {
+    "pk": 1, 
+    "model": "main.oauthsetting", 
+    "fields": {
+      "callback_url_base": "http://localhost:8080", 
+      "created": "2011-02-01 20:49:44", 
+      "user_auth_url": "https://graph.facebook.com/oauth/access_token", 
+      "consumer_secret": "secret", 
+      "request_token_url": "https://graph.facebook.com/oauth/authorize", 
+      "consumer_key": "key", 
+      "access_token_url": "https://graph.facebook.com/oauth/access_token"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "main.oauthsetting", 
+    "fields": {
+      "callback_url_base": "http://localhost:8080", 
+      "created": "2011-02-03 20:34:36", 
+      "user_auth_url": "http://github.com/", 
+      "consumer_secret": "http://github.com", 
+      "request_token_url": "http://github.com/", 
+      "consumer_key": "http://github.com", 
+      "access_token_url": "http://github.com/"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "main.oauthsetting", 
+    "fields": {
+      "callback_url_base": "http://localhost:8080", 
+      "created": "2011-02-05 22:13:47", 
+      "user_auth_url": "http://last.fm/", 
+      "consumer_secret": "secret, 
+      "request_token_url": "http://last.fm/", 
+      "consumer_key": "key", 
+      "access_token_url": "http://last.fm/"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "main.oauthsetting", 
+    "fields": {
+      "callback_url_base": "http://localhost:8080", 
+      "created": "2011-02-07 20:40:22", 
+      "user_auth_url": "http://foursquare.com/oauth/authorize", 
+      "consumer_secret": "secret", 
+      "request_token_url": "http://foursquare.com/oauth/request_token", 
+      "consumer_key": "key", 
+      "access_token_url": "http://foursquare.com/oauth/access_token"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "main.oauthsetting", 
+    "fields": {
+      "callback_url_base": "http://localhost:8080", 
+      "created": "2011-02-08 21:12:47", 
+      "user_auth_url": "http://flickr.com/", 
+      "consumer_secret": "secret", 
+      "request_token_url": "http://flickr.com/", 
+      "consumer_key": "key", 
+      "access_token_url": "http://flickr.com/"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "main.oauthsetting", 
+    "fields": {
+      "callback_url_base": "http://localhost:8080", 
+      "created": "2011-02-12 13:42:49", 
+      "user_auth_url": "http://twitter.com/oauth/authorize", 
+      "consumer_secret": "secret", 
+      "request_token_url": "http://twitter.com/oauth/request_token", 
+      "consumer_key": "key", 
+      "access_token_url": "http://twitter.com/oauth/access_token"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "main.oauthsetting", 
+    "fields": {
+      "callback_url_base": "http://localhost:8080", 
+      "created": "2011-02-12 13:43:53", 
+      "user_auth_url": "http://delicious.com/", 
+      "consumer_secret": "http://delicious.com", 
+      "request_token_url": "http://delicious.com/", 
+      "consumer_key": "http://delicious.com", 
+      "access_token_url": "http://delicious.com/"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "main.oauthsetting", 
+    "fields": {
+      "callback_url_base": "http://localhost:8080", 
+      "created": "2011-02-12 13:44:34", 
+      "user_auth_url": "http://www.google.com/reader/shared/", 
+      "consumer_secret": "http://www.google.com/reader/shared/", 
+      "request_token_url": "http://www.google.com/reader/shared/", 
+      "consumer_key": "http://www.google.com/reader/shared/", 
+      "access_token_url": "http://www.google.com/reader/shared/"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 1, 
+      "module_name": "causal.facebook"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 2, 
+      "module_name": "causal.github"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 3, 
+      "module_name": "causal.lastfm"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 4, 
+      "module_name": "causal.foursquare"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 5, 
+      "module_name": "causal.flickr"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 7, 
+      "module_name": "causal.delicious"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 8, 
+      "module_name": "causal.googlereader"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 6, 
+      "module_name": "causal.twitter"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 2, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 5, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 3, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 4, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 7, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 8, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 6, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "main.userservice", 
+    "fields": {
+      "setup": true, 
+      "app": 1, 
+      "share": false, 
+      "user": 1, 
+      "public": true
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "main.requesttoken", 
+    "fields": {
+      "oauth_token_secret": null, 
+      "oauth_verify": null, 
+      "oauth_token": null, 
+      "service": 8, 
+      "created": "2011-02-11 19:24:14"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "main.requesttoken", 
+    "fields": {
+      "oauth_token_secret": null, 
+      "oauth_verify": null, 
+      "oauth_token": null, 
+      "service": 7, 
+      "created": "2011-02-11 20:22:20"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "main.requesttoken", 
+    "fields": {
+      "oauth_token_secret": null, 
+      "oauth_verify": null, 
+      "oauth_token": null, 
+      "service": 9, 
+      "created": "2011-02-11 20:23:25"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "main.requesttoken", 
+    "fields": {
+      "oauth_token_secret": "token_secret", 
+      "oauth_verify": null, 
+      "oauth_token": "token", 
+      "service": 10, 
+      "created": "2011-02-11 20:23:52"
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "main.requesttoken", 
+    "fields": {
+      "oauth_token_secret": null, 
+      "oauth_verify": null, 
+      "oauth_token": null, 
+      "service": 11, 
+      "created": "2011-02-12 13:45:42"
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "main.requesttoken", 
+    "fields": {
+      "oauth_token_secret": "token_secret", 
+      "oauth_verify": "verify", 
+      "oauth_token": "token", 
+      "service": 13, 
+      "created": "2011-02-12 13:46:06"
+    }
+  }, 
+  {
+    "pk": 18, 
+    "model": "main.requesttoken", 
+    "fields": {
+      "oauth_token_secret": null, 
+      "oauth_verify": null, 
+      "oauth_token": null, 
+      "service": 12, 
+      "created": "2011-02-12 14:17:19"
+    }
+  }, 
+  {
+    "pk": 19, 
+    "model": "main.requesttoken", 
+    "fields": {
+      "oauth_token_secret": "", 
+      "oauth_verify": "", 
+      "oauth_token": "token", 
+      "service": 4, 
+      "created": "2011-02-12 19:55:15"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "main.accesstoken", 
+    "fields": {
+      "username": "username", 
+      "userid": null, 
+      "api_token": "http://github.com"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "main.accesstoken", 
+    "fields": {
+      "username": "username", 
+      "userid": "test@N00", 
+      "api_token": "token"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "main.accesstoken", 
+    "fields": {
+      "username": "username", 
+      "userid": null, 
+      "api_token": "token"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "main.accesstoken", 
+    "fields": {
+      "username": null, 
+      "userid": null, 
+      "api_token": null
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "main.accesstoken", 
+    "fields": {
+      "username": "username", 
+      "userid": "0000000000", 
+      "api_token": "http://www.google.com/reader/shared/"
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "main.accesstoken", 
+    "fields": {
+      "username": null, 
+      "userid": null, 
+      "api_token": null
+    }
+  }, 
+  {
+    "pk": 18, 
+    "model": "main.accesstoken", 
+    "fields": {
+      "username": "username", 
+      "userid": null, 
+      "api_token": "http://delicious.com"
+    }
+  }, 
+  {
+    "pk": 19, 
+    "model": "main.accesstoken", 
+    "fields": {
+      "username": null, 
+      "userid": null, 
+      "api_token": null
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "main.userprofile", 
+    "fields": {
+      "timezone": "Europe/London", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "main.userprofile", 
+    "fields": {
+      "timezone": "Europe/London", 
+      "user": 2
+    }
+  }
+]

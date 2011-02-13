@@ -15,7 +15,7 @@ except ImportError:
 
 class TestGithubService(TestCase):
     """Test the module with fixtures."""
-
+    
     def setUp(self):
         self.path = os.path.dirname(os.path.realpath(__file__))
         
@@ -54,4 +54,16 @@ class TestGithubService(TestCase):
         #items = _convert_feed('user', 'github', '')
         #self.assertEqual(0, len(items))
         pass
+    
+class TestGithubViews(TestCase):
+    """Testviews for service."""
+    
+    fixtures = ['users.json', 'app.json']
+    
+    def test_auth_view(self):
+        """Test /github/auth behaves correctly."""
+        
+        c = Client()
+        c.login(username='bassdread', password='password')
+        response = c.post('/github/auth', {'username' : 'username'})
        

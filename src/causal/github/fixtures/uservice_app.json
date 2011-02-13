@@ -1,0 +1,66 @@
+[
+  {
+    "pk": 1, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 1, 
+      "module_name": "causal.facebook"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 2, 
+      "module_name": "causal.github"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 3, 
+      "module_name": "causal.lastfm"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 4, 
+      "module_name": "causal.foursquare"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 5, 
+      "module_name": "causal.flickr"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 7, 
+      "module_name": "causal.delicious"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 8, 
+      "module_name": "causal.googlereader"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "main.serviceapp", 
+    "fields": {
+      "oauth": 6, 
+      "module_name": "causal.twitter"
+    }
+  }
+]
