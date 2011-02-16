@@ -44,6 +44,9 @@ def history(request, username):
         days.append([])
         day_names[i] = last.strftime('%A')
         days_to_i[day_names[i]] = i
+    
+    # Make sure day 0 is always 'today'
+    day_names[0] = 'Today'
 
     template_values['days'] = days
     template_values['day_names'] = day_names
