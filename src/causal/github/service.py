@@ -18,58 +18,11 @@ KEEP_TAGS = ('a', 'span', 'code',)
 def get_items(user, since, model_instance=None):
     """Fetch updates."""
     
-    serv = model_instance or get_model_instance(user, __name__)
-    at = AccessToken.objects.get(service=serv)
+    return _convert_feed(at.username, 
+                         serv, 
+                         _get_feed(user, since), 
+                         since)
 
-    user_feed = get_data(
-                serv,
-                'http://github.com/%s.json' % (at.username),
-                disable_oauth=True)
-
-    return _convert_feed(at.username, serv, user_feed, since)
-
-def _convert_feed(user, serv, feed, since):
-    """Take the user's atom feed."""
-
-    items = []
-
-    for entry in feed:
-        if entry['public']:
-            created = _convert_date(entry)
-            
-            if created.date() > since:
-                item = ServiceItem()
-                try:
-                    if entry['type'] == 'CreateEvent':
-                        item.title = "Created branch %s from %s" % (entry['payload']['object_name'],entry['payload']['name'])
-                    else:
-                        item.title = "%s for %s" % (entry['type'], entry['payload']['repo'])
-                    item.body = ''
-                    
-                    if entry['type'] == 'IssuesEvent':
-                        item.body = "Issue #%s was %s." % (str(entry['payload']['number']), entry['payload']['action'])
-                    elif entry['type'] == 'ForkEvent':
-                        item.body = "Repo %s forked." % (entry['payload']['repo'])
-                    elif entry['type'] == 'PushEvent':
-                        item.body = "Pushed to repo %s with comment %s." % (entry['payload']['repo'], entry['payload']['shas'][0][2])
-                    elif entry['type'] == 'CreateEvent':
-                        item.body = "Branch %s for %s." % (entry['payload']['object_name'], entry['payload']['name'])
-                    elif entry['type'] == 'WatchEvent':
-                        item.body = "Started watching %s." % (entry['payload']['repo'])
-                    elif entry['type'] == 'FollowEvent':
-                        item.body = "Started following %s." % (entry['payload']['target']['login'])
-                    elif entry['type'] == 'GollumEvent':
-                        continue
-                except:
-                    print entry['type']
-                    print entry['url']
-                item.created = created
-                item.link_back = entry['url']
-                item.service = serv
-                item.user = user
-                items.append(item)
-
-    return items
 
 def get_stats_items(user, since, model_instance=None):
     serv = model_instance or get_model_instance(user, __name__)
@@ -82,6 +35,39 @@ def get_stats_items(user, since, model_instance=None):
                 disable_oauth=True)
 
     return _convert_stats_feed(at.username, serv, user_feed, since)
+
+def _get_feed(user, since):
+    """Fetch the raw feed from github."""
+
+    serv = model_instance or get_model_instance(user, __name__)
+    at = AccessToken.objects.get(service=serv)
+    
+    user_feed = get_data(
+            serv,
+            'http://github.com/%s.json' % (at.username),
+            disable_oauth=True)
+    
+    return user_feed
+
+def _convert_feed(user, serv, feed, since):
+    """Take the user's atom feed."""
+
+    items = []
+
+    for entry in feed:
+        if entry['public']:
+            created = _convert_date(entry)
+            
+            if created.date() > since:
+                item = ServiceItem()
+                _set_title_body(entry, item)
+                item.created = created
+                item.link_back = entry['url']
+                item.service = serv
+                item.user = user
+                items.append(item)
+
+    return items
 
 def _convert_date(entry):
     """Apply the offset from githuub timing to the date."""
@@ -118,32 +104,13 @@ def _convert_stats_feed(user, serv, feed, since):
             
             if created.date() > since:
                 hour = created.strftime('%H')
-                if commit_times.has_key(hour+' ish'):
+                if commit_times.has_key(hour + ' ish'):
                     commit_times[hour+' ish'] = commit_times[hour+' ish'] + 1
                 else:
                     commit_times[hour+' ish'] = 1
 
                 item = ServiceItem()
-                if entry['type'] == 'CreateEvent':
-                    item.title = "Created branch %s from %s" % (entry['payload']['object_name'],entry['payload']['name'])
-                else:
-                    item.title = "%s for %s" % (entry['type'], entry['payload']['repo'])
-                item.body = ''
-                
-                if entry['type'] == 'IssuesEvent':
-                    item.body = "Issue #%s was %s." % (str(entry['payload']['number']), entry['payload']['action'])
-                elif entry['type'] == 'ForkEvent':
-                    item.body = "Repo %s forked." % (entry['payload']['repo'])
-                elif entry['type'] == 'PushEvent':
-                    item.body = "Pushed to repo %s with comment %s." % (entry['payload']['repo'], entry['payload']['shas'][0][2])
-                elif entry['type'] == 'CreateEvent':
-                    item.body = "Branch %s for %s." % (entry['payload']['object_name'], entry['payload']['name'])
-                elif entry['type'] == 'WatchEvent':
-                    item.body = "Started watching %s." % (entry['payload']['repo'])
-                elif entry['type'] == 'FollowEvent':
-                    item.body = "Started following %s." % (entry['payload']['target']['login'])
-                elif entry['type'] == 'GollumEvent':
-                    continue
+                _set_title_body(entry, item)
                 item.created = created
                 item.link_back = entry['url']
                 item.service = serv
@@ -154,3 +121,27 @@ def _convert_stats_feed(user, serv, feed, since):
                                     reverse=True, key=lambda x: x[1]))
 
     return items, avatar, commit_times
+
+def _set_title_body(entry, item):
+    """Set the title and body based on the event type."""
+    
+    if entry['type'] == 'CreateEvent':
+        item.title = "Created branch %s from %s" % (entry['payload']['object_name'],entry['payload']['name'])
+    else:
+        item.title = "%s for %s" % (entry['type'], entry['payload']['repo'])
+    item.body = ''
+    
+    if entry['type'] == 'IssuesEvent':
+        item.body = "Issue #%s was %s." % (str(entry['payload']['number']), entry['payload']['action'])
+    elif entry['type'] == 'ForkEvent':
+        item.body = "Repo %s forked." % (entry['payload']['repo'])
+    elif entry['type'] == 'PushEvent':
+        item.body = "Pushed to repo %s with comment %s." % (entry['payload']['repo'], entry['payload']['shas'][0][2])
+    elif entry['type'] == 'CreateEvent':
+        item.body = "Branch %s for %s." % (entry['payload']['object_name'], entry['payload']['name'])
+    elif entry['type'] == 'WatchEvent':
+        item.body = "Started watching %s." % (entry['payload']['repo'])
+    elif entry['type'] == 'FollowEvent':
+        item.body = "Started following %s." % (entry['payload']['target']['login'])
+    elif entry['type'] == 'GollumEvent':
+        pass
