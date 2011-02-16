@@ -80,7 +80,7 @@ class UserService(models.Model):
 
     @property
     def class_name(self):
-        return self.app.module_name.replace('.', '-')
+        return self.app.module_name.split('.')[1]
 
     @property
     def template_name(self):
