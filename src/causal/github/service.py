@@ -17,10 +17,13 @@ KEEP_TAGS = ('a', 'span', 'code',)
 
 def get_items(user, since, model_instance=None):
     """Fetch updates."""
-    
+
+    serv = model_instance or get_model_instance(user, __name__)
+
+    at = AccessToken.objects.get(service=serv)
     return _convert_feed(at.username, 
                          serv, 
-                         _get_feed(user, since), 
+                         _get_feed(user, serv), 
                          since)
 
 
@@ -36,15 +39,12 @@ def get_stats_items(user, since, model_instance=None):
 
     return _convert_stats_feed(at.username, serv, user_feed, since)
 
-def _get_feed(user, since):
+def _get_feed(user, serv):
     """Fetch the raw feed from github."""
 
-    serv = model_instance or get_model_instance(user, __name__)
-    at = AccessToken.objects.get(service=serv)
-    
     user_feed = get_data(
             serv,
-            'http://github.com/%s.json' % (at.username),
+            'http://github.com/%s.json' % (user),
             disable_oauth=True)
     
     return user_feed
