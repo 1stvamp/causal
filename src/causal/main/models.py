@@ -146,7 +146,8 @@ class ServiceItem(object):
 
     @property
     def class_name(self):
-        return self.service and self.service.app.module_name.replace('.', '-') or ''
+        #return self.service and self.service.app.module_name.replace('.', '-') or ''
+        return self.service.app.module_name.split('.')[1]
 
     def has_location(self):
         return self.location.has_key('long') is not False and self.location.has_key('lat') is not False
