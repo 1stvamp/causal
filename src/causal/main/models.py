@@ -80,8 +80,9 @@ class UserService(models.Model):
 
     @property
     def class_name(self):
-        return self.app.module_name.split('.')[1]
-
+        """Return the name for the html class used in templates"""
+        return self.app.module_name.replace('.', '-')
+    
     @property
     def template_name(self):
         return self.app.module_name.replace('.', '/')
@@ -133,6 +134,9 @@ post_save.connect(user_save_handler, User)
 # Not a django.db.models.Model, just a common container for service data
 
 class ServiceItem(object):
+    """Our customer model for storing a normalised model of a feed item
+    from a third party."""
+    
     created = None #datetime
     title = None #str/unicode
     body = None #str/unicode
@@ -146,8 +150,8 @@ class ServiceItem(object):
 
     @property
     def class_name(self):
-        #return self.service and self.service.app.module_name.replace('.', '-') or ''
-        return self.service.app.module_name.split('.')[1]
+        """Return the name for the html class used in templates"""
+        return self.service and self.service.app.module_name.replace('.', '-') or ''
 
     def has_location(self):
         return self.location.has_key('long') is not False and self.location.has_key('lat') is not False
