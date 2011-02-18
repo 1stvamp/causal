@@ -109,7 +109,7 @@ def get_stats_items(user, since, model_instance=None):
                     # go off and fetch details about a user
                     item.other_peoples_comments = []
                     for comment in strm['comments']['comment_list']:
-                        users = q(USER_NAME_FETCH % comment['fromid'])
+                        users = query(USER_NAME_FETCH % comment['fromid'])
                         for user in users:
                             user_details = {
                                 'name' : user['name'],
