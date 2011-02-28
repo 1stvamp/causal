@@ -13,7 +13,7 @@ except ImportError:
 class TestMain(TestCase):
     """Test the module with fixtures."""
 
-    fixtures = ['oauth_settings.json']
+    #fixtures = ['oauth_settings.json']
     user_details = {
         'username': 'test_user',
         'email': 'test_user@example.com',
