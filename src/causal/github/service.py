@@ -62,7 +62,11 @@ def _convert_feed(user, serv, feed, since):
                 item = ServiceItem()
                 _set_title_body(entry, item)
                 item.created = created
-                item.link_back = entry['url']
+                if entry['type'] == 'GistEvent':
+                    item.link_back = entry['payload']['url']
+                else:
+                    if entry.has_key('url'):
+                        item.link_back = entry['url']
                 item.service = serv
                 item.user = user
                 items.append(item)
@@ -127,6 +131,8 @@ def _set_title_body(entry, item):
     
     if entry['type'] == 'CreateEvent':
         item.title = "Created branch %s from %s" % (entry['payload']['object_name'],entry['payload']['name'])
+    elif entry['type'] == 'GistEvent':
+        item.title = "Created gist %s" % (entry['payload']['desc'])
     else:
         item.title = "%s for %s" % (entry['type'], entry['payload']['repo'])
     item.body = ''
@@ -143,5 +149,7 @@ def _set_title_body(entry, item):
         item.body = "Started watching %s." % (entry['payload']['repo'])
     elif entry['type'] == 'FollowEvent':
         item.body = "Started following %s." % (entry['payload']['target']['login'])
+    elif entry['type'] == 'GistEvent':
+        item.body = "Snippet: %s" % (entry['payload']['snippet'])
     elif entry['type'] == 'GollumEvent':
         pass
