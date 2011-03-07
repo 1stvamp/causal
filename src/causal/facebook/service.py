@@ -64,7 +64,13 @@ def get_stats_items(user, since, model_instance=None):
     serv = model_instance or get_model_instance(user, __name__)
     access_token = AccessToken.objects.get(service=serv)
     week_ago_epoch = time.mktime(since.timetuple())
-
+    
+    links = None
+    statuses = None
+    items = None
+    photos = None
+    checkins = None
+    
     query = FQL(access_token.oauth_token)
     uid_result = query(USER_ID)
     if uid_result:
