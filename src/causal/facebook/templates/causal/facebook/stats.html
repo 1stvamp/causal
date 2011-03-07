@@ -1,60 +1,87 @@
-<h3> Statuses </h3>
-<ul>
-{% for status in statuses %}
+{% load media_loaders %}
 
-    <li> {% if status.link_back %} 
-            <a href="{{status.link_back}}">
-        {%endif%}
-        {{status.created|date:"D H:ma"}}
-        {% if status.link_back %} </a> {{ status.body}}{%endif%}
-        
-    </li>
+<div class="stats">
+    <div id="main" class="clearfix"> 
+        <div id="centre"> 
+            <h3> Statuses </h3>
+            <ul>            
+            {% if statuses %}
+            {% for status in statuses %}
+                <li> {% if status.link_back %}<a href="{{status.link_back}}">{%endif%}
+                    {{status.created|date:"D H:ma"}}
+                    {% if status.link_back %} </a> {{ status.body}}{%endif%}
     
-{% endfor %}
-</ul>
+                </li>    
+            {% endfor %}
+            {% else %}
+            No status updates
+            {% endif %}
+            </ul>
+            
+            <h3> Links Created</h3>
+            <ul>
+            {% if links %}
+                {% for link in links %}
+                <li>
+                {% if link.link_back %}<a href="{{link.link_back}}">{%endif%}
+                {{link.created|date:"D H:ma"}} </a>{{link.body}}
+                </li>
+                {% endfor %}
+            {% else %}
+            No Links
+            {% endif %}
+            </ul>
 
-<h3> Links Created</h3>
-<ul>
-{% for link in links %}
-<li>
-{% if link.link_back %}<a href="{{link.link_back}}">
-        {%endif%}{{link.created|date:"D H:ma"}} </a>{{link.body}}
-</li>
-{% endfor %}
-</ul>
+            <h3> Stuff You Liked </h3>
+            <ul>
+            {% if details %}               
+                {% for status in details %}
+                    <li>{%if status.link_back %} <a href="{{status.link_back}}"> {{status.created|date:"D H:ma"}}</a>{% endif%}
+                        {%if status.liked %} Liked {% endif%} - {{status.body}}
+                        <a href="{{status.who_else_liked }}">people who liked this</a>
+                        {% if status.other_peoples_comments %}
+                            People who also liked this status:
+                            <ul>
+                            {% for comment in status.other_peoples_comments%} 
+                                <li>{{status.name}} </li> 
+                            {% endfor %}
+                            </ul>
+                        {% endif%}
+                    </li>
+                {% endfor %}
+            {% else %}
+                <h4>No Checkins</h4>
+            {% endif %}
+            </ul>
+            
+            <h3> Photos </h3>
+            <ul>
+            {% if photos %}
+                {%for photo in photos %}
+                {% if photo.link_back %}<a href="{{status.link_back}}">{{photo.created|date:"D H:ma"}}<img src="{{photo.body}}"/>
+                        {%endif%} </a>
+                {% for comment in photo.comments %}
+                    <li>"{{comment.body}}" - {{comment.from_user}}</li>
+                {% endfor %}
+                {% endfor %}
+            {% else %}
+                <h4>No Checkins</h4>
+            {% endif %}
+            </ul>
 
-<h3> Stuff You Liked </h3>
-<ul>
-{% for status in details %}
-<li>
-{%if status.link_back %} <a href="{{status.link_back}}"> {{status.created|date:"D H:ma"}}</a>{% endif%} 
-{%if status.liked %} Liked {% endif%} 
-    - {{status.body}}
-    <a href="{{status.who_else_liked }}">people who liked this</a>
-    {% if status.other_peoples_comments %}
-        People who also liked this status:
-        <ul>
-        {% for comment in status.other_peoples_comments%} 
-        <li>{{status.name}} </li> 
-        {% endfor %}
-        </ul>
-    {% endif%}</li>
-{% endfor %}
-</ul>
-
-<h3> Photos </h3>
-<ul>
-{%for photo in photos %}
-{% if photo.link_back %}<a href="{{status.link_back}}">{{photo.created|date:"D H:ma"}}<img src="{{photo.body}}"/>
-        {%endif%} </a>
-{% for comment in photo.comments %}
-    <li>"{{comment.body}}" - {{comment.from_user}}</li>
-{% endfor %}
-{% endfor %}
-</ul>
-
-<h3>Checkins</h3>
-{%for checkin in checkins %}
-{% if checkin.link_back %}<a href="{{checkin.link_back}}">{{checkin.created|date:"D H:ma"}}
-        {%endif%} </a> {{checkin.title}} {{checkin.body}}
-{% endfor %}
+            <h3>Checkins</h3>
+            <ul>
+            {% if checkins %}
+                {%for checkin in checkins %}
+                {% if checkin.link_back %}<a href="{{checkin.link_back}}">{{checkin.created|date:"D H:ma"}}
+                        {%endif%} </a> {{checkin.title}} {{checkin.body}}
+                {% endfor %}
+            {% else %}
+                <h4>No Checkins</h4>
+            {% endif %}
+            </ul>
+            <div class="clearfix"></div> 
+            <div id="right"></div> <! --#right --> 
+        </div> <!-- #centre --> 
+    </div> <!-- #main --> 
+</div> <!-- #stats --> 
