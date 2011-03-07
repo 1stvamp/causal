@@ -1,20 +1,37 @@
-<img src="{{avatar}}"/>
-<ul>
-{% for commit in commits %}
-<li> {{commit.created }} - {{ commit.title }} <a href="{{commit.link_back}}">details</a></li>
-{%if commit.links %}
-<ul>
-{% for link in commit.links %}
-<li><a href="{{link}}">{{link}}</a></li>
-{% endfor %}
-</ul>
-{%endif%}
-{% endfor %}
-</ul>
+{% load media_loaders %}
 
-<h3>Hours for commit code</h3>
-<ul>
-{% for hour, count in commit_times.iteritems %}
-<li>{{hour}} - {{count}}</li>
-{% endfor %}
-</ul>
+<div class="stats">
+    <div id="main" class="clearfix"> 
+        <div id="centre"> 
+            <img src="{{avatar}}"/>
+            <h3>Commits</h3>
+            <ul>
+                {% if commits %}
+                {% for commit in commits %}
+                <li> {{commit.created }} - {{ commit.title }} <a href="{{commit.link_back}}">details</a></li>
+                {%if commit.links %}
+                <ul>
+                    {% for link in commit.links %}
+                    <li><a href="{{link}}">{{link}}</a></li>
+                    {% endfor %}
+                </ul>
+                {%endif%}
+                {% endfor %}
+                {% else %}
+                <h4>No commits... Get coding!</h4>
+                {% endif %}
+            </ul>
+
+            {% if commits %}
+            <h3>Hours for Committing Code</h3>
+            <ul>
+                {% for hour, count in commit_times.iteritems %}
+                <li>{{hour}} - {{count}}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <div class="clearfix"></div> 
+            <div id="right"></div> <! --#right --> 
+        </div> <!-- #centre --> 
+    </div> <!-- #main --> 
+</div> <!-- #stats --> 
