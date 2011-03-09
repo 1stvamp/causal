@@ -108,8 +108,10 @@ def _extract_camera_type(json):
 
     # first attempt using the "model"
     # second using "make"
+    make_model = "Unknown make"
     try:
-        make_model = json['photo']['exif'][1]['raw']['_content']
+        if json['photo']['exif'][0]['tag'] == 'Make':
+            make_model = json['photo']['exif'][1]['raw']['_content']
         return make_model
     except:
         pass
