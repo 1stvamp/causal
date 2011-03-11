@@ -26,43 +26,43 @@ def auth(request):
     if service and request.method == 'POST':
         username = request.POST['username']
 
-        # talk to flickr to get a flickr ID 1234567@N0 style
-        url = "http://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=%s&username=%s&format=json&nojsoncallback=1" % \
-            (service.app.oauth.consumer_key, username)
-
-        http_requester = httplib2.Http()
-        resp, content = http_requester.request(url, "GET")
-
-        if resp['status'] == '200':
-            json = simplejson.loads(content)
-
-            # parse the request and check we have got back flickr id
-            if json['stat'] == 'ok':
-
-                userid = json['user']['id']
-
-                # Delete existing token
-                AccessToken.objects.filter(service=service).delete()
-
-                # Before creating a new one
-                AccessToken.objects.create(
-                    service=service,
-                    username=username,
-                    userid=userid,
-                    created=datetime.now(),
-                    api_token=service.app.oauth.consumer_key
-                )
-
-                service.setup = True
-                service.public = True
-                service.save()
-            else:
-                messages.error(request,
-    'Unable to validate your username with Flickr, please check your username and retry.')
-
+        if username:
+            # talk to flickr to get a flickr ID 1234567@N0 style
+            url = "http://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=%s&username=%s&format=json&nojsoncallback=1" % \
+                (service.app.oauth.consumer_key, username)
+    
+            http_requester = httplib2.Http()
+            resp, content = http_requester.request(url, "GET")
+    
+            if resp['status'] == '200':
+                json = simplejson.loads(content)
+    
+                # parse the request and check we have got back flickr id
+                if json['stat'] == 'ok':
+    
+                    userid = json['user']['id']
+    
+                    # Delete existing token
+                    AccessToken.objects.filter(service=service).delete()
+    
+                    # Before creating a new one
+                    AccessToken.objects.create(
+                        service=service,
+                        username=username,
+                        userid=userid,
+                        created=datetime.now(),
+                        api_token=service.app.oauth.consumer_key
+                    )
+    
+                    service.setup = True
+                    service.public = True
+                    service.save()
+                else:
+                    messages.error(request,
+        'Unable to validate your username with Flickr, please check your username and retry.')
+                    
         else:
-            messages.error(request,
-    'Unable to validate your username with Flickr, please check your username and retry.')
+            messages.error(request, 'Please enter a Flickr username')
 
     return redirect(settings_redirect(request))
 
