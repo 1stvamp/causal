@@ -5,15 +5,15 @@ from django.contrib.auth.management import create_superuser
 from django.contrib.auth import models as auth_app
 from django.db.models.signals import post_save, post_syncdb
 from django.utils.importlib import import_module
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
 from timezones.fields import TimeZoneField, MAX_TIMEZONE_LENGTH
 from timezones.utils import adjust_datetime_to_timezone
 
 User = auth_app.User
 
-# Prevent interactive question about wanting a superuser created.  (This
-# code has to go in this otherwise empty "models" module so that it gets
-# processed by the "syncdb" command during database creation.)
+# Prevent interactive question about wanting a superuser created.
 post_syncdb.disconnect(
     create_superuser,
     sender=auth_app,
@@ -22,25 +22,14 @@ post_syncdb.disconnect(
 
 TIME_ZONE = getattr(settings, 'TIME_ZONE', 'Europe/London')
 
-class OAuthSetting(models.Model):
-    """OAuth App Settings."""
-
-    consumer_key = models.CharField(max_length=255)
-    consumer_secret = models.CharField(max_length=255)
-    request_token_url = models.URLField(verify_exists=False)
-    access_token_url = models.URLField(verify_exists=False)
-    user_auth_url = models.URLField(verify_exists=False)
-    created = models.DateTimeField()
-    callback_url_base = models.CharField(max_length=255)
-
-    def __unicode__(self):
-        url = self.request_token_url
-        return u'OAuth (%s%s)' % (url[:19], len(url) > 20 and '...' or '')
 
 class ServiceApp(models.Model):
     module_name = models.CharField(max_length=255)
-    oauth = models.ForeignKey(OAuthSetting, blank=True, null=True)
     _module = None
+
+    auth_settings_type = models.ForeignKey(ContentType, blank=True, null=True)
+    auth_settings_object_id = models.PositiveIntegerField(blank=True, null=True)
+    auth_settings = generic.GenericForeignKey('auth_settings_type', 'auth_settings_object_id')
 
     @property
     def module(self):
@@ -51,6 +40,7 @@ class ServiceApp(models.Model):
     def __unicode__(self):
         return u'%s service app' % (self.module.DISPLAY_NAME,)
 
+
 class UserService(models.Model):
     """User service handler. e.g. twitter, flickr etc."""
 
@@ -58,9 +48,13 @@ class UserService(models.Model):
     app = models.ForeignKey(ServiceApp)
     setup = models.NullBooleanField(null=True, blank=True, default=False)
     share = models.NullBooleanField(null=True, blank=True, default=False)
-    
-    # used to identify if the remote service is publically available i.e. twitter
+
+    # Used to identify if the remote service is publically available i.e. twitter
     public = models.NullBooleanField(null=True, blank=True, default=False)
+
+    auth_type = models.ForeignKey(ContentType, blank=True, null=True)
+    auth_object_id = models.PositiveIntegerField(blank=True, null=True)
+    auth = generic.GenericForeignKey('auth_type', 'auth_object_id')
 
     @property
     def form_template_path(self):
@@ -80,17 +74,72 @@ class UserService(models.Model):
 
     @property
     def class_name(self):
-        """Return the name for the html class used in templates"""
         return self.app.module_name.replace('.', '-')
-    
+
     @property
     def template_name(self):
         return self.app.module_name.replace('.', '/')
 
+    @property
+    def handler(self):
+        """Return a handler class specific to the calling service."""
+        if hasattr(self, '_handler'):
+            return self._handler
+        else:
+            # fetch the class from our service
+            self._handler = self.app.module.ServiceHandler(self.user_id)
+            return self._handler
+
+
+class BaseAuthSetting(models.Model):
+    """Base model class for authentication settings containers"""
+
+    service_apps = generic.GenericRelation(
+        ServiceApp,
+        content_type_field='auth_settings_type_fk',
+        object_id_field='auth_settings_object_id'
+    )
+    created = models.DateTimeField()
+    modified = models.DateTimeField()
+
+class OAuthSetting(BaseAuthSetting):
+    """OAuth App Settings."""
+
+    consumer_key = models.CharField(max_length=255)
+    consumer_secret = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        if self.serviceapp_set:
+            return u'OAuth settings for %s' % (self.serviceapp_set[0].module_name,)
+        else:
+            return u'OAuth settings'
+
+class BaseAuth(models.Model):
+    """Base authentication class for identifying against a service"""
+
+    user_services = generic.GenericRelation(
+        UserService,
+        content_type_field='auth_type_fk',
+        object_id_field='auth_object_id'
+    )
+    created = models.DateTimeField()
+    modified = models.DateTimeField()
+
+class Auth(BaseAuth):
+    """Auth for sites requiring a username."""
+
+    username = models.CharField(max_length=255)
+    secret = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        if hasattr(self, 'userservice_set'):
+            return u'Auth for %s' % (self.userservice_set[0],)
+        else:
+            return u'Auth settings'
+
 class RequestToken(models.Model):
     """OAuth Request Token."""
 
-    service = models.ForeignKey(UserService, null=True, blank=True)
     oauth_token = models.CharField(max_length=255, blank=True, null=True)
     oauth_token_secret = models.CharField(max_length=255, blank=True, null=True)
     created = models.DateTimeField()
@@ -102,13 +151,20 @@ class RequestToken(models.Model):
 class AccessToken(RequestToken):
     """OAuth Access Token."""
 
-    # For services such as Github et al that use user/API key auth
-    username = models.CharField(max_length=255, blank=True, null=True)
-    userid = models.CharField(max_length=255, blank=True, null=True)
-    api_token = models.CharField(max_length=255, blank=True, null=True)
-
     def __unicode__(self):
         return u'%s access token for %s' % (self.service.app.module.DISPLAY_NAME, self.service.user,)
+
+class OAuth(BaseAuth):
+    """Auth details for sites requiring OAuth permission"""
+
+    request_token = models.ForeignKey(RequestToken, null=True, blank=True)
+    access_token = models.ForeignKey(AccessToken, related_name="%(app_label)s_%(class)s_related", null=True, blank=True)
+
+    def __unicode__(self):
+        if self.userservice_set:
+            return u'OAuth for %s' % (self.userservice_set[0],)
+        else:
+            return u'OAuth settings'
 
 class UserProfile(models.Model):
     """Model for providing extra information for a user, can be
@@ -121,22 +177,32 @@ def user_save_handler(sender, **kwargs):
     # Make sure we create a matching UserProfile instance whenever
     # a new User is created.
     if kwargs['created']:
-        # Check for existing profile, possible if loaded from a fixture
-        try:
-            kwargs['instance'].get_profile()
-        except UserProfile.DoesNotExist:
-            up = UserProfile()
-            up.user = kwargs['instance']
-            up.save()
+        up = UserProfile()
+        up.user = kwargs['instance']
+        # *sigh*, because certain ppl haven't pushed a new release for Django 1.2,
+        # we'll have to monkey patch this for now
+        up._meta.fields[-1].to_python = lambda x: unicode(x)
+        up.timezone = TIME_ZONE
+        up.save()
 post_save.connect(user_save_handler, User)
+
+# Allow South to handle TimeZoneField smoothly
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules(
+        rules=[(
+            (TimeZoneField,),
+            [],
+            { "max_length": ["max_length", { "default": MAX_TIMEZONE_LENGTH }],}
+        )],
+        patterns=['timezones\.fields\.']
+    )
+except ImportError:
+    pass
 
 
 # Not a django.db.models.Model, just a common container for service data
-
 class ServiceItem(object):
-    """Our customer model for storing a normalised model of a feed item
-    from a third party."""
-    
     created = None #datetime
     title = None #str/unicode
     body = None #str/unicode
@@ -150,7 +216,6 @@ class ServiceItem(object):
 
     @property
     def class_name(self):
-        """Return the name for the html class used in templates"""
         return self.service and self.service.app.module_name.replace('.', '-') or ''
 
     def has_location(self):
@@ -158,12 +223,7 @@ class ServiceItem(object):
 
     @property
     def created_local(self):
-        """Calculate the created time using timexone to give a datetime
-        in the users time zone."""
-        if hasattr(self, 'created'):
-            if hasattr(self.user, 'get_profile'):
-                return adjust_datetime_to_timezone(self.created, 'UTC', unicode(self.user.get_profile().timezone))
-            else:
-                return adjust_datetime_to_timezone(self.created, 'UTC', TIME_ZONE)
+        if hasattr(self.user, 'get_profile'):
+            return adjust_datetime_to_timezone(self.created, 'UTC', unicode(self.user.get_profile().timezone))
         else:
-            return None
+            return adjust_datetime_to_timezone(self.created, 'UTC', TIME_ZONE)
