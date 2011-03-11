@@ -1,81 +1,47 @@
-{% if pic_centre %}
-{% comment %}
-<script type="text/javascript">
+{% load media_loaders %}
 
-  function add_marker(map, lat, lng, title, content){
-    var info=new MQA.Poi({lat:lat, lng:lng});
-    info.setInfoTitleHTML(title);
-    info.setInfoContentHTML(content);
-    info.setRolloverContent(title);
-    map.addShape(info);
-    info.toggleInfoWindowRollover();
-    
-  }
-
-  $( function() {
-	
-  window.map = new MQA.TileMap(
-    document.getElementById('map'),
-    7,
-    {lat:{{pic_centre.location.lat}}, lng:{{pic_centre.location.long}}},
-    'map');
- 
-  MQA.withModule('zoomcontrol3','viewcontrol3', function() {
-		
-    map.addControl(
-      new MQA.LargeZoomControl3(), 
-      new MQA.MapCornerPlacement(MQA.MapCorner.TOP_LEFT)
-    );
-    
-                                  
-    map.addControl(
-      new MQA.ViewControl3(), 
-      new MQA.MapCornerPlacement(MQA.MapCorner.TOP_RIGHT)
-    );
-    
-    map.setZoomLevel(13);
-    map.setMapType("map");
-        {% for pic in pictures %}
-            {% if pic.location %}
-            var content = '<a href="{{ pic.link_back }}"><img height= "75" src="{{ pic.url_thumb  }}"/> </br>{{ pic.title }}</a>';
-                add_marker(map, {{ pic.location.lat }}, {{ pic.location.long }}, '{{ pic.title }}', content);
-            {% endif %}
-        {% endfor %}	
-  });
-  });
-
-</script>
-
-<div id="map" style="width:600px; height:600px"></div>
-{% endcomment %}
-{% endif %}
-<h3>Uploads</h3>
-<ul>
-<li>Total uploads this week: {{number_of_pictures_uploaded}}</li>
-{% if most_commented_picture.body %}
-<li>Most commented picture: </br><a href="{{most_commented_picture.link_back}}"><img src="{{most_commented_picture.url_small}}"/> </a> </li>
-{% endif %}
-<li>Number of pictures made favourites: {{number_of_pictures_favorites}}</li>
-
-</ul>
-<h3>Camera Usage</h3>
-<ul>
-{% for cam, count in cameras_used.items %}
-<li>{{cam}} : {{count}} {%if count == 1 %} pic {%else%}pics{%endif%}</li>
-{% endfor %}
-
-</li>
-
-{% for pic in pictures %}
-<li><a href="{{pic.link_back}}"><img src="{{pic.url_small}}"/></a> </br>
-Tags: 
-{% for tag in pic.tags %}
-    {{tag.raw}}{% if not forloop.last %},{% endif%}
-{% endfor %}
-</br>
-Camera: {{pic.camera_make}}
-</li>
-{% endfor %}
-
-</ul>
-
+<div class="stats">
+    <div id="main" class="clearfix"> 
+        <div id="centre">
+        {% if pictures %}
+            <h3>Uploads</h3>
+            <ul>
+                <li>Total uploads this week: {{number_of_pictures_uploaded}}</li>
+        
+                {% if most_commented_picture.body %}
+                <li>Most commented picture: </br><a href="{{most_commented_picture.link_back}}"><img src="{{most_commented_picture.url_small}}"/> </a> </li>
+                {% endif %}
+        
+                <li>Number of pictures made favourites: {{number_of_pictures_favorites}}</li>
+        
+            </ul>
+            
+            <h3>Camera Usage</h3>
+            <ul>
+                {% for cam, count in cameras_used.items %}
+                <li>{{cam}} : {{count}} {%if count == 1 %} pic {%else%}pics{%endif%}</li>
+                {% endfor %}
+            </ul>
+        
+            <h3> Your Pics</h3>
+            <ul>
+            {% for pic in pictures %}
+            <li>
+                 <a href="{{pic.link_back}}"><img src="{{pic.url_small}}"/></a> </br>
+                 Tags: 
+                 {% for tag in pic.tags %}
+                     {{tag.raw}}{% if not forloop.last %},{% endif%}
+                 {% endfor %}
+                 </br>
+                 Camera: {{pic.camera_make}}
+            </li>
+           {% endfor %}
+           </ul>
+        {% else %}
+            <h2> No pictures uploaded this week, I'm afraid.</h2>
+        {% endif %}
+            <div class="clearfix"></div> 
+            <div id="right"></div> <! --#right --> 
+        </div> <!-- #centre --> 
+    </div> <!-- #main --> 
+</div> <!-- #stats --> 

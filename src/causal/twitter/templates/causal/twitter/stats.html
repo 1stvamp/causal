@@ -1,50 +1,28 @@
+{% load media_loaders %}
 
-{% if tweet_centre %}
-{% comment %}
-<script type="text/javascript">
-    //<![CDATA[
-    function add_marker(map, lat, longg, contentString){
-        var myLatlng = new google.maps.LatLng(lat, longg);
-        var marker = new google.maps.Marker({
-            position: myLatlng,
-            map: map
-        });
-
-        var infowindow = new google.maps.InfoWindow({
-            content: contentString
-        });
-
-        google.maps.event.addListener(marker, 'click', function() {
-            infowindow.open(map,marker);
-        });
-    }
-
-    $(function() {
-        var latlng = new google.maps.LatLng({{tweet_centre.location.lat }}, {{ tweet_centre.location.long }});
-        var myOptions = {
-            zoom: 14,
-            center: latlng,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-        {% for tweet in tweets %}
-            {% if tweet.location %}
-            var content = '{{ tweet.body|safe|escapejs }}';
-                add_marker(map, {{ tweet.location.lat }}, {{ tweet.location.long }}, content);
+<div class="stats">
+    <div id="main" class="clearfix"> 
+        <div id="centre"> 
+            {% if tweets %}
+            <h3>Tweets to Retweets</h3>
+            <ul>
+                <li><img src="http://chart.apis.google.com/chart?chs=300x225&cht=p3&chd=t:{{non_retweets}},{{retweets}}&chdl=tweets|retweets" width="300" height="225" alt="" /></li>
+            </ul>            
+            <h3>Tweets to Retweets</h3>
+            <ul>
+                <li><img src="http://chart.apis.google.com/chart?chxr=0,0,{{max_tweets_per_day}}&chxt=y,x&chbh=a&chs=300x225&cht=bvg&chco=A2C180&chds=0,{{max_tweets_per_day}}&chd=t:{% for day in tweets_per_day %}{{day.1}}{% if not forloop.last %},{% endif%}{% endfor %}" width="300" height="225" alt="" /></li>
+            </ul>
+            <h3>People you @'ed</h3>
+            <ul>
+                {% for a, t in atters.iteritems %}
+                <li>{{ a }} : {{ t }} time{%if t > 1 %}s {%endif%}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+                <h4>No tweets found, get tweeting!</h4>
             {% endif %}
-        {% endfor %}
-    });
-    //]]>
-</script>
-
-<div id="map_canvas" style="width:600px; height:600px"></div>
-{% endcomment %}
-{% endif %}
-<img src="http://chart.apis.google.com/chart?chs=300x225&cht=p3&chd=t:{{non_retweets}},{{retweets}}&chdl=tweets|retweets" width="300" height="225" alt="" /><br/>
-<img src="http://chart.apis.google.com/chart?chxr=0,0,{{max_tweets_per_day}}&chxt=y,x&chbh=a&chs=300x225&cht=bvg&chco=A2C180&chds=0,{{max_tweets_per_day}}&chd=t:{% for day in tweets_per_day %}{{day.1}}{% if not forloop.last %},{% endif%}{% endfor %}&chtt=Tweets+Per+Day" width="300" height="225" alt="" />
-<ul>
-    People you @'ed
-    {% for a, t in atters.iteritems %}
-        <li>{{ a }} : {{ t }} time{%if t > 1 %}s {%endif%}</li>
-    {% endfor %}
-</ul>
+            <div class="clearfix"></div> 
+            <div id="right"></div> <! --#right --> 
+        </div> <!-- #centre --> 
+    </div> <!-- #main --> 
+</div> <!-- #stats --> 

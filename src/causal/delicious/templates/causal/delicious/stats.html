@@ -1,21 +1,28 @@
-{% if bookmarks %}
-<h3>Bookmarks</h3>
-<ul>
-{% for bookmark in bookmarks %}
+{% load media_loaders %}
 
-<li>{{bookmark.created}} - <a href="{{bookmark.link_back}}">{{bookmark.title}}</a></li>
-
-{% endfor %}
-</ul>
-
-<h3> Tags </h3>
-
-<ul>
-{% for tag, number in tags.iteritems %}
-<li><a href="http://www.delicious.com/tag/{{tag}}">{{tag}}</a> used {{number}}</li>
-{% endfor %}
-</ul>
-{% else %}
-<h1>Nothing Tagged!</h1>
-<p>Go read some more links!</p>
-{% endif %}
+<div class="stats">
+    <div id="main" class="clearfix"> 
+        <div id="centre"> 
+        {% if bookmarks %}
+            <h3>Bookmarks</h3>
+            <ul>
+            {% for bookmark in bookmarks %}
+            <li>{{bookmark.created}} - <a href="{{bookmark.link_back}}">{{bookmark.title}}</a></li>      
+            {% endfor %}
+            </ul>
+                
+            <h3> Tags </h3>       
+            <ul>
+            {% for tag, number in tags.iteritems %}
+            <li><a href="http://www.delicious.com/tag/{{tag}}">{{tag}}</a> used {{number}}</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <h3>Nothing Tagged!</h3>
+            <p>Go read tag some links!</p>
+        {% endif %}
+            <div class="clearfix"></div> 
+            <div id="right"></div> <! --#right --> 
+        </div> <!-- #centre --> 
+    </div> <!-- #main --> 
+</div> <!-- #stats --> 

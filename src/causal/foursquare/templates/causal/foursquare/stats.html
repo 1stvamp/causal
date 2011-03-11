@@ -1,53 +1,20 @@
-{% comment %}
-<script type="text/javascript"> 
+{% load media_loaders %}
 
-  function add_marker(map, lat, lng, title, content){
-    var info=new MQA.Poi({lat:lat, lng:lng});
-    info.setInfoTitleHTML(title);
-    info.setInfoContentHTML(content);
-    map.addShape(info);
-  }
-
-  $( function() {
-	
-  window.map = new MQA.TileMap(
-    document.getElementById('map'),
-    7,
-    {lat:{{checkin_centre.location.lat}}, lng:{{checkin_centre.location.long}}},
-    'map');
- 
-  MQA.withModule('zoomcontrol3','viewcontrol3', function() {
-		
-    map.addControl(
-      new MQA.LargeZoomControl3(), 
-      new MQA.MapCornerPlacement(MQA.MapCorner.TOP_LEFT)
-    );
-    
-                                  
-    map.addControl(
-      new MQA.ViewControl3(), 
-      new MQA.MapCornerPlacement(MQA.MapCorner.TOP_RIGHT)
-    );
-    
-    map.setZoomLevel(13);
-    map.setMapType("map");
-    {% for checkin in checkins %}
-    {% if checkin.location %}
-        add_marker(map, {{checkin.location.lat}}, {{checkin.location.long}}, '{{checkin.title}}',
-        '{% if checkin.icon %}<img height="15" src="{{ checkin.icon }}" />{% endif %} {{checkin.created}} : <a href="{{checkin.link_back}}">{{checkin.title}}</a>');
-    {% endif %}
-    {% endfor %}	
-  });
-  });
-</script> 
-
-<div id="map" style="width:600px; height:600px"/>
-{% endcomment %}
-Places checked into:
-<ul>
-{% for checkin in checkins %}
-
-<li>{{checkin.created}} - <a href="{{checkin.link_back}}">{{checkin.title}}</a></li>
-
-{% endfor %}
-</ul>
+<div class="stats">
+    <div id="main" class="clearfix"> 
+        <div id="centre"> 
+            <h3>Places Checked Into</h3>
+            <ul>
+            {% if checkins %}
+                {% for checkin in checkins %}
+                    <li>{{checkin.created}} - <a href="{{checkin.link_back}}">{{checkin.title}}</a></li>
+                {% endfor %}
+            {% else %}
+                <h4>No checkins? Get out more!</h4>
+            {%endif%}
+            </ul>
+            <div class="clearfix"></div> 
+            <div id="right"></div> <! --#right --> 
+        </div> <!-- #centre --> 
+    </div> <!-- #main --> 
+</div> <!-- #stats --> 
