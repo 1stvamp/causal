@@ -12,6 +12,7 @@ from causal.main.utils.services import get_model_instance, \
         settings_redirect, check_is_service_id
 from causal.main.utils.views import render
 from datetime import date, timedelta
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 
@@ -25,19 +26,22 @@ def auth(request):
     if service and request.method == 'POST':
         username = request.POST['username']
 
-        # Delete existing token
-        AccessToken.objects.filter(service=service).delete()
-        # Before creating a new one
-        AccessToken.objects.create(
-            service=service,
-            username=username,
-            created=datetime.now(),
-            api_token=service.app.oauth.consumer_key
-        )
-
-        service.setup = True
-        service.public = True
-        service.save()
+        if username:
+            # Delete existing token
+            AccessToken.objects.filter(service=service).delete()
+            # Before creating a new one
+            AccessToken.objects.create(
+                service=service,
+                username=username,
+                created=datetime.now(),
+                api_token=service.app.oauth.consumer_key
+            )
+    
+            service.setup = True
+            service.public = True
+            service.save()
+        else:
+            messages.error(request, 'Please enter a Last,fm username')
 
     return redirect(settings_redirect(request))
 
