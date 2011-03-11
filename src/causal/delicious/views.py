@@ -5,7 +5,7 @@ publicly rss feeds from the user's account."""
 from causal.main.models import UserService, AccessToken
 from causal.main.utils import get_module_name
 from causal.main.utils.services import get_model_instance, \
-        settings_redirect, check_is_service_id
+        settings_redirect, check_is_service_id, get_data
 from causal.main.utils.views import render
 from causal.main.decorators import can_view_service
 from causal.delicious.service import get_items
@@ -20,6 +20,7 @@ MODULE_NAME = get_module_name(__name__)
 @login_required(redirect_field_name='redirect_to')
 def auth(request):
     """We dont need a full oauth setup just a username."""
+    
     service = get_model_instance(request.user, MODULE_NAME)
     if service and request.method == 'POST':
         username = request.POST['username']
@@ -35,9 +36,18 @@ def auth(request):
                 api_token=service.app.oauth.consumer_key
             )
 
-            service.setup = True
-            service.public = True
-            service.save()
+            user_feed = get_data(
+                            None,
+                            'http://feeds.delicious.com/v2/json/%s' % (username),
+                            disable_oauth=True)
+            
+            # check the username is valid
+            if user_feed[0]['d'] == '404 Not Found':
+                messages.error(request, 'Unable to find your username, please try again')
+            else:
+                service.setup = True
+                service.public = True
+                service.save()
         else:
             messages.error(request, 'Please enter a Delicious username')
 
