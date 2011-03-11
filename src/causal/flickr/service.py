@@ -104,18 +104,20 @@ def get_items(user, since, model_instance):
 def _extract_camera_type(json):
     """Return the make and model of a photo."""
 
-    make_model = None
+    make_model = "Unknown make"
 
     # first attempt using the "model"
     # second using "make"
     try:
-        make_model = json['photo']['exif'][1]['raw']['_content']
-        return make_model
+        if json['photo']['exif'][0]['tag'] == 'Make':
+            make_model = json['photo']['exif'][1]['raw']['_content']
+            return make_model
     except:
         pass
     try:
-        make_model =  json['photo']['exif'][0]['raw']['_content']
-        return make_model
+        if json['photo']['exif'][1]['tag'] == 'Model':
+            make_model =  json['photo']['exif'][0]['raw']['_content']
+            return make_model
     except:
         pass
     return make_model
