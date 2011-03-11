@@ -10,6 +10,7 @@ from causal.main.utils.views import render
 from causal.main.decorators import can_view_service
 from causal.delicious.service import get_items
 from datetime import datetime, date, timedelta
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
 
@@ -23,19 +24,22 @@ def auth(request):
     if service and request.method == 'POST':
         username = request.POST['username']
 
-        # Delete existing token
-        AccessToken.objects.filter(service=service).delete()
-        # Before creating a new one
-        AccessToken.objects.create(
-            service=service,
-            username=username,
-            created=datetime.now(),
-            api_token=service.app.oauth.consumer_key
-        )
+        if username:
+            # Delete existing token
+            AccessToken.objects.filter(service=service).delete()
+            # Before creating a new one
+            AccessToken.objects.create(
+                service=service,
+                username=username,
+                created=datetime.now(),
+                api_token=service.app.oauth.consumer_key
+            )
 
-        service.setup = True
-        service.public = True
-        service.save()
+            service.setup = True
+            service.public = True
+            service.save()
+        else:
+            messages.error(request, 'Please enter a Delicious username')
 
     return redirect(settings_redirect(request))
 
