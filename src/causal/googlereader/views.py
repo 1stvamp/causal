@@ -39,21 +39,24 @@ def auth(request):
             parsed_links = [tag for tag in soup(str(content), parseOnlyThese=links)]
             
             if parsed_links:
-                userid = parsed_links[2].attrs[2][1].split('%2F')[1]
-                # Delete existing token
-                AccessToken.objects.filter(service=service).delete()
-                # Before creating a new one
-                AccessToken.objects.create(
-                    service=service,
-                    username=username,
-                    userid=userid,
-                    created=datetime.now(),
-                    api_token=service.app.oauth.consumer_key
-                )
+                try:
+                    userid = parsed_links[2].attrs[2][1].split('%2F')[1]
+                    # Delete existing token
+                    AccessToken.objects.filter(service=service).delete()
+                    # Before creating a new one
+                    AccessToken.objects.create(
+                        service=service,
+                        username=username,
+                        userid=userid,
+                        created=datetime.now(),
+                        api_token=service.app.oauth.consumer_key
+                    )
         
-                service.setup = True
-                service.public = True
-                service.save()
+                    service.setup = True
+                    service.public = True
+                    service.save()
+                except:
+                    messages.error(request, "Unable to find Google Reader account with that username")
             else:
                 messages.error(request, "Unable to find Google Reader account with that username")
         else:
