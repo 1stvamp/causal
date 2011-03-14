@@ -55,7 +55,7 @@ def _convert_feed(user, serv, feed, since):
     items = []
 
     for entry in feed:
-        if entry['public']:
+        if entry.has_key('public') and entry['public']:
             created = _convert_date(entry)
             
             if created.date() > since:
