@@ -46,7 +46,8 @@ def auth(request):
             
             # check the username is valid
             if user_feed.has_key('error'):
-                messages.error(request, 'Unable to find your username, please try again')
+                messages.error(request, 
+                               'Unable to validate your username with Git Hub, please check your username and retry.')
             else:
                 service.setup = True
                 service.public = True
