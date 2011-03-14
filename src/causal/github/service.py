@@ -96,8 +96,9 @@ def _convert_stats_feed(user, serv, feed, since):
     items = []
     avatar = ""
 
-    if feed[0]['actor_attributes'].has_key('gravatar_id'):
-        avatar = 'http://www.gravatar.com/avatar/%s' % feed[0]['actor_attributes']['gravatar_id']
+    if feed:
+        if feed[0]['actor_attributes'].has_key('gravatar_id'):
+            avatar = 'http://www.gravatar.com/avatar/%s' % feed[0]['actor_attributes']['gravatar_id']
 
     commit_times = {}
 
