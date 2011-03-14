@@ -9,9 +9,10 @@ from causal.main.decorators import can_view_service
 from causal.main.models import UserService, AccessToken
 from causal.main.utils import get_module_name
 from causal.main.utils.services import get_model_instance, \
-        settings_redirect, check_is_service_id
+        settings_redirect, check_is_service_id, get_data
 from causal.main.utils.views import render
 from datetime import date, timedelta
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 
@@ -25,19 +26,35 @@ def auth(request):
     if service and request.method == 'POST':
         username = request.POST['username']
 
-        # Delete existing token
-        AccessToken.objects.filter(service=service).delete()
-        # Before creating a new one
-        AccessToken.objects.create(
-            service=service,
-            username=username,
-            created=datetime.now(),
-            api_token=service.app.oauth.consumer_key
-        )
+        if username:
+            # Delete existing token
+            AccessToken.objects.filter(service=service).delete()
+            
+            user_feed = get_data(
+                            None,
+                            'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=%s&format=json'  % (username, service.app.oauth.consumer_key),
+                            disable_oauth=True)
+            
+            # check we have a valid username
+            if not user_feed.has_key('error') and user_feed['error'] != 6:
+                # Before creating a new one
+                AccessToken.objects.create(
+                    service=service,
+                    username=username,
+                    created=datetime.now(),
+                    api_token=service.app.oauth.consumer_key
+                )
+        
+                service.setup = True
+                service.public = True
+                service.save()
+                
+            else:
+                messages.error(request, 
+                               'Unable to validate your username with Last.fm, please check your username and retry.')
 
-        service.setup = True
-        service.public = True
-        service.save()
+        else:
+            messages.error(request, 'Please enter a Last.fm username')
 
     return redirect(settings_redirect(request))
 

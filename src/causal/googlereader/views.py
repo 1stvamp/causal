@@ -15,8 +15,9 @@ from causal.main.utils.services import get_model_instance, \
 from causal.main.utils.views import render
 from datetime import datetime, date, timedelta
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, get_object_or_404
 from django.utils.datastructures import SortedDict
 
 # Yay, let's recreate __package__ for Python <2.6
@@ -29,27 +30,34 @@ def auth(request):
     if service and request.method == 'POST':
         username = request.POST['username']
 
-        # fetch the page and try to find the reader id
-        url = "http://www.google.com/reader/shared/%s" % username
-        links = SoupStrainer('link')
-        h = httplib2.Http()
-        resp, content = h.request(url, "GET")
-        parsed_links = [tag for tag in soup(str(content), parseOnlyThese=links)]
-        userid = parsed_links[2].attrs[2][1].split('%2F')[1]
-        # Delete existing token
-        AccessToken.objects.filter(service=service).delete()
-        # Before creating a new one
-        AccessToken.objects.create(
-            service=service,
-            username=username,
-            userid=userid,
-            created=datetime.now(),
-            api_token=service.app.oauth.consumer_key
-        )
-
-        service.setup = True
-        service.public = True
-        service.save()
+        if username:
+            # fetch the page and try to find the reader id
+            url = "http://www.google.com/reader/shared/%s" % username
+            links = SoupStrainer('link')
+            h = httplib2.Http()
+            resp, content = h.request(url, "GET")
+            parsed_links = [tag for tag in soup(str(content), parseOnlyThese=links)]
+            
+            if parsed_links:
+                userid = parsed_links[2].attrs[2][1].split('%2F')[1]
+                # Delete existing token
+                AccessToken.objects.filter(service=service).delete()
+                # Before creating a new one
+                AccessToken.objects.create(
+                    service=service,
+                    username=username,
+                    userid=userid,
+                    created=datetime.now(),
+                    api_token=service.app.oauth.consumer_key
+                )
+        
+                service.setup = True
+                service.public = True
+                service.save()
+            else:
+                messages.error(request, "Unable to find Google Reader account with that username")
+        else:
+            messages.error(request, "Please enter a Google Reader username")
 
     return redirect(settings_redirect(request))
 

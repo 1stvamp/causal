@@ -12,8 +12,6 @@
                 <li>Most commented picture: </br><a href="{{most_commented_picture.link_back}}"><img src="{{most_commented_picture.url_small}}"/> </a> </li>
                 {% endif %}
         
-                <li>Number of pictures made favourites: {{number_of_pictures_favorites}}</li>
-        
             </ul>
             
             <h3>Camera Usage</h3>
@@ -23,7 +21,7 @@
                 {% endfor %}
             </ul>
         
-            <h3> Your Pics</h3>
+            <h3> Pics</h3>
             <ul>
             {% for pic in pictures %}
             <li>
