@@ -65,11 +65,12 @@ def get_stats_items(user, since, model_instance=None):
     access_token = AccessToken.objects.get(service=serv)
     week_ago_epoch = time.mktime(since.timetuple())
     
-    links = None
-    statuses = None
-    items = None
-    photos = None
-    checkins = None
+    links = []
+    statuses = []
+    items = []
+    photos = []
+    checkins = []
+    items = []
     
     query = FQL(access_token.oauth_token)
     uid_result = query(USER_ID)
@@ -99,7 +100,7 @@ def get_stats_items(user, since, model_instance=None):
         stream_stream = _fetch_feed(serv, access_token, STREAM_FQL % int(week_ago_epoch))
     except Exception, exception:
         return LoggedServiceError(original_exception=exception)
-    items = []
+
     for strm in stream_stream:
         # do we have permission from the user to post entry?
         # ignore if the post is entry
@@ -126,13 +127,11 @@ def get_stats_items(user, since, model_instance=None):
                     item.user = user
                     item.link_back = strm['permalink']
                     items.append(item)
-    # get pics in which they are tagged
 
     # get pics posted
 
     # fetch albums
     albums = _fetch_albums_json(serv, access_token.oauth_token)
-    photos = []
     
     for album in albums['data']:
         if album.has_key('updated_time'):
@@ -163,7 +162,6 @@ def get_stats_items(user, since, model_instance=None):
 
     # get places visited
     checkin_feed = _fetch_checkins_json(serv, access_token.oauth_token)
-    checkins = []
     if checkin_feed:
         for entry in checkin_feed['data']:
             created = datetime.strptime(entry['created_time'].split('+')[0], '%Y-%m-%dT%H:%M:%S') #'2007-06-26T17:55:03+0000'
