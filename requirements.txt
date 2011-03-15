@@ -1,6 +1,6 @@
 Django>=1.2
 oauth2
-sout>==0.7
+south>=0.7
 django-registration==0.7
 jogging
 python-dateutil
