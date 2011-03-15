@@ -133,6 +133,21 @@ INSTALLED_SERVICES = (
     #'causal.googlereader',
 )
 
+# SERVICE_CONFIG = {
+#    'causal.twitter': {
+#        'oauth': {
+#            'consumer_key': 'blah',
+#            'consumer_secret': '123567890'
+#        }
+#    },
+#    'causal.facebook': {
+#        'oauth': {
+#            'consumer_key': 'blahblah',
+#            'consumer_secret': '12356789012345'
+#        }
+#    },
+# }
+
 # Override INSTALLED_APPS_EXTEND or INSTALLED_SERVICES_EXTEND to add onto the default
 # set of apps or services, rather than overriding them, in your
 # local_settings.py
