@@ -7,14 +7,14 @@
             <ul>
                 {% if sources %}
                 <li>
-                    <img src="http://chart.apis.google.com/chart?chs=400x270&cht=p3&chd=t:{% for a, t in sources.iteritems %}{{t}}{% if not forloop.last %},{% endif%}{%endfor%}&chdl={% for source in sources %}{{source}}{% if not forloop.last %}|{% endif%}{%endfor%}&chco=71a471"  alt="" />
+                    <img src="http://chart.apis.google.com/chart?chs=800x370&cht=p3&chd=t:{% for a, t in sources.iteritems %}{{t}}{% if not forloop.last %},{% endif%}{%endfor%}&chdl={% for source in sources %}{{source}}{% if not forloop.last %}|{% endif%}{%endfor%}&chco=71a471" alt="" />
                 </li>
                 {% else %}
                     <h4>Nothing shared, get sharing!</h4>
                 {% endif %}
             </ul>
             <div class="clearfix"></div> 
-            <div id="right"></div> <! --#right --> 
+            <div id="right"></div> <!-- #right --> 
         </div> <!-- #centre --> 
     </div> <!-- #main --> 
 </div> <!-- #stats -->      
