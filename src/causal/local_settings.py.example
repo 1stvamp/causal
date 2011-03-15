@@ -42,6 +42,26 @@ INSTALLED_SERVICES = (
     'causal.tumblr',
     'causal.twitter',
 )
+# SERVICE_CONFIG = {
+#    'causal.twitter': {
+#        'oauth': {
+#            'consumer_key': 'blah',
+#            'consumer_secret': '123567890'
+#        }
+#    },
+#    'causal.facebook': {
+#        'oauth': {
+#            'consumer_key': 'blahblah',
+#            'consumer_secret': '12356789012345'
+#        }
+#    },
+#    'causal.foursquare': {
+#        'oauth': {
+#            'consumer_key': 'foobar',
+#            'consumer_secret': '0987654431'
+#        }
+#    },
+# }
 
 # *Don't* use the below example, generate your own random string of chars
 #SECRET_KEY = '`|9IK8w@VfU&([H{vaKpTRsmFq]zw7&pTIK4h#A$`@*>(&xSn<N(dg?=sxD|;*D'
