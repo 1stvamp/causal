@@ -27,10 +27,6 @@ class ServiceApp(models.Model):
     module_name = models.CharField(max_length=255)
     _module = None
 
-    auth_settings_type = models.ForeignKey(ContentType, blank=True, null=True)
-    auth_settings_object_id = models.PositiveIntegerField(blank=True, null=True)
-    auth_settings = generic.GenericForeignKey('auth_settings_type', 'auth_settings_object_id')
-
     @property
     def module(self):
         if not self._module:
@@ -39,7 +35,11 @@ class ServiceApp(models.Model):
 
     def __unicode__(self):
         return u'%s service app' % (self.module.DISPLAY_NAME,)
-
+def get_app(module_name):
+    """Shortcut function to return the correct service app
+    """
+    app = ServiceApp.objects.get_or_create(module_name=module_name)
+    return app
 
 class UserService(models.Model):
     """User service handler. e.g. twitter, flickr etc."""
@@ -89,30 +89,6 @@ class UserService(models.Model):
             # fetch the class from our service
             self._handler = self.app.module.ServiceHandler(self.user_id)
             return self._handler
-
-
-class BaseAuthSetting(models.Model):
-    """Base model class for authentication settings containers"""
-
-    service_apps = generic.GenericRelation(
-        ServiceApp,
-        content_type_field='auth_settings_type_fk',
-        object_id_field='auth_settings_object_id'
-    )
-    created = models.DateTimeField()
-    modified = models.DateTimeField()
-
-class OAuthSetting(BaseAuthSetting):
-    """OAuth App Settings."""
-
-    consumer_key = models.CharField(max_length=255)
-    consumer_secret = models.CharField(max_length=255)
-
-    def __unicode__(self):
-        if self.serviceapp_set:
-            return u'OAuth settings for %s' % (self.serviceapp_set[0].module_name,)
-        else:
-            return u'OAuth settings'
 
 class BaseAuth(models.Model):
     """Base authentication class for identifying against a service"""
