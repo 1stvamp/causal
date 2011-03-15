@@ -9,8 +9,9 @@ from causal.main.decorators import can_view_service
 from causal.main.models import UserService, AccessToken
 from causal.main.utils import get_module_name
 from causal.main.utils.services import get_model_instance, \
-        settings_redirect, check_is_service_id
+        settings_redirect, check_is_service_id, get_data
 from causal.main.utils.views import render
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from datetime import date, timedelta
@@ -26,20 +27,33 @@ def auth(request):
     if service and request.method == 'POST':
         username = request.POST['username']
 
-        # Delete existing token
-        AccessToken.objects.filter(service=service).delete()
+        if username:
+            # Delete existing token
+            AccessToken.objects.filter(service=service).delete()
+    
+            # Before creating a new one
+            AccessToken.objects.create(
+                service=service,
+                username=username,
+                created=datetime.now(),
+                api_token=service.app.oauth.consumer_key
+            )
 
-        # Before creating a new one
-        AccessToken.objects.create(
-            service=service,
-            username=username,
-            created=datetime.now(),
-            api_token=service.app.oauth.consumer_key
-        )
-
-        service.setup = True
-        service.public = True
-        service.save()
+            user_feed = get_data(
+                            None,
+                            'http://github.com/%s.json' % (username),
+                            disable_oauth=True)
+            
+            # check the username is valid
+            if user_feed.has_key('error'):
+                messages.error(request, 
+                               'Unable to validate your username with Git Hub, please check your username and retry.')
+            else:
+                service.setup = True
+                service.public = True
+                service.save()
+        else:
+            messages.error(request, 'Please enter a GitHub username')
 
     return redirect(settings_redirect(request))
 

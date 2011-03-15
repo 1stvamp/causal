@@ -1,8 +1,8 @@
-Django==1.2.3
-oauth2==1.2.0
-south==0.7.1
+Django>=1.2
+oauth2
+south>=0.7
 django-registration==0.7
-jogging==0.2.2
-python-dateutil==1.5
-pytz==2010l
+jogging
+python-dateutil
+pytz
 http://dist.pinaxproject.com/dev/django-timezones/django-timezones-0.2.dev2.tar.gz#django-timezones==0.2.dev2
