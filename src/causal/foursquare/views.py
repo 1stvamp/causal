@@ -56,11 +56,8 @@ def stats(request, service_id):
         # get checkins
         checkins = get_items(request.user,
                              date.today() - timedelta(days=7), service)
-        template_values['checkins'] = checkins
-        template_values['checkin_centre'] = checkins[-1]
 
-        # get venue details ?
-        # for example http://api.foursquare.com/v1/venue?vid=940763
+        template_values['checkins'] = checkins
 
         return render(
             request,
