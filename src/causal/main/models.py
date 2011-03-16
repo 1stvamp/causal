@@ -38,7 +38,7 @@ class ServiceApp(models.Model):
 def get_app(module_name):
     """Shortcut function to return the correct service app
     """
-    app = ServiceApp.objects.get_or_create(module_name=module_name)
+    app = ServiceApp.objects.get_or_create(module_name=module_name)[0]
     return app
 
 class UserService(models.Model):
@@ -55,6 +55,8 @@ class UserService(models.Model):
     auth_type = models.ForeignKey(ContentType, blank=True, null=True)
     auth_object_id = models.PositiveIntegerField(blank=True, null=True)
     auth = generic.GenericForeignKey('auth_type', 'auth_object_id')
+
+    _handler = None
 
     @property
     def form_template_path(self):
@@ -83,11 +85,11 @@ class UserService(models.Model):
     @property
     def handler(self):
         """Return a handler class specific to the calling service."""
-        if hasattr(self, '_handler'):
+        if self._handler:
             return self._handler
         else:
-            # fetch the class from our service
-            self._handler = self.app.module.ServiceHandler(self.user_id)
+            # Fetch class for service, and inject this model instance
+            self._handler = self.app.module.ServiceHandler(self)
             return self._handler
 
 class BaseAuth(models.Model):
@@ -148,16 +150,12 @@ class UserProfile(models.Model):
     """
     user = models.ForeignKey(User)
     timezone = TimeZoneField()
-
 def user_save_handler(sender, **kwargs):
     # Make sure we create a matching UserProfile instance whenever
     # a new User is created.
     if kwargs['created']:
         up = UserProfile()
         up.user = kwargs['instance']
-        # *sigh*, because certain ppl haven't pushed a new release for Django 1.2,
-        # we'll have to monkey patch this for now
-        up._meta.fields[-1].to_python = lambda x: unicode(x)
         up.timezone = TIME_ZONE
         up.save()
 post_save.connect(user_save_handler, User)
@@ -192,14 +190,19 @@ class ServiceItem(object):
 
     @property
     def class_name(self):
-        return self.service and self.service.app.module_name.replace('.', '-') or ''
+        return self.service and self.service.class_name or ''
 
     def has_location(self):
-        return self.location.has_key('long') is not False and self.location.has_key('lat') is not False
+        return self.location.has_key('long') is not False \
+            and self.location.has_key('lat') is not False
 
     @property
     def created_local(self):
         if hasattr(self.user, 'get_profile'):
-            return adjust_datetime_to_timezone(self.created, 'UTC', unicode(self.user.get_profile().timezone))
+            return adjust_datetime_to_timezone(
+                self.created,
+                'UTC',
+                unicode(self.user.get_profile().timezone)
+            )
         else:
             return adjust_datetime_to_timezone(self.created, 'UTC', TIME_ZONE)
