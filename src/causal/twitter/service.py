@@ -12,16 +12,11 @@ import re
 DISPLAY_NAME = 'Twitter'
 CUSTOM_FORM = False
 OAUTH_FORM = True
-SETUP_URI = 'causal-twitter-auth'
 
 class ServiceHandler(BaseServiceHandler):
-    # We set this as a property so that BaseServiceHandler.enable
-    # can forward to the right URI alias
-    setup_uri = SETUP_URI
-
     def get_items(self, since):
         """Use of oauth token to fetch the users updates."""
-        api = get_api(self.user_service)
+        api = get_api(self.service)
 
         timeline = []
 
@@ -66,8 +61,8 @@ class ServiceHandler(BaseServiceHandler):
                 if status.geo:
                     item.location['lat'] = status.geo['coordinates'][0]
                     item.location['long'] = status.geo['coordinates'][1]
-                item.service = self.user_service
-                item.user = self.user_service.user
+                item.service = self.service
+                item.user = self.service.user
                 items.append(item)
 
         return items
