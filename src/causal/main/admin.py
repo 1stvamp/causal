@@ -16,10 +16,6 @@ class UserServiceAdmin(admin.ModelAdmin):
     pass
 admin.site.register(UserService, UserServiceAdmin)
 
-class OAuthSettingAdmin(admin.ModelAdmin):
-    pass
-admin.site.register(OAuthSetting, OAuthSettingAdmin)
-
 # Add a custom form to the ServiceApp admin so we can present
 # choices in the module_name field matching INSTALLED_SERVICES
 
@@ -39,3 +35,12 @@ admin.site.register(ServiceApp, ServiceAppAdmin)
 class UserProfileAdmin(admin.ModelAdmin):
     pass
 admin.site.register(UserProfile, UserProfileAdmin)
+
+class AuthAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Auth, AuthAdmin)
+
+class OAuthAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(OAuth, OAuthAdmin)
+
