@@ -258,7 +258,7 @@ def index(request):
             'app__module_name__in': settings.INSTALLED_SERVICES
         }
         if UserService.objects.all().filter(**filters).count() == 0:
-            return redirect(reverse('user-settings'))
+            return redirect('user-settings')
         return redirect('/%s/' % (request.user.username,))
 
     users = User.objects.all().filter(is_active=True, userservice__share=True, userservice__setup=True) \
