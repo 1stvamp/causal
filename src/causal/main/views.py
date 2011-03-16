@@ -44,7 +44,7 @@ def history(request, username):
         days.append([])
         day_names[i] = last.strftime('%A')
         days_to_i[day_names[i]] = i
-    
+
     # Make sure day 0 is always 'today'
     day_names[0] = 'Today'
 
@@ -66,9 +66,9 @@ def _get_last_service_update(service):
         'error': False,
         'items': [],
     }
-        
+
     try:
-        items = service.app.module.get_items(service.user, day_one, service)
+        items = service.handler.get_items(day_one)
         if items:
             item = items[0]
             if hasattr(item, 'pic_link'):
@@ -87,7 +87,7 @@ def _get_last_service_update(service):
             updates.append(item_dict)
     except ServiceError:
         response['error'] = True
-        
+
     response['items'] = [updates]
 
     return response
@@ -109,7 +109,7 @@ def _get_service_history(service):
         'items': [],
     }
     try:
-        items = service.app.module.get_items(service.user, day_one, service)
+        items = service.handler.get_items(day_one)
         if items:
             for item in items:
                 if hasattr(item, 'pic_link'):
@@ -137,14 +137,27 @@ def _add_image_html(body):
     """Add the html src of the image to the body of the tweet."""
 
     twitpic_url = re.findall("http://twitpic.com/\S*", body)
-
     if twitpic_url:
-        body = ''.join((body, ' </br> <a href="%s"><img src="http://twitpic.com/show/mini/%s"/></a>' % (twitpic_url[0], twitpic_url[0].rsplit('/')[-1])))
+        body = ''.join(
+            (
+                body,
+                ' </br> <a href="%s"><img src="http://twitpic.com/show/mini/%s"/></a>' % (
+                    twitpic_url[0],
+                    twitpic_url[0].rsplit('/')[-1])
+                )
+        )
 
     yfrog_url = re.findall("http://yfrog.com/\S*", body)
-
     if yfrog_url:
-        body = ''.join((body, ' </br> <a href="%s.th.jpg"><img src="%s.th.jpg"/></a>' % (yfrog_url[0], yfrog_url[0])))
+        body = ''.join(
+            (
+                body,
+                ' </br> <a href="%s.th.jpg"><img src="%s.th.jpg"/></a>' % (
+                    yfrog_url[0],
+                    yfrog_url[0]
+                )
+            )
+        )
 
     return body
 
@@ -168,14 +181,25 @@ def history_callback(request, username, service_id):
 def user_settings(request):
     """Edit access to various services"""
 
-    # services available to user
-    available_services = ServiceApp.objects.all().exclude(userservice__user=request.user)
+    # Services available to user
+    available_services = ServiceApp.objects.all().exclude(
+        userservice__user=request.user,
+        app__module_name__in=settings.INSTALLED_SERVICES
+    )
 
-    # services yet to be setup
-    available_services_unconfigured = UserService.objects.all().filter(user=request.user, setup=False)
+    # Services yet to be setup
+    available_services_unconfigured = UserService.objects.all().filter(
+        user=request.user,
+        setup=False,
+        app__module_name__in=settings.INSTALLED_SERVICES
+    )
 
-    # services setup and running
-    enabled_services = UserService.objects.all().filter(user=request.user, setup=True)
+    # Services setup and running
+    enabled_services = UserService.objects.all().filter(
+        user=request.user,
+        setup=True,
+        app__module_name__in=settings.INSTALLED_SERVICES
+    )
 
     if request.method == 'POST':
         if request.POST.get('id', None) != str(request.user.get_profile().id) or \
@@ -213,17 +237,12 @@ def user_settings(request):
 def enable_service(request, app_id):
     """Edit access to various services"""
     app = get_object_or_404(ServiceApp, pk=app_id)
+    service = UserService.objects.get_or_create(user=request.user, app=app)[0]
 
-    # setup oauth based service
-    if hasattr(app.module, 'enable'):
-        return app.module.enable()
-
-    # setup username services
-    if not request.user.userservice_set.all().filter(app=app):
-        service = UserService(user=request.user, app=app)
-        request.user.userservice_set.add(service)
-        request.user.save()
-        messages.success(request, '%s enabled.' % (service.app.module.DISPLAY_NAME,))
+    if service.handler.requires_enabling:
+        return service.handler.enable()
+    # Setup username services
+    messages.success(request, '%s enabled.' % (service.handler.display_name,))
 
     return redirect('user-settings')
 
@@ -234,7 +253,11 @@ def index(request):
     # check if user has available services and they are logged in
     # if so send them to the profile page to get setup
     if request.user.is_authenticated():
-        if UserService.objects.all().filter(user=request.user).count() == 0:
+        filters = {
+            'user': request.user,
+            'app__module_name__in': settings.INSTALLED_SERVICES
+        }
+        if UserService.objects.all().filter(**filters).count() == 0:
             return redirect(reverse('user-settings'))
         return redirect('/%s/' % (request.user.username,))
 
@@ -279,6 +302,7 @@ def user_feed(request, username):
     filters = {
         'user': user,
         'setup': True,
+        'app__module_name__in': settings.INSTALLED_SERVICES
     }
     if not request.user.is_authenticated() or not request.user.pk == user.pk:
         filters['share'] = True
@@ -286,19 +310,19 @@ def user_feed(request, username):
     services = UserService.objects.filter(**filters).order_by('app__module_name')
 
     data = {}
-    
+
     # split the request url to check for /user/lastest.json
     requested_url = request.path.rsplit('/')
     latest = False
     if len(requested_url) == 3 and requested_url[2] == 'latest.json':
         latest = True
-        
+
     for service in services:
         if service.share:
             if latest:
-                data[service.app.module.DISPLAY_NAME] = _get_last_service_update(service)
+                data[service.handler.display_name] = _get_last_service_update(service)
             else:
-                data[service.app.module.DISPLAY_NAME] = _get_service_history(service)
+                data[service.handler.display_name] = _get_service_history(service)
 
     return HttpResponse(simplejson.dumps(data))
 
@@ -309,6 +333,7 @@ def current_status(request, username):
     filters = {
         'user': user,
         'setup': True,
+        'app__module_name__in': settings.INSTALLED_SERVICES
     }
     if not request.user.is_authenticated() or not request.user.pk == user.pk:
         filters['share'] = True
@@ -318,7 +343,7 @@ def current_status(request, username):
     data = {}
     for service in services:
         if service.share:
-            data[service.app.module.DISPLAY_NAME] = _get_last_service_update(service)
+            data[service.handler.display_name] = _get_last_service_update(service)
 
     last_entries = {}
 
@@ -352,7 +377,7 @@ def current_status(request, username):
 
 def about(request):
     """About the project, maybe add service status?"""
-    
+
     return render_to_response(
         'causal/about.html',{},
         context_instance=RequestContext(request)

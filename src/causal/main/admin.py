@@ -23,7 +23,8 @@ SERVICES_CHOICES = []
 for service_name in settings.INSTALLED_SERVICES:
     service = import_module("%s.service" % (service_name,))
     if service:
-        SERVICES_CHOICES.append((service_name, service.DISPLAY_NAME,))
+        SERVICES_CHOICES.append((service_name,
+            service.ServiceHandler.display_name,))
 
 class ServiceAppAdminForm(forms.ModelForm):
     module_name = forms.ChoiceField(choices=SERVICES_CHOICES, label='Application')

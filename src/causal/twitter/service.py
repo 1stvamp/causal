@@ -9,11 +9,12 @@ from twitter_text import TwitterText
 from tweepy import TweepError
 import re
 
-DISPLAY_NAME = 'Twitter'
-CUSTOM_FORM = False
-OAUTH_FORM = True
-
 class ServiceHandler(BaseServiceHandler):
+    display_name = 'Twitter'
+    custom_form = False
+    oauth_form = True
+    requires_enabling = True
+
     def get_items(self, since):
         """Use of oauth token to fetch the users updates."""
         api = get_api(self.service)

@@ -2,6 +2,13 @@
 """
 
 class BaseServiceHandler(object):
+    display_name = 'BASE SERVICE HANDLER'
+    custom_form = False
+    oauth_form = False
+    # Don't require enable() to be called by default, this is normally only
+    # needed by services that have auth steps, such as enabled OAuth services
+    requires_enabling = False
+
     def __init__(self, model_instance):
         self.service = model_instance
 

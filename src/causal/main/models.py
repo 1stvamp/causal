@@ -34,8 +34,8 @@ class ServiceApp(models.Model):
         return self._module
 
     def __unicode__(self):
-        return u'%s service app' % (self.module.DISPLAY_NAME,)
-def get_app(module_name):
+        return u'%s service app' % (self.module.ServiceHandler.display_name,)
+def get_app_by_name(module_name):
     """Shortcut function to return the correct service app
     """
     app = ServiceApp.objects.get_or_create(module_name=module_name)[0]
@@ -60,9 +60,9 @@ class UserService(models.Model):
 
     @property
     def form_template_path(self):
-        if self.app.module.CUSTOM_FORM:
+        if self.handler.custom_form:
             path = "%s/form.html" % (self.template_name,)
-        elif self.app.module.OAUTH_FORM:
+        elif self.handler.oauth_form:
             path = "causal/services/oauth_form.html"
         else:
             path = "causal/services/username_form.html"
@@ -124,13 +124,19 @@ class RequestToken(models.Model):
     oauth_verify = models.CharField(max_length=255, blank=True, null=True)
 
     def __unicode__(self):
-        return u'%s request token for %s' % (self.service.app.module.DISPLAY_NAME, self.service.user,)
+        if self.userservice_set:
+            return u'Request token for %s' % (self.userservice_set[0],)
+        else:
+            return u'Request token'
 
 class AccessToken(RequestToken):
     """OAuth Access Token."""
 
     def __unicode__(self):
-        return u'%s access token for %s' % (self.service.app.module.DISPLAY_NAME, self.service.user,)
+        if self.userservice_set:
+            return u'Access token for %s' % (self.userservice_set[0],)
+        else:
+            return u'Access token'
 
 class OAuth(BaseAuth):
     """Auth details for sites requiring OAuth permission"""
