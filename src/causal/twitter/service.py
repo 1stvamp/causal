@@ -1,7 +1,7 @@
 """Does all the fetching from twitter using a oauth token."""
 __version__ = '1.0.0'
 
-from causal.main.handlers import BaseServiceHandler
+from causal.main.handlers import OAuthServiceHandler
 from causal.main.exceptions import LoggedServiceError
 from causal.main.models import ServiceItem
 from causal.twitter.utils import get_api
@@ -9,7 +9,7 @@ from twitter_text import TwitterText
 from tweepy import TweepError
 import re
 
-class ServiceHandler(BaseServiceHandler):
+class ServiceHandler(OAuthServiceHandler):
     display_name = 'Twitter'
     custom_form = False
     oauth_form = True
