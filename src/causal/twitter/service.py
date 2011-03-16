@@ -11,9 +11,6 @@ import re
 
 class ServiceHandler(OAuthServiceHandler):
     display_name = 'Twitter'
-    custom_form = False
-    oauth_form = True
-    requires_enabling = True
 
     def get_items(self, since):
         """Use of oauth token to fetch the users updates."""

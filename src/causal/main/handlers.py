@@ -34,6 +34,9 @@ class BaseServiceHandler(object):
         raise NotImplementedError("ServiceHandler classes need a custom get_items method")
 
 class OAuthServiceHandler(BaseServiceHandler):
+    oauth_form = True
+    requires_enabling = True
+
     def get_auth_url_alias(self):
         """Returns the alias to lookup the reversable auth URL.
         """
