@@ -2,7 +2,7 @@
 """
 
 from causal.main.models import get_app_by_name
-from django.config import settings
+from django.conf import settings
 from django.core.exceptions import MiddlewareNotUsed
 
 class SetupServiceApps(object):
