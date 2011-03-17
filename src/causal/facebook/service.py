@@ -116,7 +116,6 @@ class ServiceHandler(OAuthServiceHandler):
                                 }
                                 item.other_peoples_comments.append(user_details)
                         item.service = self.service
-                        item.user = self.service.user
                         item.link_back = strm['permalink']
                         items.append(item)
 
@@ -149,7 +148,6 @@ class ServiceHandler(OAuthServiceHandler):
                                 comment_item.from_user = comment['from']['name']
                                 item.comments.append(comment_item)
                             item.service = self.service
-                            item.user = self.service.user
                             photos.append(item)
 
         # get places visited
@@ -167,7 +165,6 @@ class ServiceHandler(OAuthServiceHandler):
                     else:
                         item.body = ''
                     item.service = self.service
-                    item.user = self.service.user
                     checkins.append(item)
 
         return links, statuses, items, photos, checkins
@@ -227,7 +224,6 @@ class ServiceHandler(OAuthServiceHandler):
                         item.body = entry.owner_comment
                     item.url = entry.url
                     item.service = self.service
-                    item.user = self.service.user
                     items.append(item)
 
         return items
@@ -250,7 +246,6 @@ class ServiceHandler(OAuthServiceHandler):
                     item.link_back = \
                         "http://www.facebook.com/%s/posts/%s?notif_t=feed_comment" % (uid, entry['status_id'])
                     item.service = self.service
-                    item.user = self.service.user
                     item.created = created
                     items.append(item)
 

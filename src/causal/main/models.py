@@ -183,16 +183,16 @@ except ImportError:
 
 # Not a django.db.models.Model, just a common container for service data
 class ServiceItem(object):
-    created = None #datetime
-    title = None #str/unicode
-    body = None #str/unicode
-    location = {
-        'long': None, #str
-        'lat': None, #str
-    } #dict
-    service = None #Service
-    link_back = None #str/unicode
-    user = None #auth.user instance
+    def __init__(self):
+        self.created = None #datetime
+        self.title = None #str/unicode
+        self.body = None #str/unicode
+        self.location = {
+            'long': None, #str
+            'lat': None, #str
+        } #dict
+        self.service = None #Service
+        self.link_back = None #str/unicode
 
     @property
     def class_name(self):

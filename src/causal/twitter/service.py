@@ -43,7 +43,6 @@ class ServiceHandler(OAuthServiceHandler):
             # We are interested in tweets since
             if status.created_at.date() > since:
                 item = ServiceItem()
-                item.location = {}
                 twitter_text = TwitterText(status.text)
                 twitter_text.autolink.auto_link_usernames_or_lists()
                 twitter_text.autolink.auto_link_hashtags()
@@ -60,7 +59,6 @@ class ServiceHandler(OAuthServiceHandler):
                     item.location['lat'] = status.geo['coordinates'][0]
                     item.location['long'] = status.geo['coordinates'][1]
                 item.service = self.service
-                item.user = self.service.user
                 items.append(item)
 
         return items
