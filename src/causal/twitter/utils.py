@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from causal.main.utils.services import get_config
 
-from causal.main.models import RequestToken, AccessToken, UserService
+from causal.main.models import OAuth, RequestToken, AccessToken, UserService
 
 auth_settings = get_config('causal.twitter', 'oauth')
 if not auth_settings:
@@ -29,12 +29,16 @@ def user_login(service, cust_callback_url=None):
         oauth = _oauth(cust_callback_url)
         redirect_url = oauth.get_authorization_url()
 
-        # check if we have an existing RequestToken
+        # Make sure we have an auth container
+        if not service.auth:
+            service.auth = OAuth()
+
+        # Check if we have an existing RequestToken
         # if so delete it.
         if service.auth.request_token:
             service.auth.request_token.delete()
 
-        # create a new requesttoken
+        # Create a new requesttoken
         new_rt = RequestToken()
         new_rt.oauth_token = oauth.request_token.key
         new_rt.oauth_token_secret = oauth.request_token.secret
@@ -51,6 +55,10 @@ def user_login(service, cust_callback_url=None):
 def get_api(service):
     oauth = _oauth()
 
+    # Have we authenticated at all?
+    if not service.auth:
+        return False
+
     # Get access token
     if not service.auth.access_token:
         if not service.auth.request_token:
@@ -66,10 +74,12 @@ def get_api(service):
         except tweepy.TweepError:
             return False
 
-        AccessToken.objects.get_or_create(
+        at = AccessToken.objects.get_or_create(
             oauth_token=auth.access_token.key,
             oauth_token_secret=auth.access_token.secret
         )
+        service.auth.access_token = at
+        service.auth.save()
     else:
         oauth.set_access_token(
             service.auth.access_token.oauth_token,
