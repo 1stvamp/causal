@@ -4,11 +4,14 @@ from datetime import datetime
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
+from django.conf import settings
 from causal.main.models import RequestToken, AccessToken, UserService
 
 PARENT_PACKAGE_NAME = 'causal.'
 
 def user_login(service, cust_callback_url=None):
+    """Authenticates to an OAuth service.
+    """
     pos = service.app.module_name.find(PARENT_PACKAGE_NAME) + len(PARENT_PACKAGE_NAME)
     callback_app_name = service.app.module_name[pos:]
     callback = cust_callback_url or reverse('causal-%s-callback' % (callback_app_name,))
@@ -17,8 +20,6 @@ def user_login(service, cust_callback_url=None):
         consumer = oauth.Consumer(service.app.oauth.consumer_key, service.app.oauth.consumer_secret)
 
         client = oauth.Client(consumer)
-        # facebook fix:
-        #service.app.oauth.request_token_url = service.app.oauth.request_token_url + '&redirect_uri=http://localhost:8080/'
         resp, content = client.request(service.app.oauth.request_token_url, "GET")
 
         if resp['status'] != '200':
@@ -44,7 +45,8 @@ def user_login(service, cust_callback_url=None):
 
 def generate_access_token(service, request_token):
     """Takes a request_token and validates it to give a valid AccessToken
-    and the stores it. Should an existing token exist it will be deleted."""
+    and the stores it. Should an existing token exist it will be deleted.
+    """
     consumer = oauth.Consumer(service.app.oauth.consumer_key, service.app.oauth.consumer_secret)
 
     token = oauth.Token(request_token.oauth_token, request_token.oauth_token_secret)
@@ -66,6 +68,9 @@ def generate_access_token(service, request_token):
     )
 
 def get_data(service, url, disable_oauth=False):
+    """Helper function for retrieving JSON data from a web service, with
+    optional OAuth authentication.
+    """
     if disable_oauth:
         h = httplib2.Http()
         resp, content = h.request(url, "GET")
@@ -82,6 +87,8 @@ def get_data(service, url, disable_oauth=False):
     return simplejson.loads(content)
 
 def get_model_instance(user, module_name):
+    # TODO: check if we actually need this any longer, with the new
+    # ServiceHandler model
     try:
         return UserService.objects.get(user=user, app__module_name=module_name)
     except:
@@ -89,13 +96,25 @@ def get_model_instance(user, module_name):
 
 def settings_redirect(request):
     """Where the user is redirected to after configuring a service.
-    This can be overridden in the app itself."""
+    This can be overridden in the app itself.
+    """
 
-    # return the user back to the settings page
+    # Return the user back to the settings page
     return reverse('user-settings') or '/' + request.user.username
 
 def check_is_service_id(service, module_name):
     """Check we have the correct service for the url:
-    /delicious/stats/8 where 8 is the correct id otherwise redirect."""
+    /delicious/stats/8 where 8 is the correct id otherwise redirect.
+    """
 
+    # TODO: do we still need this with ServiceHandler model?
     return service.template_name.replace('/','.') == module_name
+
+def get_config(module_name, config_name=None):
+    """Select an app specific config from settings
+    """
+    app_settings = getattr(settings, 'SERVICE_CONFIG', {}).get(module_name, {})
+    if config_name:
+        return app_settings.get(config_name, None)
+    else:
+        return app_settings

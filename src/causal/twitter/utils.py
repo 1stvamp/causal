@@ -4,11 +4,11 @@ from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.sites.models import Site
+from causal.main.utils.services import get_config
 
 from causal.main.models import RequestToken, AccessToken, UserService
 
-auth_settings = getattr(settings, 'SERVICES_CONFIG', {}).get('causal.twitter',
-    {}).get('auth', None)
+auth_settings = get_config('causal.twitter', 'oauth')
 if not auth_settings:
     raise Exception('Missing Twitter OAuth config in settings module')
 
