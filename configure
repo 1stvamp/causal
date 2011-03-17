@@ -11,16 +11,20 @@ import subprocess
 from optparse import OptionParser
 
 template = """[buildout]
-parts = django
+parts = dependencies
+        django
 cwd = %(cwd)s
 eggs =
   %(eggs)s
 versions = versions
 %(findlinks)s
 
+[dependencies]
+recipe = zc.recipe.egg
+eggs = ${buildout:eggs}
+
 [django]
 recipe = isotoma.recipe.django
-version = 1.2.3
 project = causal
 projectegg = ${django:project}
 settings = settings
