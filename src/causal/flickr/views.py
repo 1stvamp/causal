@@ -1,7 +1,7 @@
 """Handle account settings for flickr and other direct url requests."""
 
 import httplib2
-from causal.flickr.service import get_items
+from causal.flickr.service import get_items, get_stats_items
 from causal.main.decorators import can_view_service
 from causal.main.models import UserService, AccessToken
 from causal.main.utils import get_module_name
@@ -73,7 +73,7 @@ def stats(request, service_id):
     service = get_object_or_404(UserService, pk=service_id)
     
     if check_is_service_id(service, MODULE_NAME):
-        pictures = get_items(request.user,
+        pictures = get_stats_items(request.user,
                              date.today() - timedelta(days=7),
                              service)
         template_values = {}
@@ -91,17 +91,19 @@ def stats(request, service_id):
             if pic.favorite:
                 template_values['number_of_pictures_favorites'] = \
                                number_of_pictures_favorites + 1
-            if int(pic.number_of_comments) > 0:
+                
+            if hasattr(pic, 'number_of_comments'):
                 if pic.number_of_comments > comments:
                     comments = pic.number_of_comments
                     template_values['most_commented_picture'] = pic
 
             # get camera used count
-            if template_values['cameras_used'].has_key(pic.camera_make):
+            if template_values['cameras_used'].has_key(hasattr(pic, 'camera_make')):
                 template_values['cameras_used'][pic.camera_make] = \
                                template_values['cameras_used'][pic.camera_make] + 1
             else:
-                template_values['cameras_used'][pic.camera_make] = 1
+                if hasattr(pic, 'camera_make'):
+                    template_values['cameras_used'][pic.camera_make] = 1
 
         template_values['pictures'] = pictures
         template_values['number_of_pictures_uploaded'] = len(pictures)
