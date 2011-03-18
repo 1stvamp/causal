@@ -7,9 +7,8 @@ import urllib
 from causal.facebook.service import get_items, get_stats_items
 from causal.main.decorators import can_view_service
 from causal.main.models import AccessToken, ServiceApp, UserService
-from causal.main.utils import get_module_name
 from causal.main.utils.services import get_model_instance, settings_redirect, \
-        check_is_service_id
+        check_is_service_id, get_config
 from causal.main.utils.views import render
 from datetime import datetime, date, timedelta
 from django.shortcuts import redirect
@@ -18,38 +17,44 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
-# Yay, let's recreate __package__ for Python <2.6
-MODULE_NAME = get_module_name(__name__)
+auth_settings = get_config('causal.facebook', 'oauth')
+if not auth_settings:
+    raise Exception('Missing Facebook OAuth config in settings module')
 
 @login_required(redirect_field_name='redirect_to')
 def verify_auth(request):
     """Get the values back from facebook and store them for use later."""
 
-    service = get_model_instance(request.user, MODULE_NAME)
+    service = get_model_instance(request.user, 'causal.facebook')
     code = request.GET.get('code')
-    callback = "%s%s" % (service.app.oauth.callback_url_base,
-                         reverse('causal-facebook-callback'),)
-    url = "%s&code=%s&client_secret=%s&redirect_uri=%s&client_id=%s" % (
-        service.app.oauth.access_token_url,
+    if request.is_secure():
+        scheme = "https://"
+    else:
+        scheme = "http://"
+    base_url = "%s%s" % (scheme, request.get_host(),)
+    callback = "%s%s" % (base_url, reverse('causal-facebook-callback'),)
+
+    url = "https://graph.facebook.com/oauth/access_token&code=%s&client_secret=%s&redirect_uri=%s&client_id=%s" % (
         code,
-        service.app.oauth.consumer_secret,
+        auth_settings['consumer_secret'],
         callback,
-        service.app.oauth.consumer_key
+        auth_settings['consumer_key']
     )
 
     response = cgi.parse_qs(urllib.urlopen(url).read())
 
     if response.has_key('access_token'):
-        # Delete existing token
-        AccessToken.objects.filter(service=service).delete()
+        if service.auth.access_token:
+            service.auth.access_token.delete()
         # Before creating a new one
-        AccessToken.objects.create(
-            service=service,
+        at = AccessToken.objects.create(
             oauth_token=''.join(response["access_token"]),
             oauth_token_secret='',
-            created=datetime.now(),
-            oauth_verify=''
+            oauth_verify='',
+            created=datetime.now()
         )
+        service.auth.access_token = at
+        service.auth.save()
         service.setup = True
         service.public = True
         service.save()
@@ -66,19 +71,18 @@ def auth(request):
 
     request.session['causal_facebook_oauth_return_url'] = \
         request.GET.get('HTTP_REFERER', None)
-    service = get_model_instance(request.user, MODULE_NAME)
+    service = get_model_instance(request.user, 'causal.facebook')
 
-    if not service:
-        app = ServiceApp.objects.get(module_name=MODULE_NAME)
-        service = UserService(user=request.user, app=app)
-        service.save()
-    callback = "%s%s" % (service.app.oauth.callback_url_base,
-                         reverse('causal-facebook-callback'),)
-    return redirect("%s&redirect_uri=%s&scope=%s&client_id=%s" % (
-            service.app.oauth.request_token_url,
+    if request.is_secure():
+        scheme = "https://"
+    else:
+        scheme = "http://"
+    base_url = "%s%s" % (scheme, request.get_host(),)
+    callback = "%s%s" % (base_url, reverse('causal-facebook-callback'),)
+    return redirect("https://graph.facebook.com/oauth/authorize&redirect_uri=%s&scope=%s&client_id=%s" % (
             callback,
             'read_stream,offline_access,user_photos,user_photo_video_tags,user_checkins',
-            service.app.oauth.consumer_key
+            auth_settings['consumer_key']
         )
     )
 
@@ -88,8 +92,8 @@ def stats(request, service_id):
 
     service = get_object_or_404(UserService, pk=service_id)
 
-    if check_is_service_id(service, MODULE_NAME):
-        links, statuses, details, photos, checkins = get_stats_items(request.user, date.today() - timedelta(days=7), service)
+    if check_is_service_id(service, 'causal.facebook'):
+        links, statuses, details, photos, checkins = service.handler.get_stats_items(date.today() - timedelta(days=7))
         return render(
             request,
             {'links' : links,
@@ -98,7 +102,7 @@ def stats(request, service_id):
              'photos': photos,
              'checkins' : checkins,
              },
-            service.template_name + '/stats.html'
+            'causal/facebook/stats.html'
         )
     else:
         return redirect('/%s' %(request.user.username))

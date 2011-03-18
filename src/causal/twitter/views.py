@@ -7,7 +7,6 @@ import logging
 import tweepy
 from causal.main.decorators import can_view_service
 from causal.main.models import UserService, RequestToken
-from causal.main.utils import get_module_name
 from causal.main.utils.services import get_model_instance, \
      generate_access_token, settings_redirect, check_is_service_id
 from causal.main.utils.views import render
@@ -19,13 +18,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.utils.datastructures import SortedDict
 
-# Yay, let's recreate __package__ for Python <2.6
-MODULE_NAME = get_module_name(__name__)
-
 @login_required(redirect_field_name='redirect_to')
 def verify_auth(request):
     """Take incoming request and validate it to create a valid AccessToken."""
-    service = get_model_instance(request.user, MODULE_NAME)
+    service = get_model_instance(request.user, 'causal.twitter')
     service.auth.request_token.oauth_verify = request.GET.get('oauth_verifier')
     service.auth.request_token.save()
     generate_access_token(service, request_token)
@@ -52,14 +48,14 @@ def auth(request):
     redirect from twitter."""
     request.session['causal_twitter_oauth_return_url'] = \
            request.GET.get('HTTP_REFERER', None)
-    service = get_model_instance(request.user, MODULE_NAME)
+    service = get_model_instance(request.user, 'causal.twitter')
     return user_login(service)
 
 @can_view_service
 def stats(request, service_id):
     """Create up some stats."""
     service = get_object_or_404(UserService, pk=service_id)
-    if check_is_service_id(service, MODULE_NAME):
+    if check_is_service_id(service, 'causal.twitter'):
         # get tweets
         tweets = service.handler.get_items(date.today() - timedelta(days=7))
         retweets = 0
@@ -110,7 +106,7 @@ def stats(request, service_id):
         return render(
             request,
             template_values,
-            service.template_name + '/stats.html'
+            'causal/twitter/stats.html'
         )
     else:
         return redirect('/%s' %(request.user.username))
