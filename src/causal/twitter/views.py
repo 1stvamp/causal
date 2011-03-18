@@ -10,7 +10,6 @@ from causal.main.models import UserService, RequestToken
 from causal.main.utils.services import get_model_instance, \
      generate_access_token, settings_redirect, check_is_service_id
 from causal.main.utils.views import render
-from causal.twitter.service import get_items
 from causal.twitter.utils import _oauth, user_login, get_user
 from datetime import date, timedelta
 from django.http import HttpResponseRedirect

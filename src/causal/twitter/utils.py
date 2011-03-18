@@ -89,6 +89,6 @@ def get_api(service):
     # API instance
     return tweepy.API(oauth)
 
-def get_user(service)
+def get_user(service):
     service_auth = _oauth(service.auth)
     return tweepy.API(service_auth).get_user('twitter')
