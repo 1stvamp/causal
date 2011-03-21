@@ -27,9 +27,6 @@ def user_login(service, cust_callback_url=None):
 
         request_token_params = dict((token.split('=') for token in content.split('&')))
 
-        # Remove any old tokens, so we can start from a fresh token
-        if service.auth.request_token:
-            service.auth.request_token.delete()
         RequestToken.objects.create(
             oauth_token=request_token_params['oauth_token'],
             oauth_token_secret=request_token_params['oauth_token_secret'],
@@ -59,9 +56,6 @@ def generate_access_token(service, token_url):
 
     access_token_params = dict((token.split('=') for token in content.split('&')))
 
-    # Delete any previous tokens
-    if service.auth.access_token:
-        service.auth.access_token.delete()
     # Before creating a new one
     at = AccessToken.objects.create(
         oauth_token=access_token_params['oauth_token'],

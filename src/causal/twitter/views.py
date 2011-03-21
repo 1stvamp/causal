@@ -40,7 +40,6 @@ def verify_auth(request):
 
     service.save()
 
-    service.auth.request_token.delete()
     return HttpResponseRedirect(settings_redirect(request))
 
 @login_required(redirect_field_name='redirect_to')

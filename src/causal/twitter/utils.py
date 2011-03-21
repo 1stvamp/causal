@@ -15,7 +15,7 @@ if not auth_settings:
 def _oauth(cust_callback_url=None):
     current_site = Site.objects.get(id=settings.SITE_ID)
     callback = cust_callback_url or reverse('causal-twitter-callback')
-    callback = "//%s%s" % (current_site.domain, callback,)
+    callback = "http://%s%s" % (current_site.domain, callback,)
     return tweepy.OAuthHandler(
         auth_settings['consumer_key'],
         auth_settings['consumer_secret'],
@@ -34,11 +34,6 @@ def user_login(service, cust_callback_url=None):
             auth_handler = OAuth()
         else:
             auth_handler = service.auth
-
-        # Check if we have an existing RequestToken
-        # if so delete it.
-        if auth_handler.request_token:
-            auth_handler.request_token.delete()
 
         # Create a new requesttoken
         new_rt = RequestToken()
