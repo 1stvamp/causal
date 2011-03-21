@@ -31,21 +31,25 @@ def user_login(service, cust_callback_url=None):
 
         # Make sure we have an auth container
         if not service.auth:
-            service.auth = OAuth()
+            auth_handler = OAuth()
+        else:
+            auth_handler = service.auth
 
         # Check if we have an existing RequestToken
         # if so delete it.
-        if service.auth.request_token:
-            service.auth.request_token.delete()
+        if auth_handler.request_token:
+            auth_handler.request_token.delete()
 
         # Create a new requesttoken
         new_rt = RequestToken()
         new_rt.oauth_token = oauth.request_token.key
         new_rt.oauth_token_secret = oauth.request_token.secret
         new_rt.save()
-        service.auth.request_token = new_rt
-        service.auth.save()
-        service.save()
+        auth_handler.request_token = new_rt
+        auth_handler.save()
+        if not service.auth:
+            service.auth = auth_handler
+            service.save()
     except tweepy.TweepError:
         return False
 

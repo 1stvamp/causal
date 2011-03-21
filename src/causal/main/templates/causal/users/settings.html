@@ -138,7 +138,7 @@
             <h3>Available services:</h3>
             <ul>
                 {% for service in available_services %}
-                    <li><a href="{% url enable-service service.id %}">{{ service.ServiceHandler.display_name }}</a></li>
+                    <li><a href="{% url enable-service service.id %}">{{ service.display_name }}</a></li>
                 {% endfor %}
             </ul>
         {% endif %}

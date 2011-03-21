@@ -11,10 +11,7 @@ if settings.DEBUG:
     try:
         import causal.wingdbstub
     except ImportError:
-        try:
-            import causal.wingdb
-        except ImportError:
-            pass
+        pass
 
 from django.contrib import admin
 admin.autodiscover()

@@ -2,6 +2,7 @@
 """
 
 from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
 
 class BaseServiceHandler(object):
     display_name = 'BASE SERVICE HANDLER'

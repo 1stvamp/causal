@@ -28,9 +28,9 @@ def user_login(service, cust_callback_url=None):
         request_token_params = dict((token.split('=') for token in content.split('&')))
 
         # Remove any old tokens, so we can start from a fresh token
-        RequestToken.objects.filter(service=service).delete()
+        if service.auth.request_token:
+            service.auth.request_token.delete()
         RequestToken.objects.create(
-            service=service,
             oauth_token=request_token_params['oauth_token'],
             oauth_token_secret=request_token_params['oauth_token_secret'],
         )
@@ -42,7 +42,7 @@ def user_login(service, cust_callback_url=None):
     # Redirect user to Twitter to authorize
     return redirect(redirect_url)
 
-def generate_access_token(service):
+def generate_access_token(service, token_url):
     """Takes a request_token and validates it to give a valid AccessToken
     and the stores it. Should an existing token exist it will be deleted.
     """
@@ -55,15 +55,15 @@ def generate_access_token(service):
     token = oauth.Token(request_token.oauth_token, request_token.oauth_token_secret)
     token.set_verifier(request_token.oauth_verify)
     client = oauth.Client(consumer, token)
-    resp, content = client.request(service.app.oauth.access_token_url, "POST")
+    resp, content = client.request(token_url, "POST")
 
     access_token_params = dict((token.split('=') for token in content.split('&')))
 
     # Delete any previous tokens
-    AccessToken.objects.filter(service=service).delete()
+    if service.auth.access_token:
+        service.auth.access_token.delete()
     # Before creating a new one
     at = AccessToken.objects.create(
-        service=service,
         oauth_token=access_token_params['oauth_token'],
         oauth_token_secret=access_token_params['oauth_token_secret'],
         oauth_verify=request_token.oauth_verify
@@ -95,7 +95,7 @@ def get_model_instance(user, module_name):
     # ServiceHandler model
     try:
         return UserService.objects.get(user=user, app__module_name=module_name)
-    except:
+    except Exception, e:
         return False
 
 def settings_redirect(request):

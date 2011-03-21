@@ -32,6 +32,10 @@ class ServiceApp(models.Model):
         if not self._module:
             self._module = import_module("%s.service" % (self.module_name,))
         return self._module
+    
+    @property
+    def display_name(self):
+        return self.module.ServiceHandler.display_name
 
     def __unicode__(self):
         return u'%s service app' % (self.module.ServiceHandler.display_name,)
