@@ -99,7 +99,7 @@ class BaseAuth(models.Model):
 
     user_services = generic.GenericRelation(
         UserService,
-        content_type_field='auth_type_fk',
+        content_type_field='auth_type',
         object_id_field='auth_object_id'
     )
     created = models.DateTimeField(auto_now_add=True)
@@ -112,8 +112,8 @@ class Auth(BaseAuth):
     secret = models.CharField(max_length=255)
 
     def __unicode__(self):
-        if hasattr(self, 'userservice_set'):
-            return u'Auth for %s' % (self.userservice_set[0],)
+        if user_services.count() > 0:
+            return u'Auth for %s' % (self.user_services.all()[0],)
         else:
             return u'Auth settings'
 
@@ -122,12 +122,13 @@ class RequestToken(models.Model):
 
     oauth_token = models.CharField(max_length=255, blank=True, null=True)
     oauth_token_secret = models.CharField(max_length=255, blank=True, null=True)
-    created = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add=True)
     oauth_verify = models.CharField(max_length=255, blank=True, null=True)
 
     def __unicode__(self):
-        if self.userservice_set:
-            return u'Request token for %s' % (self.userservice_set[0],)
+        if self.oauth_set.count() > 0 and \
+          self.oauth_set.all()[0].user_services.count() > 0:
+            return u'Request token for %s' % (self.oauth_set.all()[0].user_services.all()[0],)
         else:
             return u'Request token'
 
@@ -135,8 +136,9 @@ class AccessToken(RequestToken):
     """OAuth Access Token."""
 
     def __unicode__(self):
-        if self.userservice_set:
-            return u'Access token for %s' % (self.userservice_set[0],)
+        if self.oauth_set.count() > 0 and \
+          self.oauth_set.all()[0].user_services.count() > 0:
+            return u'Access token for %s' % (self.oauth_set.all()[0].user_services.all()[0],)
         else:
             return u'Access token'
 
@@ -147,8 +149,8 @@ class OAuth(BaseAuth):
     access_token = models.ForeignKey(AccessToken, related_name="%(app_label)s_%(class)s_related", null=True, blank=True)
 
     def __unicode__(self):
-        if self.userservice_set:
-            return u'OAuth for %s' % (self.userservice_set[0],)
+        if self.user_services.count():
+            return u'OAuth for %s' % (self.user_services.all()[0],)
         else:
             return u'OAuth settings'
 

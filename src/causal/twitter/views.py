@@ -17,13 +17,15 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.utils.datastructures import SortedDict
 
+PACKAGE = 'causal.twitter'
+
 @login_required(redirect_field_name='redirect_to')
 def verify_auth(request):
     """Take incoming request and validate it to create a valid AccessToken."""
-    service = get_model_instance(request.user, 'causal.twitter')
+    service = get_model_instance(request.user, PACKAGE)
     service.auth.request_token.oauth_verify = request.GET.get('oauth_verifier')
     service.auth.request_token.save()
-    generate_access_token(service, request_token)
+    generate_access_token(service)
 
     # Mark as setup completed
     service.setup = True
@@ -47,14 +49,14 @@ def auth(request):
     redirect from twitter."""
     request.session['causal_twitter_oauth_return_url'] = \
            request.GET.get('HTTP_REFERER', None)
-    service = get_model_instance(request.user, 'causal.twitter')
+    service = get_model_instance(request.user, PACKAGE)
     return user_login(service)
 
 @can_view_service
 def stats(request, service_id):
     """Create up some stats."""
     service = get_object_or_404(UserService, pk=service_id)
-    if check_is_service_id(service, 'causal.twitter'):
+    if check_is_service_id(service, PACKAGE):
         # get tweets
         tweets = service.handler.get_items(date.today() - timedelta(days=7))
         retweets = 0

@@ -42,11 +42,15 @@ def user_login(service, cust_callback_url=None):
     # Redirect user to Twitter to authorize
     return redirect(redirect_url)
 
-def generate_access_token(service, request_token):
+def generate_access_token(service):
     """Takes a request_token and validates it to give a valid AccessToken
     and the stores it. Should an existing token exist it will be deleted.
     """
-    consumer = oauth.Consumer(service.app.oauth.consumer_key, service.app.oauth.consumer_secret)
+    auth_settings = get_config(service.app.module_name, 'oauth')
+    consumer_key = auth_settings['consumer_key']
+    consumer_secret = auth_settings['consumer_secret']
+    consumer = oauth.Consumer(consumer_key, consumer_secret)
+    request_token = service.auth.request_token
 
     token = oauth.Token(request_token.oauth_token, request_token.oauth_token_secret)
     token.set_verifier(request_token.oauth_verify)
@@ -58,12 +62,14 @@ def generate_access_token(service, request_token):
     # Delete any previous tokens
     AccessToken.objects.filter(service=service).delete()
     # Before creating a new one
-    AccessToken.objects.create(
+    at = AccessToken.objects.create(
         service=service,
         oauth_token=access_token_params['oauth_token'],
         oauth_token_secret=access_token_params['oauth_token_secret'],
         oauth_verify=request_token.oauth_verify
     )
+    service.auth.access_token = at
+    service.auth.save()
 
 def get_data(service, url, disable_oauth=False):
     """Helper function for retrieving JSON data from a web service, with
