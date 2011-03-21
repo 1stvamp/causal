@@ -212,11 +212,11 @@ class ServiceItem(object):
 
     @property
     def created_local(self):
-        if hasattr(self.user, 'get_profile'):
+        if hasattr(self.service.user, 'get_profile'):
             return adjust_datetime_to_timezone(
                 self.created,
                 'UTC',
-                unicode(self.user.get_profile().timezone)
+                unicode(self.service.user.get_profile().timezone)
             )
         else:
             return adjust_datetime_to_timezone(self.created, 'UTC', TIME_ZONE)
