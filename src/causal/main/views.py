@@ -26,6 +26,7 @@ def history(request, username):
     filters = {
         'user': user,
         'setup': True,
+        'app__module_name__in': settings.INSTALLED_SERVICES
     }
     if not request.user.is_authenticated() or not request.user.pk == user.pk:
         filters['share'] = True
