@@ -48,6 +48,8 @@ class UserService(models.Model):
     app = models.ForeignKey(ServiceApp)
     setup = models.NullBooleanField(null=True, blank=True, default=False)
     share = models.NullBooleanField(null=True, blank=True, default=False)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     # Used to identify if the remote service is publically available i.e. twitter
     public = models.NullBooleanField(null=True, blank=True, default=False)
@@ -100,8 +102,8 @@ class BaseAuth(models.Model):
         content_type_field='auth_type_fk',
         object_id_field='auth_object_id'
     )
-    created = models.DateTimeField()
-    modified = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
 class Auth(BaseAuth):
     """Auth for sites requiring a username."""

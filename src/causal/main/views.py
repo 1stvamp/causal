@@ -185,7 +185,7 @@ def user_settings(request):
     # Services available to user
     available_services = ServiceApp.objects.all().exclude(
         userservice__user=request.user,
-        app__module_name__in=settings.INSTALLED_SERVICES
+        module_name__in=settings.INSTALLED_SERVICES
     )
 
     # Services yet to be setup

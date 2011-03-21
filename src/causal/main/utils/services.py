@@ -33,7 +33,6 @@ def user_login(service, cust_callback_url=None):
             service=service,
             oauth_token=request_token_params['oauth_token'],
             oauth_token_secret=request_token_params['oauth_token_secret'],
-            created=datetime.now()
         )
 
         redirect_url = "%s?oauth_token=%s" % (service.app.oauth.user_auth_url, request_token_params['oauth_token'],)
@@ -63,7 +62,6 @@ def generate_access_token(service, request_token):
         service=service,
         oauth_token=access_token_params['oauth_token'],
         oauth_token_secret=access_token_params['oauth_token_secret'],
-        created=datetime.now(),
         oauth_verify=request_token.oauth_verify
     )
 

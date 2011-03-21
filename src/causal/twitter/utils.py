@@ -42,10 +42,10 @@ def user_login(service, cust_callback_url=None):
         new_rt = RequestToken()
         new_rt.oauth_token = oauth.request_token.key
         new_rt.oauth_token_secret = oauth.request_token.secret
-        new_rt.created = datetime.now()
         new_rt.save()
-        service.auth.request_token = rt
+        service.auth.request_token = new_rt
         service.auth.save()
+        service.save()
     except tweepy.TweepError:
         return False
 
