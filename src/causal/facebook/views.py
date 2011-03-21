@@ -17,7 +17,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
-auth_settings = get_config('causal.facebook', 'oauth')
+PACKAGE = 'causal.facebook'
+
+auth_settings = get_config(PACKAGE, 'oauth')
 if not auth_settings:
     raise Exception('Missing Facebook OAuth config in settings module')
 
@@ -25,7 +27,7 @@ if not auth_settings:
 def verify_auth(request):
     """Get the values back from facebook and store them for use later."""
 
-    service = get_model_instance(request.user, 'causal.facebook')
+    service = get_model_instance(request.user, PACKAGE)
     code = request.GET.get('code')
     if request.is_secure():
         scheme = "https://"
@@ -44,14 +46,10 @@ def verify_auth(request):
     response = cgi.parse_qs(urllib.urlopen(url).read())
 
     if response.has_key('access_token'):
-        if service.auth.access_token:
-            service.auth.access_token.delete()
-        # Before creating a new one
         at = AccessToken.objects.create(
             oauth_token=''.join(response["access_token"]),
             oauth_token_secret='',
-            oauth_verify='',
-            created=datetime.now()
+            oauth_verify=''
         )
         service.auth.access_token = at
         service.auth.save()
@@ -71,7 +69,7 @@ def auth(request):
 
     request.session['causal_facebook_oauth_return_url'] = \
         request.GET.get('HTTP_REFERER', None)
-    service = get_model_instance(request.user, 'causal.facebook')
+    service = get_model_instance(request.user, PACKAGE)
 
     if request.is_secure():
         scheme = "https://"
@@ -92,7 +90,7 @@ def stats(request, service_id):
 
     service = get_object_or_404(UserService, pk=service_id)
 
-    if check_is_service_id(service, 'causal.facebook'):
+    if check_is_service_id(service, PACKAGE):
         links, statuses, details, photos, checkins = service.handler.get_stats_items(date.today() - timedelta(days=7))
         return render(
             request,

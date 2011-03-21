@@ -5,34 +5,45 @@ from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
 from django.conf import settings
-from causal.main.models import RequestToken, AccessToken, UserService
-
-PARENT_PACKAGE_NAME = 'causal.'
+from django.contrib.sites.models import Site
+from causal.main.models import RequestToken, AccessToken, UserService, OAuth
 
 def user_login(service, cust_callback_url=None):
     """Authenticates to an OAuth service.
     """
-    pos = service.app.module_name.find(PARENT_PACKAGE_NAME) + len(PARENT_PACKAGE_NAME)
-    callback_app_name = service.app.module_name[pos:]
-    callback = cust_callback_url or reverse('causal-%s-callback' % (callback_app_name,))
-    callback = "%s%s" % (service.app.oauth.callback_url_base, callback,)
+    current_site = Site.objects.get(id=settings.SITE_ID)
+    auth_settings = get_config(service.app.module_name, 'oauth')
+    callback = cust_callback_url or reverse(service.app.module_name.replace('.', '-'))
+    callback = "http://%s%s" % (current_site.domain, callback,)
     try:
-        consumer = oauth.Consumer(service.app.oauth.consumer_key, service.app.oauth.consumer_secret)
+        consumer = oauth.Consumer(auth_settings['consumer_key'], auth_settings['consumer_secret'])
 
         client = oauth.Client(consumer)
-        resp, content = client.request(service.app.oauth.request_token_url, "GET")
+        resp, content = client.request("https://graph.facebook.com/oauth/authorize", "GET")
 
         if resp['status'] != '200':
             return False
 
         request_token_params = dict((token.split('=') for token in content.split('&')))
 
-        RequestToken.objects.create(
+        rt = RequestToken.objects.create(
             oauth_token=request_token_params['oauth_token'],
             oauth_token_secret=request_token_params['oauth_token_secret'],
         )
+        if not service.auth:
+            auth_handler = service.auth = OAuth()
+        else:
+            auth_handler = service.auth
+        auth_handler.request_token = rt
+        auth_handler.save()
+        if not service.auth:
+            service.auth = auth_handler
+            service.save()
 
-        redirect_url = "%s?oauth_token=%s" % (service.app.oauth.user_auth_url, request_token_params['oauth_token'],)
+        redirect_url = "%s?oauth_token=%s" % (
+            "https://graph.facebook.com/oauth/access_token",
+            request_token_params['oauth_token']
+        )
     except:
         return False
 
@@ -44,9 +55,7 @@ def generate_access_token(service, token_url):
     and the stores it. Should an existing token exist it will be deleted.
     """
     auth_settings = get_config(service.app.module_name, 'oauth')
-    consumer_key = auth_settings['consumer_key']
-    consumer_secret = auth_settings['consumer_secret']
-    consumer = oauth.Consumer(consumer_key, consumer_secret)
+    consumer = oauth.Consumer(auth_settings['consumer_key'], auth_settings['consumer_secret'])
     request_token = service.auth.request_token
 
     token = oauth.Token(request_token.oauth_token, request_token.oauth_token_secret)
@@ -69,13 +78,15 @@ def get_data(service, url, disable_oauth=False):
     """Helper function for retrieving JSON data from a web service, with
     optional OAuth authentication.
     """
+
+    auth_settings = get_config(service.app.module_name, 'oauth')
     if disable_oauth:
         h = httplib2.Http()
         resp, content = h.request(url, "GET")
     else:
-        at = AccessToken.objects.get(service=service)
+        at = service.auth.access_token
         if at:
-            consumer = oauth.Consumer(service.app.oauth.consumer_key, service.app.oauth.consumer_secret)
+            consumer = oauth.Consumer(auth_settings['consumer_key'], auth_settings['consumer_secret'])
             token = oauth.Token(at.oauth_token , at.oauth_token_secret)
 
             client = oauth.Client(consumer, token)
@@ -98,7 +109,7 @@ def settings_redirect(request):
     """
 
     # Return the user back to the settings page
-    return reverse('user-settings') or '/' + request.user.username
+    return reverse('user-settings') or '/%s' % (request.user.username,)
 
 def check_is_service_id(service, module_name):
     """Check we have the correct service for the url:
