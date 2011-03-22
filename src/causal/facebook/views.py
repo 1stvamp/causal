@@ -4,7 +4,6 @@ the stats work is done using FQL."""
 
 import cgi
 import urllib
-from causal.facebook.service import get_items, get_stats_items
 from causal.main.decorators import can_view_service
 from causal.main.models import AccessToken, ServiceApp, UserService
 from causal.main.utils.services import get_model_instance, settings_redirect, \
