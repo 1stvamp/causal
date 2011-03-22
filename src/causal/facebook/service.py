@@ -32,7 +32,7 @@ class ServiceHandler(OAuthServiceHandler):
     def get_items(self, since):
         """Fetch main stats for history page."""
 
-        self.query = FQL(self.service.auth.access_token)
+        self.query = FQL(self.service.auth.access_token.oauth_token)
 
         try:
             uid_result = self.query(USER_ID)
@@ -55,7 +55,7 @@ class ServiceHandler(OAuthServiceHandler):
     def get_stats_items(self, since):
         """Return more detailed ServiceItems for the stats page."""
 
-        self.query = FQL(self.service.auth.access_token)
+        self.query = FQL(self.service.auth.access_token.oauth_token)
         week_ago_epoch = time.mktime(since.timetuple())
 
         links = []
@@ -176,7 +176,7 @@ class ServiceHandler(OAuthServiceHandler):
                     self.service,
                     # We do this bit ourselves, because FB had to be "speschull"
                     'https://graph.facebook.com/me/albums?access_token=%s' \
-                        % (self.service.auth.oauth_token),
+                        % (self.service.auth.access_token.oauth_token),
                     disable_oauth=True
                 )
 
@@ -186,7 +186,7 @@ class ServiceHandler(OAuthServiceHandler):
                     self.service,
                     # We do this bit ourselves, because FB had to be "speschull"
                     'https://graph.facebook.com/%s/photos?access_token=%s' \
-                        % (album_id, self.service.auth.oauth_token),
+                        % (album_id, self.service.auth.access_token.oauth_token),
                     disable_oauth=True
                 )
 
@@ -198,7 +198,7 @@ class ServiceHandler(OAuthServiceHandler):
                     self.service,
                     # We do this bit ourselves, because FB had to be "speschull"
                     'https://graph.facebook.com/me/checkins?access_token=%s' \
-                        % (self.service.auth.oauth_token),
+                        % (self.service.auth.access_token.oauth_token),
                     disable_oauth=True
                 )
 

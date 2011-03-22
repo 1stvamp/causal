@@ -5,7 +5,7 @@ the stats work is done using FQL."""
 import cgi
 import urllib
 from causal.main.decorators import can_view_service
-from causal.main.models import AccessToken, ServiceApp, UserService
+from causal.main.models import AccessToken, ServiceApp, UserService, OAuth
 from causal.main.utils.services import get_model_instance, settings_redirect, \
         check_is_service_id, get_config
 from causal.main.utils.views import render
@@ -69,6 +69,12 @@ def auth(request):
     request.session['causal_facebook_oauth_return_url'] = \
         request.GET.get('HTTP_REFERER', None)
     service = get_model_instance(request.user, PACKAGE)
+    
+    if not service.auth:
+        auth_handler = OAuth()
+        auth_handler.save()
+        service.auth = auth_handler
+        service.save()
 
     if request.is_secure():
         scheme = "https://"
