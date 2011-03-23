@@ -20,11 +20,11 @@ def verify_auth(request):
     """
 
     service = get_model_instance(request.user, PACKAGE)
-    request_token = service.auth.reques_token
+    request_token = service.auth.request_token
     request_token.oauth_verify = request.GET.get('oauth_verifier')
     request_token.save()
 
-    generate_access_token(service)
+    generate_access_token(service, "http://foursquare.com/oauth/access_token")
     service.setup = True
     service.public = True
     service.save()
@@ -45,7 +45,7 @@ def auth(request):
         auth_handler.save()
         service.auth = auth_handler
         service.save()
-    return user_login(service)
+    return user_login(service, "http://foursquare.com/oauth/request_token", "http://foursquare.com/oauth/authorize")
 
 @can_view_service
 def stats(request, service_id):

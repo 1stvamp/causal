@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from causal.main.models import RequestToken, AccessToken, UserService, OAuth
 
-def user_login(service, cust_callback_url=None):
+def user_login(service, rt_url, auth_url, cust_callback_url=None):
     """Authenticates to an OAuth service.
     """
     current_site = Site.objects.get(id=settings.SITE_ID)
@@ -19,9 +19,12 @@ def user_login(service, cust_callback_url=None):
         consumer = oauth.Consumer(auth_settings['consumer_key'], auth_settings['consumer_secret'])
 
         client = oauth.Client(consumer)
-        resp, content = client.request("https://graph.facebook.com/oauth/authorize", "GET")
+        resp, content = client.request(rt_url, "GET")
 
         if resp['status'] != '200':
+            # TODO:
+            # We need to do something graceful here, even if it's just a
+            # redirect back to the last page
             return False
 
         request_token_params = dict((token.split('=') for token in content.split('&')))
@@ -41,10 +44,14 @@ def user_login(service, cust_callback_url=None):
             service.save()
 
         redirect_url = "%s?oauth_token=%s" % (
-            "https://graph.facebook.com/oauth/access_token",
+            auth_url,
             request_token_params['oauth_token']
         )
-    except:
+    except Exception, e:
+        # TODO:
+        # We need to do something graceful here, even if it's just a
+        # redirect back to the last page
+        # Logging the exception probably wouldn't go amiss either.
         return False
 
     # Redirect user to Twitter to authorize
