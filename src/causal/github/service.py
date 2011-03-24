@@ -130,15 +130,13 @@ def _convert_stats_feed(user, serv, feed, since):
 def _set_title_body(entry, item):
     """Set the title and body based on the event type."""
     
+    item.body = ''
+    
     if entry['type'] == 'CreateEvent':
         item.title = "Created branch %s from %s" % (entry['payload']['object_name'],entry['payload']['name'])
     elif entry['type'] == 'GistEvent':
         item.title = "Created gist %s" % (entry['payload']['desc'])
-    else:
-        item.title = "%s for %s" % (entry['type'], entry['payload']['repo'])
-    item.body = ''
-    
-    if entry['type'] == 'IssuesEvent':
+    elif entry['type'] == 'IssuesEvent':
         item.body = "Issue #%s was %s." % (str(entry['payload']['number']), entry['payload']['action'])
     elif entry['type'] == 'ForkEvent':
         item.body = "Repo %s forked." % (entry['payload']['repo'])
@@ -152,5 +150,9 @@ def _set_title_body(entry, item):
         item.body = "Started following %s." % (entry['payload']['target']['login'])
     elif entry['type'] == 'GistEvent':
         item.body = "Snippet: %s" % (entry['payload']['snippet'])
+    elif entry['type'] == 'DeleteEvent':
+        item.body = "Deleted: %s called %s" % (entry['payload']['ref_type'], entry['payload']['ref'])
     elif entry['type'] == 'GollumEvent':
         pass
+    else:
+        item.title = "Unknown Event!"
