@@ -116,7 +116,7 @@ class Auth(BaseAuth):
     secret = models.CharField(max_length=255)
 
     def __unicode__(self):
-        if user_services.count() > 0:
+        if self.user_services.count() > 0:
             return u'Auth for %s' % (self.user_services.all()[0],)
         else:
             return u'Auth settings'
