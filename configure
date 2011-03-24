@@ -15,6 +15,7 @@ parts = dependencies
         django
 cwd = %(cwd)s
 eggs =
+  causal
   %(eggs)s
 versions = versions
 %(findlinks)s
@@ -26,9 +27,7 @@ eggs = ${buildout:eggs}
 [django]
 recipe = isotoma.recipe.django
 project = causal
-projectegg = ${django:project}
 settings = settings
-test = causal
 eggs = ${buildout:eggs}
 wsgi = true
 
