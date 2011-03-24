@@ -86,11 +86,11 @@ def get_data(service, url, disable_oauth=False):
     optional OAuth authentication.
     """
 
-    auth_settings = get_config(service.app.module_name, 'oauth')
     if disable_oauth:
         h = httplib2.Http()
         resp, content = h.request(url, "GET")
     else:
+        auth_settings = get_config(service.app.module_name, 'oauth')
         at = service.auth.access_token
         if at:
             consumer = oauth.Consumer(auth_settings['consumer_key'], auth_settings['consumer_secret'])

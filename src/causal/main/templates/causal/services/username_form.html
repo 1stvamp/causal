@@ -6,9 +6,7 @@
     {% csrf_token %}
     <div>
         <label for="id_{{ service.class_name }}_username">Username:</label>
-        {% with service.requesttoken_set.all.0.accesstoken.username as username %}
-            <input type="text" name="username" id="id_{{ service.class_name }}_username" value="{{ username }}" />
-        {% endwith %}
+        <input type="text" name="username" id="id_{{ service.class_name }}_username" value="{{ service.auth.username }}" />
         <input type="submit" value="Submit" />
     </div>
 </form>
