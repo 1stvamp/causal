@@ -15,5 +15,5 @@ class SetupServiceApps(object):
                 app.enable = True
                 app.save()
         # Disable any ServiceApp not installed
-        ServiceApp.objects.filter(module_name__not__insettings.INSTALLED_SERVICES).update(enable=False)
+        ServiceApp.objects.exclude(module_name__in=settings.INSTALLED_SERVICES).update(enable=False)
         raise MiddlewareNotUsed()
