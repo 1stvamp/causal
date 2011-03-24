@@ -1,7 +1,7 @@
 """Middleware for the maintenance of Causal ServiceApps
 """
 
-from causal.main.models import get_app_by_name
+from causal.main.models import get_app_by_name, ServiceApp
 from django.conf import settings
 from django.core.exceptions import MiddlewareNotUsed
 
@@ -10,5 +10,10 @@ class SetupServiceApps(object):
         # Make sure we have a corresponding ServiceApp model instance for each
         # installed service
         for module_name in settings.INSTALLED_SERVICES:
-            get_app_by_name(module_name)
+            app = get_app_by_name(module_name)
+            if not app.enable:
+                app.enable = True
+                app.save()
+        # Disable any ServiceApp not installed
+        ServiceApp.objects.filter(module_name__not__insettings.INSTALLED_SERVICES).update(enable=False)
         raise MiddlewareNotUsed()
