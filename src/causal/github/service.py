@@ -51,7 +51,7 @@ class ServiceHandler(BaseServiceHandler):
 
         for entry in feed:
             if entry.has_key('public') and entry['public']:
-                created = _convert_date(entry)
+                created = self._convert_date(entry)
 
                 if created.date() > since:
                     item = ServiceItem()
