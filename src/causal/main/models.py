@@ -25,6 +25,7 @@ TIME_ZONE = getattr(settings, 'TIME_ZONE', 'Europe/London')
 
 class ServiceApp(models.Model):
     module_name = models.CharField(max_length=255)
+    enable = models.NullBooleanField(null=True, blank=True, default=True)
     _module = None
 
     @property
