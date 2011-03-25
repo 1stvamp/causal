@@ -110,8 +110,9 @@ To build a sandboxed Django environment containing Causal using ``buildout``::
 
   ### git clone the source, or curl and untar here ###
   cd causal
+  python buildout_bootstrap.py
   ./configure
-  buildout
+  bin/buildout
 
 After which you should have a set of endpoints in ``bin/``, e.g.::
 
@@ -120,7 +121,6 @@ After which you should have a set of endpoints in ``bin/``, e.g.::
   bin/django createsuperuser
   bin/django runserver
 
-(Notice we don't distribute the buildout ``bootstrap.py``, as it has many problems, so you'll need a system, or virtualenv, installed buildout.)
 
 4.5 Bootstrapping a virtualenv
 ******************************
@@ -221,3 +221,4 @@ get_items
 ~~~~~~~~~
 
 This is the key method that fetches the data and returns data in json for the interface to render.
+
