@@ -26,7 +26,7 @@ def history(request, username):
     filters = {
         'user': user,
         'setup': True,
-        'app__module_name__in': settings.INSTALLED_SERVICES
+        'app__enable': True
     }
     if not request.user.is_authenticated() or not request.user.pk == user.pk:
         filters['share'] = True
@@ -185,21 +185,21 @@ def user_settings(request):
     # Services available to user
     available_services = ServiceApp.objects.all().exclude(
         userservice__user=request.user,
-        module_name__in=settings.INSTALLED_SERVICES
+        enable=True
     )
 
     # Services yet to be setup
     available_services_unconfigured = UserService.objects.all().filter(
         user=request.user,
         setup=False,
-        app__module_name__in=settings.INSTALLED_SERVICES
+        app__enable=True
     )
 
     # Services setup and running
     enabled_services = UserService.objects.all().filter(
         user=request.user,
         setup=True,
-        app__module_name__in=settings.INSTALLED_SERVICES
+        app__enable=True
     )
 
     if request.method == 'POST':
@@ -256,7 +256,7 @@ def index(request):
     if request.user.is_authenticated():
         filters = {
             'user': request.user,
-            'app__module_name__in': settings.INSTALLED_SERVICES
+            'app__enable': True
         }
         if UserService.objects.all().filter(**filters).count() == 0:
             return redirect('user-settings')
@@ -303,7 +303,7 @@ def user_feed(request, username):
     filters = {
         'user': user,
         'setup': True,
-        'app__module_name__in': settings.INSTALLED_SERVICES
+        'app__enable': True
     }
     if not request.user.is_authenticated() or not request.user.pk == user.pk:
         filters['share'] = True
@@ -334,7 +334,7 @@ def current_status(request, username):
     filters = {
         'user': user,
         'setup': True,
-        'app__module_name__in': settings.INSTALLED_SERVICES
+        'app__enable': True
     }
     if not request.user.is_authenticated() or not request.user.pk == user.pk:
         filters['share'] = True
