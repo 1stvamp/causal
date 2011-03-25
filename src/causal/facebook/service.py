@@ -150,12 +150,13 @@ def get_stats_items(user, since, model_instance=None):
                             item.title = photo['name']
                         item.body = photo['picture']
                         item.comments = []
-                        for comment in photo['comments']['data']:
-                            comment_item = ServiceItem()
-                            comment_item.created = datetime.strptime(comment['created_time'].split('+')[0], '%Y-%m-%dT%H:%M:%S')
-                            comment_item.body = comment['message']
-                            comment_item.from_user = comment['from']['name']
-                            item.comments.append(comment_item)
+                        if photo.has_key('comments'):
+                            for comment in photo['comments']['data']:
+                                comment_item = ServiceItem()
+                                comment_item.created = datetime.strptime(comment['created_time'].split('+')[0], '%Y-%m-%dT%H:%M:%S')
+                                comment_item.body = comment['message']
+                                comment_item.from_user = comment['from']['name']
+                                item.comments.append(comment_item)
                         item.service = serv
                         item.user = user
                         photos.append(item)            
