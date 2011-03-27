@@ -43,11 +43,13 @@ class ServiceApp(models.Model):
 def get_app_by_name(module_name):
     """Shortcut function to return the correct service app
     """
+
     app = ServiceApp.objects.get_or_create(module_name=module_name)[0]
     return app
 
 class UserService(models.Model):
-    """User service handler. e.g. twitter, flickr etc."""
+    """User service handler. e.g. twitter, flickr etc.
+    """
 
     user = models.ForeignKey(User, db_index=True)
     app = models.ForeignKey(ServiceApp, db_index=True)
@@ -103,7 +105,8 @@ class UserService(models.Model):
             return self._handler
 
 class BaseAuth(models.Model):
-    """Base authentication class for identifying against a service"""
+    """Base authentication class for identifying against a service.
+    """
 
     user_services = generic.GenericRelation(
         UserService,
@@ -114,10 +117,11 @@ class BaseAuth(models.Model):
     modified = models.DateTimeField(auto_now=True)
 
 class Auth(BaseAuth):
-    """Auth for sites requiring a username."""
+    """Auth for sites requiring a username.
+    """
 
     username = models.CharField(max_length=255)
-    secret = models.CharField(max_length=255)
+    secret = models.CharField(max_length=255, blank=True, null=True)
 
     def __unicode__(self):
         if self.user_services.count() > 0:
@@ -126,7 +130,8 @@ class Auth(BaseAuth):
             return u'Auth settings'
 
 class RequestToken(models.Model):
-    """OAuth Request Token."""
+    """OAuth Request Token.
+    """
 
     oauth_token = models.CharField(max_length=255, blank=True, null=True)
     oauth_token_secret = models.CharField(max_length=255, blank=True, null=True)
@@ -141,7 +146,8 @@ class RequestToken(models.Model):
             return u'Request token'
 
 class AccessToken(RequestToken):
-    """OAuth Access Token."""
+    """OAuth Access Token.
+    """
 
     def __unicode__(self):
         if self.oauth_set.count() > 0 and \
@@ -151,7 +157,8 @@ class AccessToken(RequestToken):
             return u'Access token'
 
 class OAuth(BaseAuth):
-    """Auth details for sites requiring OAuth permission"""
+    """Auth details for sites requiring OAuth permission.
+    """
 
     request_token = models.ForeignKey(RequestToken, null=True, blank=True)
     access_token = models.ForeignKey(AccessToken, related_name="%(app_label)s_%(class)s_related", null=True, blank=True)
