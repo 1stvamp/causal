@@ -24,7 +24,7 @@ TIME_ZONE = getattr(settings, 'TIME_ZONE', 'Europe/London')
 
 
 class ServiceApp(models.Model):
-    module_name = models.CharField(max_length=255)
+    module_name = models.CharField(max_length=255, db_index=True)
     enable = models.NullBooleanField(null=True, blank=True, default=True)
     _module = None
 
@@ -49,8 +49,8 @@ def get_app_by_name(module_name):
 class UserService(models.Model):
     """User service handler. e.g. twitter, flickr etc."""
 
-    user = models.ForeignKey(User)
-    app = models.ForeignKey(ServiceApp)
+    user = models.ForeignKey(User, db_index=True)
+    app = models.ForeignKey(ServiceApp, db_index=True)
     setup = models.NullBooleanField(null=True, blank=True, default=False)
     share = models.NullBooleanField(null=True, blank=True, default=False)
     created = models.DateTimeField(auto_now_add=True)
@@ -64,6 +64,9 @@ class UserService(models.Model):
     auth = generic.GenericForeignKey('auth_type', 'auth_object_id')
 
     _handler = None
+    
+    class Meta:
+        unique_together = ("user", "app",)
 
     @property
     def form_template_path(self):
