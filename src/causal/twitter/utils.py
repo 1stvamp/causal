@@ -4,21 +4,16 @@ from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.sites.models import Site
-from causal.main.utils.services import get_config
 
 from causal.main.models import OAuth, RequestToken, AccessToken, UserService
 
-auth_settings = get_config('causal.twitter', 'auth')
-if not auth_settings:
-    raise Exception('Missing Twitter OAuth config in settings module')
-
-def _oauth(cust_callback_url=None):
+def _oauth(service):
     current_site = Site.objects.get(id=settings.SITE_ID)
     callback = cust_callback_url or reverse('causal-twitter-callback')
     callback = "http://%s%s" % (current_site.domain, callback,)
     return tweepy.OAuthHandler(
-        auth_settings['consumer_key'],
-        auth_settings['consumer_secret'],
+        service.auth_settings['consumer_key'],
+        service.auth_settings['consumer_secret'],
         callback
     )
 
@@ -26,7 +21,7 @@ def user_login(service, cust_callback_url=None):
     """Create RequestToken to auth on user return and redirect
     user to third party url for auth."""
     try:
-        oauth = _oauth(cust_callback_url)
+        oauth = _oauth(service, cust_callback_url)
         redirect_url = oauth.get_authorization_url()
 
         # Make sure we have an auth container
@@ -52,7 +47,7 @@ def user_login(service, cust_callback_url=None):
     return redirect(redirect_url)
 
 def get_api(service):
-    oauth = _oauth()
+    oauth = _oauth(service)
 
     # Have we authenticated at all?
     if not service.auth:
@@ -89,5 +84,5 @@ def get_api(service):
     return tweepy.API(oauth)
 
 def get_user(service):
-    service_auth = _oauth(service.auth)
+    service_auth = _oauth(service)
     return tweepy.API(service_auth).get_user('twitter')

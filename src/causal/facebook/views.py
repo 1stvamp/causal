@@ -18,10 +18,6 @@ from django.shortcuts import get_object_or_404
 
 PACKAGE = 'causal.facebook'
 
-auth_settings = get_config(PACKAGE, 'auth')
-if not auth_settings:
-    raise Exception('Missing Facebook OAuth config in settings module')
-
 @login_required(redirect_field_name='redirect_to')
 def verify_auth(request):
     """Get the values back from facebook and store them for use later."""
@@ -37,9 +33,9 @@ def verify_auth(request):
 
     url = "https://graph.facebook.com/oauth/access_token&code=%s&client_secret=%s&redirect_uri=%s&client_id=%s" % (
         code,
-        auth_settings['consumer_secret'],
+        service.auth_settings['consumer_secret'],
         callback,
-        auth_settings['consumer_key']
+        service.auth_settings['consumer_key']
     )
 
     response = cgi.parse_qs(urllib.urlopen(url).read())
@@ -69,7 +65,7 @@ def auth(request):
     request.session['causal_facebook_oauth_return_url'] = \
         request.GET.get('HTTP_REFERER', None)
     service = get_model_instance(request.user, PACKAGE)
-    
+
     if not service.auth:
         auth_handler = OAuth()
         auth_handler.save()
@@ -85,7 +81,7 @@ def auth(request):
     return redirect("https://graph.facebook.com/oauth/authorize&redirect_uri=%s&scope=%s&client_id=%s" % (
             callback,
             'read_stream,offline_access,user_photos,user_photo_video_tags,user_checkins',
-            auth_settings['consumer_key']
+            service.auth_settings['consumer_key']
         )
     )
 
