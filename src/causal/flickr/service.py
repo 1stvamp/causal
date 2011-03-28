@@ -2,6 +2,7 @@
 feed from flickr.com.
 """
 
+from causal.main.handlers import BaseServiceHandler
 from causal.main.models import ServiceItem
 from causal.main.exceptions import LoggedServiceError
 from datetime import datetime, timedelta
@@ -68,7 +69,7 @@ class ServiceHandler(BaseServiceHandler):
 
         try:
             photos_json = self.flickr.photos_search(
-                user_id = self.service.auth.username,
+                user_id = self.service.auth.secret,
                 per_page = '10',
                 format = 'json',
                 nojsoncallback ='1',
@@ -97,7 +98,7 @@ class ServiceHandler(BaseServiceHandler):
         epoch_then = time.mktime(then.timetuple())
 
         favs = self.flickr.favorites_getList(
-            user_id=self.service.auth.username,
+            user_id=self.service.auth.secret,
             max_fave_date=int(epoch_now),
             min_fave_date=int(epoch_then),
             format='json',

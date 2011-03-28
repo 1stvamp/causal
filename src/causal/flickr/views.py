@@ -44,6 +44,7 @@ def auth(request):
                     else:
                         auth_handler = service.auth
                     auth_handler.username = username
+                    auth_handler.secret = userid
                     auth_handler.save()
                     if not service.auth:
                         service.auth = auth_handler
