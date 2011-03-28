@@ -27,7 +27,7 @@ def auth(request):
         if username:
             # Talk to flickr to get a flickr ID 1234567@N0 style
             url = "http://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=%s&username=%s&format=json&nojsoncallback=1" % \
-                (service.auth_settings['api_key'], username)
+                (service.app.auth_settings['api_key'], username)
 
             http_requester = httplib2.Http()
             resp, content = http_requester.request(url, "GET")

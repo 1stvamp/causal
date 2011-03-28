@@ -16,8 +16,8 @@ def user_login(service, rt_url, auth_url, cust_callback_url=None):
     callback = "http://%s%s" % (current_site.domain, callback,)
     try:
         consumer = oauth.Consumer(
-            service.auth_settings['consumer_key'],
-            service.auth_settings['consumer_secret']
+            service.app.auth_settings['consumer_key'],
+            service.app.auth_settings['consumer_secret']
         )
 
         client = oauth.Client(consumer)
@@ -63,7 +63,7 @@ def generate_access_token(service, token_url):
     """Takes a request_token and validates it to give a valid AccessToken
     and the stores it. Should an existing token exist it will be deleted.
     """
-    consumer = oauth.Consumer(service.auth_settings['consumer_key'], service.auth_settings['consumer_secret'])
+    consumer = oauth.Consumer(service.app.auth_settings['consumer_key'], service.app.auth_settings['consumer_secret'])
     request_token = service.auth.request_token
 
     token = oauth.Token(request_token.oauth_token, request_token.oauth_token_secret)
@@ -95,8 +95,8 @@ def get_data(service, url, disable_oauth=False):
         at = service.auth.access_token
         if at:
             consumer = oauth.Consumer(
-                service.auth_settings['consumer_key'],
-                service.auth_settings['consumer_secret']
+                service.app.auth_settings['consumer_key'],
+                service.app.auth_settings['consumer_secret']
             )
             token = oauth.Token(at.oauth_token , at.oauth_token_secret)
 

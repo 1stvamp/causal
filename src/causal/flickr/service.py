@@ -16,7 +16,7 @@ class ServiceHandler(BaseServiceHandler):
         """Fetch and normalise the updates from the service.
         """
 
-        self.flickr = flickrapi.FlickrAPI(self.service.auth_settings['api_key'])
+        self.flickr = flickrapi.FlickrAPI(self.service.app.auth_settings['api_key'])
         photos = self._get_service_items() or {}
         items = []
 
@@ -110,7 +110,7 @@ class ServiceHandler(BaseServiceHandler):
         """Fetch and normalise the updates from the service and generate stats.
         """
 
-        self.flickr = flickrapi.FlickrAPI(self.service.auth_settings['api_key'])
+        self.flickr = flickrapi.FlickrAPI(self.service.app.auth_settings['api_key'])
         photos = self._get_service_items()
 
         items = []

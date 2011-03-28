@@ -33,9 +33,9 @@ def verify_auth(request):
 
     url = "https://graph.facebook.com/oauth/access_token&code=%s&client_secret=%s&redirect_uri=%s&client_id=%s" % (
         code,
-        service.auth_settings['consumer_secret'],
+        service.app.auth_settings['consumer_secret'],
         callback,
-        service.auth_settings['consumer_key']
+        service.app.auth_settings['consumer_key']
     )
 
     response = cgi.parse_qs(urllib.urlopen(url).read())
@@ -81,7 +81,7 @@ def auth(request):
     return redirect("https://graph.facebook.com/oauth/authorize&redirect_uri=%s&scope=%s&client_id=%s" % (
             callback,
             'read_stream,offline_access,user_photos,user_photo_video_tags,user_checkins',
-            service.auth_settings['consumer_key']
+            service.app.auth_settings['consumer_key']
         )
     )
 

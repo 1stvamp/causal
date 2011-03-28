@@ -12,8 +12,8 @@ def _oauth(service):
     callback = cust_callback_url or reverse('causal-twitter-callback')
     callback = "http://%s%s" % (current_site.domain, callback,)
     return tweepy.OAuthHandler(
-        service.auth_settings['consumer_key'],
-        service.auth_settings['consumer_secret'],
+        service.app.auth_settings['consumer_key'],
+        service.app.auth_settings['consumer_secret'],
         callback
     )
 

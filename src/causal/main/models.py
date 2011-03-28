@@ -10,7 +10,6 @@ from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
 from timezones.fields import TimeZoneField, MAX_TIMEZONE_LENGTH
 from timezones.utils import adjust_datetime_to_timezone
-from causal.main.utils.services import get_config
 
 User = auth_app.User
 
@@ -41,6 +40,15 @@ class ServiceApp(models.Model):
 
     def __unicode__(self):
         return u'%s service app' % (self.module.ServiceHandler.display_name,)
+
+    @property
+    def auth_settings(self):
+        """App specific auth settings from the settings module
+        """
+        app_settings = getattr(settings, 'SERVICE_CONFIG', {}).get(
+            self.module_name, {})
+        return app_settings.get('auth', None)
+
 def get_app_by_name(module_name):
     """Shortcut function to return the correct service app
     """
@@ -97,17 +105,14 @@ class UserService(models.Model):
 
     @property
     def handler(self):
-        """Return a handler class specific to the calling service."""
+        """Return a handler class specific to the calling service.
+        """
         if self._handler:
             return self._handler
         else:
             # Fetch class for service, and inject this model instance
             self._handler = self.app.module.ServiceHandler(self)
             return self._handler
-
-    @property
-    def auth_settings(self):
-        return get_config(self.app.module_name, 'auth')
 
 class BaseAuth(models.Model):
     """Base authentication class for identifying against a service.
@@ -130,9 +135,9 @@ class Auth(BaseAuth):
 
     def __unicode__(self):
         if self.user_services.count() > 0:
-            return u'Auth for %s' % (self.user_services.all()[0],)
+            return u'Auth tokens for %s' % (self.user_services.all()[0],)
         else:
-            return u'Auth settings'
+            return u'Auth tokens'
 
 class RequestToken(models.Model):
     """OAuth Request Token.
@@ -170,9 +175,9 @@ class OAuth(BaseAuth):
 
     def __unicode__(self):
         if self.user_services.count():
-            return u'OAuth for %s' % (self.user_services.all()[0],)
+            return u'OAuth tokens for %s' % (self.user_services.all()[0],)
         else:
-            return u'OAuth settings'
+            return u'OAuth tokens'
 
 class UserProfile(models.Model):
     """Model for providing extra information for a user, can be
