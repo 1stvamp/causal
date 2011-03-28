@@ -135,13 +135,13 @@ INSTALLED_SERVICES = (
 
 # SERVICE_CONFIG = {
 #    'causal.twitter': {
-#        'oauth': {
+#        'auth': {
 #            'consumer_key': 'blah',
 #            'consumer_secret': '123567890'
 #        }
 #    },
 #    'causal.facebook': {
-#        'oauth': {
+#        'auth': {
 #            'consumer_key': 'blahblah',
 #            'consumer_secret': '12356789012345'
 #        }

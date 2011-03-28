@@ -8,7 +8,7 @@ from causal.main.utils.services import get_config
 
 from causal.main.models import OAuth, RequestToken, AccessToken, UserService
 
-auth_settings = get_config('causal.twitter', 'oauth')
+auth_settings = get_config('causal.twitter', 'auth')
 if not auth_settings:
     raise Exception('Missing Twitter OAuth config in settings module')
 

@@ -10,6 +10,7 @@ from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
 from timezones.fields import TimeZoneField, MAX_TIMEZONE_LENGTH
 from timezones.utils import adjust_datetime_to_timezone
+from causal.main.utils.services import get_config
 
 User = auth_app.User
 
@@ -103,6 +104,10 @@ class UserService(models.Model):
             # Fetch class for service, and inject this model instance
             self._handler = self.app.module.ServiceHandler(self)
             return self._handler
+
+    @property
+    def auth_settings(self):
+        return get_config(self.app.module_name, 'auth')
 
 class BaseAuth(models.Model):
     """Base authentication class for identifying against a service.

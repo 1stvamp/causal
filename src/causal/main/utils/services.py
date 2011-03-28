@@ -12,7 +12,7 @@ def user_login(service, rt_url, auth_url, cust_callback_url=None):
     """Authenticates to an OAuth service.
     """
     current_site = Site.objects.get(id=settings.SITE_ID)
-    auth_settings = get_config(service.app.module_name, 'oauth')
+    auth_settings = get_config(service.app.module_name, 'auth')
     callback = cust_callback_url or reverse(service.app.module_name.replace('.', '-'))
     callback = "http://%s%s" % (current_site.domain, callback,)
     try:
@@ -61,7 +61,7 @@ def generate_access_token(service, token_url):
     """Takes a request_token and validates it to give a valid AccessToken
     and the stores it. Should an existing token exist it will be deleted.
     """
-    auth_settings = get_config(service.app.module_name, 'oauth')
+    auth_settings = get_config(service.app.module_name, 'auth')
     consumer = oauth.Consumer(auth_settings['consumer_key'], auth_settings['consumer_secret'])
     request_token = service.auth.request_token
 
@@ -90,7 +90,7 @@ def get_data(service, url, disable_oauth=False):
         h = httplib2.Http()
         resp, content = h.request(url, "GET")
     else:
-        auth_settings = get_config(service.app.module_name, 'oauth')
+        auth_settings = get_config(service.app.module_name, 'auth')
         at = service.auth.access_token
         if at:
             consumer = oauth.Consumer(auth_settings['consumer_key'], auth_settings['consumer_secret'])

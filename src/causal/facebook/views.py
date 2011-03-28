@@ -18,7 +18,7 @@ from django.shortcuts import get_object_or_404
 
 PACKAGE = 'causal.facebook'
 
-auth_settings = get_config(PACKAGE, 'oauth')
+auth_settings = get_config(PACKAGE, 'auth')
 if not auth_settings:
     raise Exception('Missing Facebook OAuth config in settings module')
 
