@@ -46,8 +46,14 @@ class ServiceApp(models.Model):
         """App specific auth settings from the settings module
         """
         app_settings = getattr(settings, 'SERVICE_CONFIG', {}).get(
-            self.module_name, {})
-        return app_settings.get('auth', None)
+            self.module_name, {}).get('auth', None)
+        if app_settings:
+            return app_settings
+        else:
+            raise Exception(
+                'Missing "auth" in settings.SERVICES_CONFIG for %s' % \
+                    (self.module_name,)
+            )
 
 def get_app_by_name(module_name):
     """Shortcut function to return the correct service app
