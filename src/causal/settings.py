@@ -116,7 +116,6 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'south',
     'registration',
-    'jogging',
     'timezones',
     'causal.main',
 )
