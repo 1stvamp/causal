@@ -1,6 +1,6 @@
 """Exceptions for use in handling service errors"""
 
-from jogging import logging
+import logging
 
 class ServiceError(Exception):
     """Generic exception for any causal service error, e.g. Twitter is down"""

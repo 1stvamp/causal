@@ -13,10 +13,10 @@ from optparse import OptionParser
 template = """[buildout]
 parts = dependencies
         django
-cwd = %(cwd)s
+develop = %(cwd)s
 eggs =
-  causal
-  %(eggs)s
+        causal
+        %(eggs)s
 versions = versions
 %(findlinks)s
 
@@ -68,18 +68,32 @@ def main():
 			req = req_bits[1]
 			url = req_bits[0]
 			find_links.append("find-links = %s" % (url,))
-		if "==" in req:
-			(name, version) = req.split('==')
+		if "=" in req:
+			if ">=" in req:
+				(name, version) = req.split('>=')
+				op = '>='
+			elif "<=" in req:
+				(name, version) = req.split('<=')
+				op = '<='
+			elif "<" in req:
+				(name, version) = req.split('<=')
+				op = '<'
+			elif ">" in req:
+				(name, version) = req.split('<=')
+				op = '>'
+			else:
+				(name, version) = req.split('==')
+				op = '='
 			if name != "Django":
-				versions.append("%s = %s" % (name, version,))
+				versions.append("%s %s %s" % (name, op, version,))
 		else:
 			name = req
 		if name != "Django":
-			eggs.append(name)
+			eggs.append(name.strip())
 
 	out = template % {
 		'cwd': os.path.realpath(file_path),
-		'eggs': "\n  ".join(eggs),
+		'eggs': "\n        ".join(eggs),
 		'versions': "".join(versions),
 		'findlinks': "".join(find_links),
 	}
