@@ -13,8 +13,7 @@ from optparse import OptionParser
 template = """[buildout]
 parts = dependencies
         django
-develop = .
-cwd = %(cwd)s
+develop = %(cwd)s
 eggs =
         causal
         %(eggs)s
