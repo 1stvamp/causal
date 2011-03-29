@@ -69,17 +69,23 @@ def main():
 			url = req_bits[0]
 			find_links.append("find-links = %s" % (url,))
 		if "=" in req:
-			if ">" in req:
+			if ">=" in req:
 				(name, version) = req.split('>=')
 				op = '>='
-			elif "<" in req:
+			elif "<=" in req:
 				(name, version) = req.split('<=')
 				op = '<='
+			elif "<" in req:
+				(name, version) = req.split('<=')
+				op = '<'
+			elif ">" in req:
+				(name, version) = req.split('<=')
+				op = '>'
 			else:
 				(name, version) = req.split('==')
-				op = '=='
-			if name != "Django" and op == '==':
-				versions.append("%s = %s" % (name, version,))
+				op = '='
+			if name != "Django":
+				versions.append("%s %s %s" % (name, op, version,))
 		else:
 			name = req
 		if name != "Django":
