@@ -71,11 +71,14 @@ def main():
 		if "=" in req:
 			if ">" in req:
 				(name, version) = req.split('>=')
+				op = '>='
 			elif "<" in req:
 				(name, version) = req.split('<=')
+				op = '<='
 			else:
 				(name, version) = req.split('==')
-			if name != "Django":
+				op = '=='
+			if name != "Django" and op == '==':
 				versions.append("%s = %s" % (name, version,))
 		else:
 			name = req
