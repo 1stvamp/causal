@@ -7,7 +7,7 @@ from django.contrib.sites.models import Site
 
 from causal.main.models import OAuth, RequestToken, AccessToken, UserService
 
-def _oauth(service):
+def _oauth(service, cust_callback_url=None):
     current_site = Site.objects.get(id=settings.SITE_ID)
     callback = cust_callback_url or reverse('causal-twitter-callback')
     callback = "http://%s%s" % (current_site.domain, callback,)
