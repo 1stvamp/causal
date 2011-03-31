@@ -88,8 +88,8 @@
             {% for service in services %}
                 {% if service|stats_url %}
                     <li>
-                        <a href="{{ service|stats_url }}" class="{{ service.class_name }} tab-link" title="{{ service.app.module.DISPLAY_NAME }} stats">
-                            <span>{{ service.app.module.DISPLAY_NAME }} stats</span>
+                        <a href="{{ service|stats_url }}" class="{{ service.class_name }} tab-link" title="{{ service.handler.display_name }} stats">
+                            <span>{{ service.handler.display_name }} stats</span>
                         </a>
                     </li>
                 {% endif %}
@@ -98,7 +98,7 @@
         <div id="all-services" class="ui-tabs-panel">
             <ul id="loading-services">
                 {% for service in services %}
-                    <li id="service_load_{{ service.class_name }}">{{ service.app.module.DISPLAY_NAME }}</li>
+                    <li id="service_load_{{ service.class_name }}">{{ service.handler.display_name }}</li>
                 {% endfor %}
             </ul>
             {% if services %}

@@ -1,50 +1,48 @@
 """Handles user accessable urls for http://delicious.com service.
 There isn't an easy to user API for this service so we work on
-publicly rss feeds from the user's account."""
+publicly rss feeds from the user's account.
+"""
 
-from causal.main.models import UserService, AccessToken
-from causal.main.utils import get_module_name
+from causal.main.models import UserService, Auth
 from causal.main.utils.services import get_model_instance, \
         settings_redirect, check_is_service_id, get_data
 from causal.main.utils.views import render
 from causal.main.decorators import can_view_service
-from causal.delicious.service import get_items
 from datetime import datetime, date, timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
 
-# Yay, let's recreate __package__ for Python <2.6
-MODULE_NAME = get_module_name(__name__)
+PACKAGE_NAME = 'causal.delicious'
 
 @login_required(redirect_field_name='redirect_to')
 def auth(request):
     """We dont need a full oauth setup just a username."""
-    
-    service = get_model_instance(request.user, MODULE_NAME)
+
+    service = get_model_instance(request.user, PACKAGE_NAME)
     if service and request.method == 'POST':
         username = request.POST['username']
 
         if username:
-            # Delete existing token
-            AccessToken.objects.filter(service=service).delete()
-            # Before creating a new one
-            AccessToken.objects.create(
-                service=service,
-                username=username,
-                created=datetime.now(),
-                api_token=service.app.oauth.consumer_key
+            user_feed = get_data(
+                service,
+                'http://feeds.delicious.com/v2/json/%s' % (username,),
+                disable_oauth=True
             )
 
-            user_feed = get_data(
-                            None,
-                            'http://feeds.delicious.com/v2/json/%s' % (username),
-                            disable_oauth=True)
-            
             # check the username is valid
             if user_feed[0]['d'] == '404 Not Found':
-                messages.error(request, 'Unable to find your username, please try again')
+                messages.error(request, 'Unable to find username "%s", please try again' % (username,))
             else:
+                if not service.auth:
+                    auth_handler = Auth()
+                else:
+                    auth_handler = service.auth
+                auth_handler.username = username
+                auth_handler.save()
+                if not service.auth:
+                    service.auth = auth_handler
+
                 service.setup = True
                 service.public = True
                 service.save()
@@ -55,13 +53,13 @@ def auth(request):
 
 @can_view_service
 def stats(request, service_id):
-    """Create up some stats."""
+    """Create up some stats.
+    """
 
     service = get_object_or_404(UserService, pk=service_id)
 
-    if check_is_service_id(service, MODULE_NAME):
-
-        bookmarks = get_items(request.user, date.today() - timedelta(days=7), service)
+    if check_is_service_id(service, PACKAGE_NAME):
+        bookmarks = service.handler.get_items(date.today() - timedelta(days=7))
 
         tags = {}
 
@@ -74,8 +72,11 @@ def stats(request, service_id):
 
         return render(
             request,
-            {'bookmarks': bookmarks, 'tags' : tags},
-            service.template_name + '/stats.html'
+            {
+                'bookmarks': bookmarks,
+                'tags' : tags
+            },
+            'causal/delicious/stats.html'
         )
     else:
-        return redirect('/%s' %(request.user.username))
+        return redirect('/%s' % (request.user.username,))

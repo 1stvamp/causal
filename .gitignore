@@ -17,4 +17,5 @@ downloads
 src/*.egg-info
 buildout.cfg
 bootstrap.py
+wingdbstub.py
 *.egg

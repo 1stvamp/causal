@@ -97,6 +97,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'causal.main.middleware.messaging.AjaxMessaging',
+    'causal.main.middleware.service_apps.SetupServiceApps',
 )
 
 ROOT_URLCONF = 'causal.urls'
@@ -130,6 +131,37 @@ INSTALLED_SERVICES = (
     #'causal.lastfm',
     #'causal.googlereader',
 )
+
+# SERVICE_CONFIG = {
+#    'causal.twitter': {
+#        'auth': {
+#            'consumer_key': 'blah',
+#            'consumer_secret': '123567890'
+#        }
+#    },
+#    'causal.facebook': {
+#        'auth': {
+#            'consumer_key': 'blahblah',
+#            'consumer_secret': '12356789012345'
+#        }
+#    },
+#    'causal.foursquare': {
+#        'auth': {
+#            'consumer_key': 'ASDFGHJKLQWERTYUIOP',
+#            'consumer_secret': 'ASDFGHJKL1234567890'
+#        }
+#    },
+#    'causal.flickr': {
+#        'auth': {
+#            'api_key': 'asdfghjkl1234567890'
+#        }
+#    },
+#    'causal.lastfm': {
+#        'auth': {
+#            'api_key': 'asdfghjkl1234567890'
+#        }
+#    }
+# }
 
 # Override INSTALLED_APPS_EXTEND or INSTALLED_SERVICES_EXTEND to add onto the default
 # set of apps or services, rather than overriding them, in your

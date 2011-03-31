@@ -11,7 +11,7 @@
         //<![CDATA[
         var services = {
             {% for service in user.userservice_set.all %}
-                {{ service.id }}: "{{ service.app.module.DISPLAY_NAME|escapejs }}"{% if not forloop.last %},{% endif %}
+                {{ service.id }}: "{{ service.handler.display_name|escapejs }}"{% if not forloop.last %},{% endif %}
             {% endfor %}
         };
         function _ajax_request(url, data, callback, type, method) {
@@ -138,7 +138,7 @@
             <h3>Available services:</h3>
             <ul>
                 {% for service in available_services %}
-                    <li><a href="{% url enable-service service.id %}">{{ service.module.DISPLAY_NAME }}</a></li>
+                    <li><a href="{% url enable-service service.id %}">{{ service.display_name }}</a></li>
                 {% endfor %}
             </ul>
         {% endif %}

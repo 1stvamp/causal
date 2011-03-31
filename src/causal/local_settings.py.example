@@ -39,9 +39,38 @@ INSTALLED_SERVICES = (
     'causal.github',
     'causal.googlereader',
     'causal.lastfm',
-    'causal.tumblr',
     'causal.twitter',
 )
+SERVICE_CONFIG = {
+   'causal.twitter': {
+       'auth': {
+           'consumer_key': 'blah',
+           'consumer_secret': '123567890'
+       }
+   },
+   'causal.facebook': {
+       'auth': {
+           'consumer_key': 'blahblah',
+           'consumer_secret': '12356789012345'
+       }
+   },
+   'causal.foursquare': {
+       'auth': {
+           'consumer_key': 'ASDFGHJKLQWERTYUIOP',
+           'consumer_secret': 'ASDFGHJKL1234567890'
+       }
+   },
+   'causal.flickr': {
+       'auth': {
+           'api_key': 'asdfghjkl1234567890'
+       }
+   },
+   'causal.lastfm': {
+       'auth': {
+           'api_key': 'asdfghjkl1234567890'
+       }
+   }
+}
 
 # *Don't* use the below example, generate your own random string of chars
 #SECRET_KEY = '`|9IK8w@VfU&([H{vaKpTRsmFq]zw7&pTIK4h#A$`@*>(&xSn<N(dg?=sxD|;*D'

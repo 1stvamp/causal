@@ -1,6 +1,6 @@
-<h3>{{ service.app.module.DISPLAY_NAME }}</h3>
+<h3>{{ service.handler.display_name }}</h3>
 {% if not service.setup %}
-    Not authenticated. <a href="{{ service.get_auth_url }}">Authenticate</a>?
+    Not authenticated. <a href="{{ service.handler.get_auth_url }}">Authenticate</a>?
 {% else %}
-    Authenticated. <a href="{{ service.get_auth_url }}">Re-authenticate</a>?
+    Authenticated. <a href="{{ service.handler.get_auth_url }}">Re-authenticate</a>?
 {% endif %}

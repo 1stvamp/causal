@@ -1,14 +1,12 @@
-<h3>{{ service.app.module.DISPLAY_NAME }}</h3>
+<h3>{{ service.handler.display_name }}</h3>
 {% if not service.setup%}
-    No username for {{ service.app.module.DISPLAY_NAME }}.
+    No username for {{ service.handler.display_name }}.
 {% endif %}
-<form action="{{ service.get_auth_url }}" method="post">
+<form action="{{ service.handler.get_auth_url }}" method="post">
     {% csrf_token %}
     <div>
         <label for="id_{{ service.class_name }}_username">Username:</label>
-        {% with service.requesttoken_set.all.0.accesstoken.username as username %}
-            <input type="text" name="username" id="id_{{ service.class_name }}_username" value="{{ username }}" />
-        {% endwith %}
+        <input type="text" name="username" id="id_{{ service.class_name }}_username" value="{{ service.auth.username }}" />
         <input type="submit" value="Submit" />
     </div>
 </form>
