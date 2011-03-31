@@ -145,6 +145,22 @@ INSTALLED_SERVICES = (
 #            'consumer_secret': '12356789012345'
 #        }
 #    },
+#    'causal.foursquare': {
+#        'auth': {
+#            'consumer_key': 'ASDFGHJKLQWERTYUIOP',
+#            'consumer_secret': 'ASDFGHJKL1234567890'
+#        }
+#    },
+#    'causal.flickr': {
+#        'auth': {
+#            'api_key': 'asdfghjkl1234567890'
+#        }
+#    },
+#    'causal.lastfm': {
+#        'auth': {
+#            'api_key': 'asdfghjkl1234567890'
+#        }
+#    }
 # }
 
 # Override INSTALLED_APPS_EXTEND or INSTALLED_SERVICES_EXTEND to add onto the default
