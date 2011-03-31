@@ -67,17 +67,14 @@ class ServiceHandler(BaseServiceHandler):
         """Get a users top artists.
         """
 
-        fav_artists = None
-
-        if access_token:
-            fav_artists = get_data(
-                self.service,
-                'http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=%s&api_key=%s&period=7day&format=json' % (
-                    self.service.auth.username,
-                    self.service.app.auth_settings['api_key']
-                ),
-                disable_oauth=True
-            )
+        fav_artists = get_data(
+            self.service,
+            'http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=%s&api_key=%s&period=7day&format=json' % (
+                self.service.auth.username,
+                self.service.app.auth_settings['api_key']
+            ),
+            disable_oauth=True
+        )
 
         return self._convert_top_artists_json(fav_artists)
 

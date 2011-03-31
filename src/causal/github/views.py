@@ -73,7 +73,7 @@ def stats(request, service_id):
                 'avatar' : avatar,
                 'commit_times' : commit_times
             },
-            'causal/foursquare/stats.html'
+            'causal/github/stats.html'
         )
     else:
         return redirect('/%s' % (request.user.username,))

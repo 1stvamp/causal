@@ -76,7 +76,7 @@ def stats(request, service_id):
     service = get_object_or_404(UserService, pk=service_id)
 
     if check_is_service_id(service, PACKAGE_NAME):
-        shares = service.get_items(date.today() - timedelta(days=7))
+        shares = service.handler.get_items(date.today() - timedelta(days=7))
         sources = {}
 
         # Count source websites

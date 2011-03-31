@@ -74,13 +74,13 @@ def stats(request, service_id):
 
         date_offset = date.today() - timedelta(days=7)
 
-        template_values['favourite_artists'] = service.get_artists(date_offset)
-        template_values['recent_tracks'] = service.get_items(date_offset)
+        template_values['favourite_artists'] = service.handler.get_artists(date_offset)
+        template_values['recent_tracks'] = service.handler.get_items(date_offset)
 
         gig_index = 0
 
         for artist in template_values['favourite_artists']:
-            artist.gigs = service.get_upcoming_gigs(date_offset, artist.name)
+            artist.gigs = service.handler.get_upcoming_gigs(date_offset, artist.name)
             if artist.gigs:
                 if not template_values.has_key('gig_centre') and \
                    artist.gigs[gig_index].location.has_key('lat') and \

@@ -112,7 +112,8 @@ class ServiceHandler(BaseServiceHandler):
                     item = ServiceItem()
                     self._set_title_body(entry, item)
                     item.created = created
-                    item.link_back = entry['url']
+                    if entry.has_key('url'):
+                        item.link_back = entry['url']
                     item.service = self.service
                     items.append(item)
 

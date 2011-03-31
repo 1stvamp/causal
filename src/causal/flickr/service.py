@@ -171,7 +171,7 @@ class ServiceHandler(BaseServiceHandler):
                 item.service = self.service
 
                 items.append(item)
-            return items
+        return items
 
     def _extract_camera_type(self, json):
         """Return the make and model of a photo.

@@ -69,11 +69,7 @@ def stats(request, service_id):
     service = get_object_or_404(UserService, pk=service_id)
 
     if check_is_service_id(service, PACKAGE_NAME):
-        pictures = get_stats_items(
-            request.user,
-            date.today() - timedelta(days=7),
-            service
-        )
+        pictures = service.handler.get_stats_items(date.today() - timedelta(days=7))
         template_values = {}
         # Most commented
         comments = 0
