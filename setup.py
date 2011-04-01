@@ -1,4 +1,7 @@
-__version__ = '0.9.10'
+import os
+
+cwd = os.path.dirname(__file__)
+__version__ = open(os.path.join(cwd, 'src', 'causal', 'version.txt'), 'r').read()
 
 try:
     from setuptools import setup, find_packages
@@ -19,8 +22,8 @@ def parse_requires(path):
             links.append(link)
     return reqs, links
 
-setup_requires, dependency_links = parse_requires('requirements.txt')
-extras_requires, dependency_links2 = parse_requires('extras_requirements.txt')
+setup_requires, dependency_links = parse_requires(os.path.join(cwd, 'requirements.txt'))
+extras_requires, dependency_links2 = parse_requires(os.path.join(cwd, 'extras_requirements.txt'))
 dependency_links.extend(dependency_links2)
 
 print dependency_links
@@ -34,8 +37,8 @@ setup(
         url='http://www.projectcausal.com/',
         download_url='https://github.com/causality/causal/tarball/%s' % (__version__,),
         keywords=['lifestream', 'aggregator', 'socialnetwork', 'django', 'social'],
-        packages=find_packages('src', exclude=['ez_setup']),
-        package_dir={'': 'src'},
+        packages=find_packages(os.path.join(cwd, 'src'), exclude=['ez_setup']),
+        package_dir={'': os.path.join(cwd, 'src')},
         setup_requires=setup_requires,
         install_requires=['setuptools'],
         extras_require={
