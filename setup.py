@@ -1,7 +1,7 @@
 import os
 
 cwd = os.path.dirname(__file__)
-__version__ = open(os.path.join(cwd, 'src', 'causal', 'version.txt'), 'r').read()
+__version__ = open(os.path.join(cwd, 'src', 'causal', 'version.txt'), 'r').read().strip()
 
 try:
     from setuptools import setup, find_packages
